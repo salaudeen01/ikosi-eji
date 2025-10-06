@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Navigation from "@/components/Navigation";
 import ArticleCard from "@/components/ArticleCard";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import Layout from "@/components/layout";
 
 const CategoryPage = () => {

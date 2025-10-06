@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-import Navigation from "@/components/Navigation";
 import ArticleCard from "@/components/ArticleCard";
 import CategorySection from "@/components/CategorySection";
 import Autoplay from "embla-carousel-autoplay";
@@ -11,7 +9,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Link from "next/link";
 import Layout from "@/components/layout";
 
 const Index = () => {

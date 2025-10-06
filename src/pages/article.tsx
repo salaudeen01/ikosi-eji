@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { Helmet } from "react-helmet";
 import Layout from "@/components/layout";
 import ShareDialog from "@/components/ShareDialog";
@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar, User, Bookmark } from "lucide-react";
 
 const Article = () => {
-  const params = useParams();
   const [currentUrl, setCurrentUrl] = useState("");
   const [origin, setOrigin] = useState("");
 

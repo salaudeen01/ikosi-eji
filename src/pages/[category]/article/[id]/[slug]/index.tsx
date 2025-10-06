@@ -2,21 +2,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { Helmet } from "react-helmet";
 import Layout from "@/components/layout";
 import ShareDialog from "@/components/ShareDialog";
-import CommentSection from "@/components/CommentSection";
+// import CommentSection from "@/components/CommentSection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, User, Bookmark } from "lucide-react";
 import { useArticleStore } from "@/hooks/ArticleStore";
 
 const Article = () => {
-  const params = useParams();
   const [currentUrl, setCurrentUrl] = useState("");
   const [origin, setOrigin] = useState("");
-  const { article, clearArticle } = useArticleStore();
+  const { article } = useArticleStore();
 
   // Fallback data if no article is passed
   const articleData = article || {

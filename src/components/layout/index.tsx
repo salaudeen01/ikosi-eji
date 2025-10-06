@@ -8,7 +8,7 @@ interface LayoutProps {
     icon?: string;
   }
 
-const  Layout = ({ children, pageTitle, icon }: LayoutProps) => {
+const  Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]" suppressHydrationWarning>
