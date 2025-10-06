@@ -99,7 +99,102 @@ const Article = () => {
             {articleData.excerpt}
           </p>
 
+              <p className="mb-4">
+                  The World Bank has released its latest economic outlook for Nigeria, projecting
+                  a GDP growth rate of 3.8% for 2025. This optimistic forecast comes on the heels
+                  of significant structural reforms implemented by the federal government over the
+                  past year.
+              </p>
+
+              <h2 className="text-2xl font-bold mt-8 mb-4">Key Growth Drivers</h2>
+              
+              <p className="mb-4">
+                  Several factors are contributing to this positive economic trajectory. The
+                  government&apos;s fiscal reforms have begun to show tangible results, with improved
+                  revenue collection and more efficient public spending. The naira&apos;s recent
+                  appreciation has also bolstered investor confidence.
+              </p>
+
+              <p className="mb-4">
+                  Security improvements across the country, particularly in oil-producing regions,
+                  have led to a significant increase in crude oil production. Nigeria is now
+                  producing approximately 1.8 million barrels per day, the highest level in 18 months.
+              </p>
+
+              <h2 className="text-2xl font-bold mt-8 mb-4">Sectoral Analysis</h2>
+
+              <p className="mb-4">
+                  The non-oil sector continues to be a bright spot in Nigeria&apos;s economy. Agricultural
+                  exports have grown by 35% year-on-year, while the technology and telecommunications
+                  sectors are experiencing unprecedented growth.
+              </p>
+
+              <p className="mb-4">
+                  The banking sector has shown remarkable resilience, with major banks reporting
+                  strong earnings in Q3 2025. The Nigerian Stock Exchange has responded positively,
+                  with the All-Share Index gaining 2.5% in recent weeks.
+              </p>
+
+              <h2 className="text-2xl font-bold mt-8 mb-4">Challenges Ahead</h2>
+
+              <p className="mb-4">
+                  Despite the positive outlook, analysts caution that challenges remain. Inflation,
+                  while moderating, still stands at 23.8% - well above the Central Bank&apos;s target
+                  range. Infrastructure deficits, particularly in power supply, continue to hamper
+                  business operations.
+              </p>
+
+              <p className="mb-4">
+                  &quot;While the reforms are moving in the right direction, sustained implementation
+                  will be crucial,&quot; noted the World Bank&apos;s country director. &quot;Nigeria has the
+                  potential to achieve even higher growth rates if these policies are maintained
+                  and expanded.&quot;
+              </p>
+
+              <h2 className="text-2xl font-bold mt-8 mb-4">Investment Outlook</h2>
+
+              <p className="mb-4">
+                  Foreign direct investment has shown signs of recovery, with several multinational
+                  corporations announcing new projects in Nigeria. The government&apos;s efforts to
+                  improve the business environment and streamline regulatory processes are paying
+                  dividends.
+              </p>
+
+              <p className="mb-4">
+                  Market analysts remain cautiously optimistic about Nigeria&apos;s economic prospects.
+                  With continued policy reforms and improved security, the country is well-positioned
+                  to meet or exceed the World Bank&apos;s growth projections for 2025.
+              </p>
+
           {/* ...rest of article content */}
+          {/* Related Articles */}
+          <div className="mt-12 pt-8 border-t border-[hsl(var(--border))]">
+            <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="border border-[hsl(var(--border))] rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer">
+                <Badge className="mb-2 bg-primary/10 text-[hsl(var(--primary))] hover:bg-primary/20 border-0">
+                  Economy
+                </Badge>
+                <h4 className="font-bold mb-2">
+                  CBN Maintains Interest Rate at 18.5% Amid Inflation Concerns
+                </h4>
+                <p className="text-sm text-[hsl(var(--muted-foreground))]">
+                  The Central Bank of Nigeria holds rates steady as inflation moderates...
+                </p>
+              </div>
+              <div className="border border-[hsl(var(--border))] rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer">
+                <Badge className="mb-2 bg-primary/10 text-[hsl(var(--primary))] hover:bg-primary/20 border-0">
+                  Market News
+                </Badge>
+                <h4 className="font-bold mb-2">
+                  Nigerian Stock Exchange Records Highest Trading Volume in Q3
+                </h4>
+                <p className="text-sm text-[hsl(var(--muted-foreground))]">
+                  The NSE All-Share Index gained 2.5% as investors showed renewed confidence...
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </article>
     </Layout>
