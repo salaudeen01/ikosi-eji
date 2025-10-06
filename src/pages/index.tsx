@@ -16,7 +16,7 @@ const Index = () => {
 
   const featuredArticles = [
     {
-      image: "/images/assets/hero-market.jpg",
+      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/hero-market_tmjban.jpg",
       category: "Featured",
       title: "Nigerian Economy Projected to Grow 3.8% in 2025 as Reforms Take Hold",
       excerpt:
@@ -24,7 +24,7 @@ const Index = () => {
       date: "September 30, 2025",
     },
     {
-      image: "/images/assets/business-skyline.jpg",
+      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/business-skyline_cwsedf.jpg",
       category: "Featured",
       title: "Lagos Emerges as Africa's Leading Financial Hub",
       excerpt:
@@ -32,7 +32,7 @@ const Index = () => {
       date: "September 29, 2025",
     },
     {
-      image: "/images/assets/naira-currency.jpg",
+      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/naira-currency_snbzhq.jpg",
       category: "Featured",
       title: "Nigerian Tech Sector Attracts $2.5B in Foreign Investment",
       excerpt:
@@ -58,7 +58,7 @@ const Index = () => {
 
   const economyArticles = [
     {
-      image: "/images/assets/naira-currency.jpg",
+      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/naira-currency_snbzhq.jpg",
       category: "Economy",
       title: "Naira Appreciates to ₦750/$1 at Official Market",
       excerpt:
@@ -66,7 +66,7 @@ const Index = () => {
       date: "September 22, 2025",
     },
     {
-      image: "/images/assets/business-meeting.jpg",
+      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/business-meeting_zxlxgu.jpg",
       category: "Policy",
       title: "Federal Government Unveils New Tax Reform Framework",
       excerpt:
@@ -74,7 +74,7 @@ const Index = () => {
       date: "September 21, 2025",
     },
     {
-      image: "/images/assets/oil-industry.jpg",
+      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/oil-industry_aat83r.jpg",
       category: "Trade",
       title: "Nigeria's Non-Oil Exports Grow 35% Year-on-Year",
       excerpt:

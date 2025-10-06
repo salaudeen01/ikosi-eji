@@ -24,16 +24,16 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Categories</h4>
             <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))] ">
-              <li>
+              {/* <li>
                 <Link href="/category/market-news" className="hover:text-[hsl(var(--primary))] transition-colors">
                   Market News
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link href="/category/business" className="hover:text-[hsl(var(--primary))] transition-colors">
                   Business
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/category/economy" className="hover:text-[hsl(var(--primary))] transition-colors">
                   Economy
@@ -41,7 +41,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link href="/category/investing" className="hover:text-[hsl(var(--primary))] transition-colors">
-                  Investing
+                  Technology
                 </Link>
               </li>
             </ul>

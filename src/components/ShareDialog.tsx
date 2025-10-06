@@ -23,10 +23,10 @@ import { useToast } from "@/hooks/use-toast";
 interface ShareDialogProps {
   title: string;
   url: string;
-  image: string;
+  image?: string
 }
 
-const ShareDialog = ({ title, url, image }: ShareDialogProps) => {
+const ShareDialog = ({ title, url }: ShareDialogProps) => {
   const { toast } = useToast();
   const [fullUrl, setFullUrl] = useState<string>("");
 
@@ -42,10 +42,8 @@ const ShareDialog = ({ title, url, image }: ShareDialogProps) => {
 
   const encodedUrl = encodeURIComponent(fullUrl);
   const encodedTitle = encodeURIComponent(title);
-  const encodedImage = encodeURIComponent(image);
 
   const copyToClipboard = () => {
-    if (!fullUrl) return;
     navigator.clipboard.writeText(fullUrl);
     toast({
       title: "Link copied!",
@@ -54,31 +52,20 @@ const ShareDialog = ({ title, url, image }: ShareDialogProps) => {
   };
 
   const openShareWindow = (shareUrl: string) => {
-    if (typeof window !== "undefined") {
-      window.open(shareUrl, "_blank", "width=600,height=400");
-    }
+    window.open(shareUrl, "_blank", "width=600,height=400");
   };
 
-  // 🔗 Updated share URLs
   const shareToFacebook = () =>
-    openShareWindow(
-      `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
-    );
+    openShareWindow(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`);
 
   const shareToTwitter = () =>
-    openShareWindow(
-      `https://twitter.com/intent/tweet?text=${encodedTitle}%20${encodedUrl}%20${encodedImage}`
-    );
+    openShareWindow(`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`);
 
   const shareToLinkedIn = () =>
-    openShareWindow(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`
-    );
+    openShareWindow(`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`);
 
   const shareToWhatsApp = () =>
-    openShareWindow(
-      `https://wa.me/?text=${encodedTitle}%0A${encodedUrl}%0A${encodedImage}`
-    );
+    openShareWindow(`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`);
 
   return (
     <Dialog>
@@ -99,20 +86,16 @@ const ShareDialog = ({ title, url, image }: ShareDialogProps) => {
 
         <div className="grid grid-cols-2 gap-3">
           <Button onClick={shareToFacebook} variant="outline" className="w-full">
-            <Facebook className="h-4 w-4 mr-2" />
-            Facebook
+            <Facebook className="h-4 w-4 mr-2" /> Facebook
           </Button>
           <Button onClick={shareToTwitter} variant="outline" className="w-full">
-            <Twitter className="h-4 w-4 mr-2" />
-            Twitter
+            <Twitter className="h-4 w-4 mr-2" /> Twitter
           </Button>
           <Button onClick={shareToLinkedIn} variant="outline" className="w-full">
-            <Linkedin className="h-4 w-4 mr-2" />
-            LinkedIn
+            <Linkedin className="h-4 w-4 mr-2" /> LinkedIn
           </Button>
           <Button onClick={shareToWhatsApp} variant="outline" className="w-full">
-            <MessageCircle className="h-4 w-4 mr-2" />
-            WhatsApp
+            <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
           </Button>
         </div>
 
