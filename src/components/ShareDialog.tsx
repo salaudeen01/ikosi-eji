@@ -23,14 +23,13 @@ import { useToast } from "@/hooks/use-toast";
 interface ShareDialogProps {
   title: string;
   url: string;
-  image?: string;
+  image: string;
 }
 
-const ShareDialog = ({ title, url }: ShareDialogProps) => {
+const ShareDialog = ({ title, url, image }: ShareDialogProps) => {
   const { toast } = useToast();
   const [fullUrl, setFullUrl] = useState<string>("");
 
-  // ✅ Ensure window is available before accessing it
   useEffect(() => {
     if (typeof window !== "undefined") {
       const origin = window.location.origin;
@@ -41,15 +40,16 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
     }
   }, [url]);
 
-  const encodedTitle = encodeURIComponent(title);
   const encodedUrl = encodeURIComponent(fullUrl);
+  const encodedTitle = encodeURIComponent(title);
+  const encodedImage = encodeURIComponent(image);
 
   const copyToClipboard = () => {
     if (!fullUrl) return;
     navigator.clipboard.writeText(fullUrl);
     toast({
       title: "Link copied!",
-      description: "Article link has been copied to clipboard",
+      description: "Article link has been copied to clipboard.",
     });
   };
 
@@ -59,6 +59,7 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
     }
   };
 
+  // 🔗 Updated share URLs
   const shareToFacebook = () =>
     openShareWindow(
       `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
@@ -66,7 +67,7 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
 
   const shareToTwitter = () =>
     openShareWindow(
-      `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`
+      `https://twitter.com/intent/tweet?text=${encodedTitle}%20${encodedUrl}%20${encodedImage}`
     );
 
   const shareToLinkedIn = () =>
@@ -75,7 +76,9 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
     );
 
   const shareToWhatsApp = () =>
-    openShareWindow(`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`);
+    openShareWindow(
+      `https://wa.me/?text=${encodedTitle}%0A${encodedUrl}%0A${encodedImage}`
+    );
 
   return (
     <Dialog>
