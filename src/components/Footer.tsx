@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import React from 'react'
 
@@ -7,8 +8,13 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-bold text-[hsl(var(--primary))] mb-4">
-              EconoNetrics
+            <h3 className="text-xl font-bold text-[hsl(var(--primary))] mb-4 flex gap-1 items-center">
+            <img
+              src={'/images/assets/econo.png'}
+              alt={'logo'}
+              className="w-10 h-auto"
+            />
+            conoNetrics
             </h3>
             <p className="text-sm text-[hsl(var(--muted-foreground))] ">
               Nigeria&apos;s leading business and financial news platform. Stay

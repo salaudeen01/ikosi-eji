@@ -1,11 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Menu, Search, ChevronDown } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -36,9 +31,14 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/">
+            <Link href="/" className="flex items-center gap-1">
+              <img
+                src={'/images/assets/econo.png'}
+                alt={'logo'}
+                className="w-10 h-auto"
+              />
               <h1 className="text-2xl font-bold text-[hsl(var(--primary))] cursor-pointer hover:text-[hsl(var(--news-hover))] transition-colors">
-                EconoNetrics
+                conoNetrics
               </h1>
             </Link>
           </div>
