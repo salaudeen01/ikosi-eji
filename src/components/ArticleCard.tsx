@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useArticleStore } from "@/hooks/ArticleStore";
+import { useSimpleArticleStore } from "@/hooks/ArticleStore";
 
 interface ArticleCardProps {
   image: string;
@@ -23,7 +23,7 @@ const ArticleCard = ({
   featured = false,
 }: ArticleCardProps) => {
   const router = useRouter();
-  const { setArticle } = useArticleStore();
+  const { setArticle } = useSimpleArticleStore();
 
   const handleClick = () => {
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");

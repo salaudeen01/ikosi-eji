@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
 
 import { useEffect, useState } from "react";
 import Head from "next/head";
@@ -8,12 +7,12 @@ import ShareDialog from "@/components/ShareDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, User, Bookmark } from "lucide-react";
-import { useArticleStore } from "@/hooks/ArticleStore";
+import { useSimpleArticleStore } from "@/hooks/ArticleStore";
 
 const Article = () => {
   const [currentUrl, setCurrentUrl] = useState("");
   const [origin, setOrigin] = useState("");
-  const { article } = useArticleStore();
+  const { article } = useSimpleArticleStore();
 
   const articleData = article || {
     title: "Nigerian Economy Projected to Grow 3.8% in 2025 as Reforms Take Hold",

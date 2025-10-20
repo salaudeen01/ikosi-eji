@@ -1,23 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { SimpleArticle } from "../../type";
 
-interface Article {
-  image: string;
-  category: string;
-  title: string;
-  excerpt: string;
-  date: string;
-  author: string;
-}
+
 
 interface ArticleStore {
-  article: Article | null;
-  setArticle: (article: Article) => void;
+  article: SimpleArticle | null;
+  setArticle: (article: SimpleArticle) => void;
   clearArticle: () => void;
 }
 
 // Zustand store with persistence
-export const useArticleStore = create<ArticleStore>()(
+export const useSimpleArticleStore = create<ArticleStore>()(
   persist(
     (set) => ({
       article: null,
