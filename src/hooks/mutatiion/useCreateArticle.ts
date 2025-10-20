@@ -1,11 +1,10 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createArticle, fetchArticles, fetchCategories, patchCategory, updateCategory } from "@/api/admin";
+import { createArticle, fetchArticles, patchCategory, updateCategory } from "@/api/admin";
 import { useToast } from "@/hooks/use-toast";
-import { CreateArticlePayload, CreateCategoryPayload, FetchCategoriesResponse } from "../../../type";
+import { CreateArticlePayload, CreateCategoryPayload } from "../../../type";
 import { useRouter } from "next/navigation";
-import { useCategoryStore } from "@/store/useCategoryStore";
 import { useArticleStore } from "@/store/useArticleStore";
 
 interface ApiError {

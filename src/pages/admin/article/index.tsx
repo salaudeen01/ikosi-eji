@@ -38,12 +38,12 @@ const Index = () => {
 
   const {
     search,
-    status,
+    // status,
     page,
     setSearch,
-    setStatus,
+    // setStatus,
     setPage,
-    resetFilters,
+    // resetFilters,
   } = useArticleStore();
 
   const { data, isLoading, error } = useFetchArticle();

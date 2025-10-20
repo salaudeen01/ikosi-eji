@@ -79,7 +79,7 @@ export const useUpdateAdmin = ({ onSuccessCallback }: UseCreateAdminOptions = {}
 
 // ✅ FETCH ADMINS HOOK
 export const useFetchAdmins = () => {
-  const { page, search, setAdmins, setPagination } = useAdminStore();
+  const { setAdmins, setPagination } = useAdminStore(); // page, search, 
 
   return useQuery<FetchAdminsResponse>({
     queryKey: ["admins" ], // 👈 include pagination/search in key page, search

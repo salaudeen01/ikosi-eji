@@ -3,13 +3,13 @@ import Layout from '@/components/layout/shell'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useCreateAdmin, useFetchAdmins, useUpdateAdmin } from '@/hooks/mutatiion/useCreateAdmin'
-import { Crown, Edit, Search, Shield, ShieldOff, User, UserPlus } from 'lucide-react'
+import { Crown, Edit, Search, ShieldOff, User } from 'lucide-react'
 import React, { useState } from 'react'
 import { Admin, CreateAdminPayload } from '../../../../type'
 import { useAdminStore } from '@/store/useAdminStore'
@@ -17,7 +17,7 @@ import { useAuth } from '@/store/useAuth'
 
 const Index = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const { admins, page, total, nextPage, prevPage, setSearch } = useAdminStore();
+  const { admins } = useAdminStore();// page, total, nextPage, prevPage, setSearch
   const { isLoading, isError } = useFetchAdmins();
   const { user } = useAuth();
 

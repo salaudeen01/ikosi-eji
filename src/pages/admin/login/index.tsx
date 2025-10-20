@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,37 +24,37 @@ const Login = () => {
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth?mode=reset`,
-      });
-      if (error) throw error;
-      toast.success("Password reset link sent to your email!");
-      setIsForgotPassword(false);
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
-    } finally {
-      setLoading(false);
-    }
+    setSession('')
+    // try {
+    //   const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    //     redirectTo: `${window.location.origin}/auth?mode=reset`,
+    //   });
+    //   if (error) throw error;
+    //   toast.success("Password reset link sent to your email!");
+    //   setIsForgotPassword(false);
+    // } catch (error: any) {
+    //   toast.error(error.message || "An error occurred");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: password,
-      });
-      if (error) throw error;
-      toast.success("Password updated successfully!");
-      navigate("/");
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   const { error } = await supabase.auth.updateUser({
+    //     password: password,
+    //   });
+    //   if (error) throw error;
+    //   toast.success("Password updated successfully!");
+    //   navigate("/");
+    // } catch (error: any) {
+    //   toast.error(error.message || "An error occurred");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   if (session) {

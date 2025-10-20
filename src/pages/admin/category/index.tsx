@@ -20,7 +20,7 @@ const CategoryManager = () => {
   const { imageUrl, setImage } = useUploadStore();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const { categories, page, total, nextPage, prevPage, setSearch } = useCategoryStore();
+  const { categories } = useCategoryStore(); // page, total, nextPage, prevPage, setSearch
   const { isLoading, isError } = useFetchCategories();
 
   const [form, setForm] = useState<CreateCategoryPayload>({

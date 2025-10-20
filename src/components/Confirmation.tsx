@@ -2,7 +2,7 @@ import React from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog'
 import { OctagonAlert } from 'lucide-react'
 import { Button } from './ui/button'
-import { Category, CreateCategoryPayload } from '../../type'
+import { CreateCategoryPayload } from '../../type'
 
 type ConfirmProps = {
   open: boolean;

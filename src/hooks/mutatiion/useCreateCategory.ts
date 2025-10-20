@@ -107,7 +107,7 @@ export const usePatchCategory = ({ onSuccessCallback }: UseCreateCategoryOptions
 
 // ✅ FETCH ADMINS HOOK
 export const useFetchCategories = () => {
-  const { page, search, setCategories, setPagination } = useCategoryStore();
+  const { setCategories, setPagination } = useCategoryStore(); // page, search, 
 
   return useQuery<FetchCategoriesResponse>({
     queryKey: ["categories" ], // 👈 include pagination/search in key page, search

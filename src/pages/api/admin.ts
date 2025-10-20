@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../lib/db";
 import bcrypt from "bcryptjs";
