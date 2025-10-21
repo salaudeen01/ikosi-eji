@@ -139,7 +139,7 @@ const CategoryManager = () => {
                         />
                       </div>
 
-                      <div>
+                      {/* <div>
                         <Label htmlFor="slug">Slug</Label>
                         <Input
                           id="slug"
@@ -147,7 +147,7 @@ const CategoryManager = () => {
                           onChange={(e) => setForm({ ...form, slug: e.target.value })}
                           placeholder="Auto-generated from name"
                         />
-                      </div>
+                      </div> */}
 
                       <div>
                         <Label htmlFor="slug">Category Image</Label>
