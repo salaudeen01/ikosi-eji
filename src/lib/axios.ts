@@ -38,7 +38,7 @@ authApi.interceptors.response.use(
 
       // Redirect to login page safely (client only)
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
+        window.location.href = "/admin/login";
       }
     }
     return Promise.reject(error);
