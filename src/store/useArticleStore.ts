@@ -6,11 +6,13 @@ export const useArticleStore = create<ArticleFilterState>((set) => ({
   status: "",
   categoryId: undefined,
   adminId: undefined,
+  slug: "",
   startDate: undefined,
   endDate: undefined,
   page: 1,
   limit: 10,
 
+  setSlug: (slug) => set({ slug }),
   setSearch: (search) => set({ search, page: 1 }),
   setStatus: (status) => set({ status, page: 1 }),
   setCategory: (categoryId) => set({ categoryId, page: 1 }),

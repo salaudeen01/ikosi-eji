@@ -43,7 +43,7 @@ export default function UploadImageForm({imageFile }:UploadProps) {
       {(imageFile || imageUrl) && (
         <div className="mt-4">
           <img
-            src={imageFile || imageUrl || ''}
+            src={imageUrl || imageFile || ''}
             alt="Uploaded"
             className="w-40 h-40 object-cover rounded-lg"
           />

@@ -1,75 +1,37 @@
-import { persist } from "zustand/middleware";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { AuthState } from "../../type";
-
-// interface AuthState {
-//   token: string | null;
-//   setToken: (token: string) => void;
-//   clearToken: () => void;
-// }
-
-// export const useAuth = create<AuthState>((set) => ({
-//   token: null,
-//   setToken: (token) => {
-//     localStorage.setItem("token", token);
-//     set({ token });
-//   },
-//   clearToken: () => {
-//     localStorage.removeItem("token");
-//     set({ token: null });
-//   },
-// }));
-
-// export const useAuth = create<AuthState>((set) => ({
-//   token: null,
-//   user: null,
-//   setAuth: (token, user) => {
-//     set({ token, user });
-//     localStorage.setItem("token", token);
-//     localStorage.setItem("user", JSON.stringify(user));
-//   },
-//   logout: () => {
-//     set({ token: null, user: null });
-//     localStorage.removeItem("token");
-//     localStorage.removeItem("user");
-//   },
-// }));
-
-// src/store/useAuthStore.ts
-// import { create } from "zustand";
-
-// interface User {
-//   id: string;
-//   name: string;
-//   email: string;
-//   role: string;
-// }
-
-// interface AuthState {
-//   token: string | null;
-//   user: User | null;
-//   setAuth: (token: string, user: User) => void;
-//   logout: () => void;
-// }
 
 export const useAuth = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       token: null,
       user: null,
+      isAuthenticated: false,
 
+      // ✅ Set token and user, and automatically set isAuthenticated
       setAuth: (token, user) => {
-        set({ token, user });
+        set({
+          token,
+          user,
+          isAuthenticated: !!token && !!user,
+        });
       },
 
+      // ✅ Clear everything on logout
       logout: () => {
-        set({ token: null, user: null });
+        set({
+          token: null,
+          user: null,
+          isAuthenticated: false,
+        });
       },
     }),
     {
-      name: "auth-storage", // key name in localStorage
+      name: "auth-storage", // localStorage key
     }
   )
 );
+
 
 

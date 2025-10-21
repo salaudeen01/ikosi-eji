@@ -1,4 +1,6 @@
 // types/admin.ts
+import { RowDataPacket } from "mysql2";
+
   export interface Admin {
     id: string;
     name: string;
@@ -136,10 +138,16 @@
     limit: number;
     totalPages: number;
   }
+  export interface Stats {
+    total: number;
+    published: number;
+    draft: number;
+  }
   
   export interface FetchArticlesResponse {
     message: string;
     data: Article[];
+    stats: Stats
     pagination: Pagination;
   }
   
@@ -155,25 +163,27 @@
     limit?: number;
   }
 
-export interface ArticleFilterState {
-  search: string;
-  status: string;
-  categoryId?: number;
-  adminId?: number;
-  startDate?: string;
-  endDate?: string;
-  page: number;
-  limit: number;
+  export interface ArticleFilterState {
+    search: string;
+    status: string;
+    categoryId?: number;
+    adminId?: number;
+    slug: string;
+    startDate?: string;
+    endDate?: string;
+    page: number;
+    limit: number;
 
-  // Actions
-  setSearch: (search: string) => void;
-  setStatus: (status: string) => void;
-  setCategory: (categoryId?: number) => void;
-  setAdmin: (adminId?: number) => void;
-  setDateRange: (startDate?: string, endDate?: string) => void;
-  setPage: (page: number) => void;
-  resetFilters: () => void;
-}
+    // Actions
+    setSlug: (slug: string) =>void;
+    setSearch: (search: string) => void;
+    setStatus: (status: string) => void;
+    setCategory: (categoryId?: number) => void;
+    setAdmin: (adminId?: number) => void;
+    setDateRange: (startDate?: string, endDate?: string) => void;
+    setPage: (page: number) => void;
+    resetFilters: () => void;
+  }
 
   // src/type/index.ts
   export interface LoginPayload {
@@ -201,8 +211,158 @@ export interface ArticleFilterState {
   export interface AuthState {
     token: string | null;
     user: User | null;
+    isAuthenticated: boolean;
     setAuth: (token: string, user: User) => void;
     logout: () => void;
   }
 
+  export interface Article {
+    id: number;
+    title: string;
+    slug: string;
+    summary: string;
+    imageUrl: string;
+    videoUrl: string;
+    content: string;
+    type: string;
+    status: string;
+    categoryId: number;
+    shareNo: string;
+    viewNo: string;
+    createdAt: string;
+    categoryName: string;
+    adminName: string;
+  }
 
+  export interface FetchArticleResponse {
+    message: string;
+    data: {
+      article: Article;
+      related: Article[];
+    };
+  }
+  
+  // ✅ Category table
+  export interface ClientCategory extends RowDataPacket {
+    id: number;
+    name: string;
+    slug: string;
+    imageUrl: string | null;
+    description: string | null;
+    status?: string;
+  }
+  
+  // ✅ Article table
+  export interface ClientArticle extends RowDataPacket {
+    id: number;
+    title: string;
+    slug: string;
+    summary: string | null;
+    imageUrl: string | null;
+    content: string | null;
+    status: "draft" | "published" | "archived";
+    categoryId: number;
+    adminId: number;
+    createdAt: string;
+    updatedAt?: string;
+    type?: string;
+    videoUrl?: string | null;
+    shareNo?: number;
+    viewNo?: number;
+  }
+  
+  // ✅ Generic count result for COUNT(*)
+  export interface CountResult extends RowDataPacket {
+    total: number;
+  }
+  
+  // ✅ Stats for article dashboards
+  export interface ArticleStats extends RowDataPacket {
+    total: number;
+    published: number;
+    draft: number;
+  }
+  
+  // ✅ Example for location or pricing (optional, expand as needed)
+  export interface Location extends RowDataPacket {
+    id: number;
+    location_name: string;
+    status: string;
+  }
+  
+  export interface ArticleSummary {
+    id: number;
+    title: string;
+    slug: string;
+    summary: string;
+    imageUrl: string;
+    createdAt: string;
+  }
+  
+  export interface HomeCategory {
+    id: number;
+    name: string;
+    slug: string;
+    imageUrl: string;
+    articles: ArticleSummary[];
+  }
+  
+  export interface BreakingNews {
+    id: number;
+    title: string;
+    slug: string;
+    categoryName: string;
+    categorySlug: string;
+    imageUrl: string;
+  }
+  
+  export interface Banner {
+    id: number;
+    title: string;
+    slug: string;
+    categoryName: string;
+    categorySlug: string;
+    summary: string;
+    imageUrl: string;
+    createdAt: string;
+  }
+  
+  export interface HomeResponse {
+    message: string;
+    categories: HomeCategory[];
+    breakingNews: BreakingNews[];
+    banners: Banner[];
+  }
+
+  export interface RelatedArticle {
+    id: number;
+    title: string;
+    slug: string;
+    summary: string;
+    categoryName: string;
+    categorySlug: string;
+  }
+  
+  // export interface Article {
+  //   id: number;
+  //   title: string;
+  //   slug: string;
+  //   viewNo: string;
+  // }
+  
+  export interface ArticleViews {
+    total: number;
+    unique: number;
+  }
+
+  export interface DataCon {
+    article: Article;
+    related: RelatedArticle[];
+    views: ArticleViews;
+  }
+  
+  export interface ArticleResponse {
+    message: string;
+    data: DataCon;
+  }
+  

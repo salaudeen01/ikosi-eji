@@ -36,7 +36,6 @@ const CreateArticle = ({setSection, pageTitle, form, setForm, content, setConten
   //   setLoading(true);
   //   handleSubmit
   // };
-console.log(form?.categoryId)
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
@@ -58,7 +57,7 @@ console.log(form?.categoryId)
                 />
               </div>
 
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="slug">Slug (URL)</Label>
                 <Input
                   id="slug"
@@ -67,7 +66,7 @@ console.log(form?.categoryId)
                   required
                   placeholder="article-slug"
                 />
-              </div>
+              </div> */}
 
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
@@ -84,7 +83,7 @@ console.log(form?.categoryId)
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="excerpt">Excerpt</Label>
+                <Label htmlFor="excerpt">Summary</Label>
                 <Input
                   id="excerpt"
                   value={form?.summary}
@@ -138,9 +137,16 @@ console.log(form?.categoryId)
               </div> */}
 
               <div className="flex space-x-4">
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Saving..." : "Create Article"}
-                </Button>
+                {!form?.id &&
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading ? "Saving..." : "Create Article"}
+                  </Button>
+                }
+                {form?.id &&
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading ? "Saving..." : "Update Article"}
+                  </Button>
+                }
                 <Button
                   type="button"
                   variant="outline"

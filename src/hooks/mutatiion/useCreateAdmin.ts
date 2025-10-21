@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createAdmin, fetchAdmins, updateAdmin } from "@/api/admin";
+import { createAdmin, fetchAdmins, patchAdmin, updateAdmin } from "@/api/admin";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminStore } from "@/store/useAdminStore";
 import { CreateAdminPayload, FetchAdminsResponse } from "../../../type";
@@ -70,6 +70,34 @@ export const useUpdateAdmin = ({ onSuccessCallback }: UseCreateAdminOptions = {}
     onError: (error) => {
       toast({
         title: "Error updating admin",
+        description: error?.response?.data?.message || "Something went wrong",
+        variant: "destructive",
+      });
+    },
+  });
+};
+
+// ✅ UPDATE ADMIN HOOK
+export const usePatchAdmin = ({ onSuccessCallback }: UseCreateAdminOptions = {}) => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, ApiError, CreateAdminPayload>({
+    mutationFn: patchAdmin,
+    onSuccess: async (_, variables) => {
+      toast({
+        title: "Article updated successfully ✅",
+        description: `${variables.name} has been updated.`,
+      });
+
+      // 👇 refresh list after update too
+      await queryClient.invalidateQueries({ queryKey: ["admins"] });
+
+      if (onSuccessCallback) onSuccessCallback();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error updating article",
         description: error?.response?.data?.message || "Something went wrong",
         variant: "destructive",
       });

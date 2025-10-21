@@ -8,17 +8,21 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { useCreateAdmin, useFetchAdmins, useUpdateAdmin } from '@/hooks/mutatiion/useCreateAdmin'
+import { useCreateAdmin, useFetchAdmins, usePatchAdmin, useUpdateAdmin } from '@/hooks/mutatiion/useCreateAdmin'
 import { Crown, Edit, Search, ShieldOff, User } from 'lucide-react'
 import React, { useState } from 'react'
 import { Admin, CreateAdminPayload } from '../../../../type'
 import { useAdminStore } from '@/store/useAdminStore'
 import { useAuth } from '@/store/useAuth'
+import Confirmation from '@/components/Confirmation'
+import ArticleSkeleton from '@/components/ArticleSkeleton'
+import { ErrorState } from '@/components/ui/error-state'
 
 const Index = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { admins } = useAdminStore();// page, total, nextPage, prevPage, setSearch
-  const { isLoading, isError } = useFetchAdmins();
+  const [open, setOpen] = useState(false);
+  const { isLoading, isError, refetch } = useFetchAdmins();
   const { user } = useAuth();
 
   const [form, setForm] = useState<CreateAdminPayload>({
@@ -45,6 +49,13 @@ const Index = () => {
     },
   });
 
+  const patchMutation = usePatchAdmin({
+    onSuccessCallback: () =>{ 
+      setOpen(false);
+      setForm({...form, name: '', email: '', password: '', phone:'', role:'', status:''});
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createAdminMutation.mutate(form);
@@ -53,6 +64,11 @@ const Index = () => {
   const handleSubmitEdit = (e: React.FormEvent) => {
     e.preventDefault();
     updateAdminMutation.mutate(form);
+  };
+
+  const handleSubmitDelete = async (e: React.FormEvent) => {
+    e.preventDefault();
+    patchMutation.mutate(form);
   };
 
   const onClose =()=>{
@@ -64,6 +80,11 @@ const Index = () => {
     setForm({...form, email: e.email, name: e.name, role: e.role, id: e.id, phone: e.phone})
     setDialogOpen(true)
   }
+  const handleDelete = async (e: Admin, b:string) => {
+    console.log(b)
+    setForm({...form, email: e.email, name: e.name, role: e.role, id: e.id, phone: e.phone, status: b})
+    setOpen(true)
+  };
 
   const users = [
     {
@@ -89,8 +110,13 @@ const Index = () => {
     },
   ];
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Failed to load admins</p>;
+  if (isLoading) return <ArticleSkeleton />;
+  if (isError) return (
+    <ErrorState
+      message="Failed to fetch article details."
+      onRetry={() => refetch()}
+    />
+  );
 
   return (
     <Layout>
@@ -180,7 +206,7 @@ const Index = () => {
                       <SelectContent>
                         <SelectItem value="admin">Admin</SelectItem>
                         <SelectItem value="publisher">Publisher</SelectItem>
-                        <SelectItem value="Editor">Editor</SelectItem>
+                        <SelectItem value="editor">Editor</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -252,15 +278,15 @@ const Index = () => {
                       </TableCell>
                         {user?.role === "admin" && (
                           <TableCell className="text-right flex gap-1">
-                              <Button
-                                variant={admin.status === 'active' ? "destructive":'default'}
-                                size="sm"
-                                // onClick={() => handleRevokeAdmin(admin.id)}
-                                // disabled={admin.id === session?.admin.id}
-                              >
-                                <ShieldOff className="h-4 w-4 mr-2" />
-                                {admin.status === 'active' ? 'Revoke Admin': 'Grant Admin'}
-                              </Button>
+                            <Button
+                              variant={admin.status === 'active' ? "destructive":'default'}
+                              size="sm"
+                              onClick={() => handleDelete(admin, admin.status === 'active' ? "archived":'active')}
+                              // disabled={admin.id === session?.admin.id}
+                            >
+                              <ShieldOff className="h-4 w-4 mr-2" />
+                              {admin.status === 'active' ? 'Revoke Admin': 'Grant Admin'}
+                            </Button>
                             {/* // ) : (
                             //   <Button
                             //     variant="default"
@@ -289,6 +315,8 @@ const Index = () => {
           )}
         </CardContent>
       </Card>
+
+<     Confirmation name={form?.name} status="delete" open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
     </Layout>
   )
 }

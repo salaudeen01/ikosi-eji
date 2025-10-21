@@ -30,34 +30,36 @@ interface JwtPayload {
   email: string;
 }
 
-async function isAdmin(req: NextApiRequest): Promise<{ isAdmin: boolean; userId?: number }> {
+async function isAdmin(
+  req: NextApiRequest
+): Promise<{ isAdmin: boolean; userId?: number, adminType?: string }> {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!authHeader?.startsWith("Bearer ")) {
     return { isAdmin: false };
   }
 
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as JwtPayload;
 
     if (decoded.role !== "admin") {
       return { isAdmin: false };
     }
 
-    // Optionally confirm in DB that user is still active
     const [rows] = await db.query<User[]>(
-      "SELECT id FROM users WHERE id = ? AND status = ? AND role = ?",
-      [decoded.id, "active", "admin"]
+      "SELECT id FROM admin WHERE id = ? AND status = ?",
+      [decoded.id, "active"]
     );
 
-    if (!rows.length) {
-      return { isAdmin: false };
-    }
+    if (!rows.length) return { isAdmin: false };
 
-    return { isAdmin: true, userId: decoded.id };
-  } catch (error) {
+    return { isAdmin: true, userId: decoded.id, adminType: decoded.role };
+  } catch {
     return { isAdmin: false };
   }
 }

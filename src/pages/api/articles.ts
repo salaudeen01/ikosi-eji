@@ -1,9 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../lib/db";
+import slugify from "slugify";
 import jwt from "jsonwebtoken";
 import { RowDataPacket } from "mysql2";
 
 // ✅ DB Model
+interface Stats extends RowDataPacket {
+  total: number;
+  published: number;
+  draft: number;
+}
+
 interface Article {
   id: number;
   title: string;
@@ -25,6 +32,7 @@ interface ApiResponse {
   data?: Article[];
   id?: number;
   userId?: number;
+  stats?: Stats;
   pagination?: {
     total: number;
     page: number;
@@ -67,9 +75,9 @@ async function isAdmin(
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 
-    // if (decoded.role !== "admin") {
-    //   return { isAdmin: false };
-    // }
+    if (decoded.role === "") {
+      return { isAdmin: false };
+    }
 
     const [rows] = await db.query<User[]>(
       "SELECT id FROM admin WHERE id = ? AND status = ?",
@@ -204,6 +212,15 @@ export default async function handler(
       const [rows] = await db.query(query, params);
       const articles = rows as Article[];
 
+      // ✅ Stats query
+        const [[stats]] = await db.query<Stats[]>(`
+          SELECT
+            COUNT(*) AS total,
+            SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS published,
+            SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) AS draft
+          FROM articles
+        `);
+
       return res.status(200).json({
         message: "Articles fetched successfully",
         data: articles,
@@ -213,6 +230,7 @@ export default async function handler(
           limit: pageSize,
           totalPages: Math.ceil(total / pageSize),
         },
+        stats, // ✅ Added stats to response
       });
     } catch (err) {
       console.error("Error fetching articles:", err);
@@ -226,18 +244,16 @@ export default async function handler(
   if (req.method === "POST") {
     const { isAdmin: adminCheck, userId: adminId, adminType } = await isAdmin(req);
 
-    console.log(adminCheck, adminId, adminType)
-
-    // if (!adminCheck || !adminId) {
-    //   return res
-    //     .status(403)
-    //     .json({ message: "Unauthorized: Admin access required" });
-    // }
+    if (!adminCheck || !adminId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized: Admin access required" });
+    }
 
     const {
       title,
       summary,
-      slug,
+      type,
       imageUrl,
       categoryId,
       content,
@@ -245,7 +261,7 @@ export default async function handler(
     } = req.body as {
       title?: string;
       summary?: string;
-      slug?: string;
+      type?: string;
       imageUrl?: string;
       categoryId?: number;
       content?: string;
@@ -261,13 +277,26 @@ export default async function handler(
     try {
       const now = new Date();
 
+    // ✅ Generate slug from title
+      let slug = slugify(title, { lower: true, strict: true });
+
+      // ✅ Check for duplicate slug
+      const [existing] = await db.query<RowDataPacket[]>(
+        "SELECT id FROM articles WHERE slug = ?",
+        [slug]
+      );
+      if (existing.length > 0) {
+        slug = `${slug}-${Date.now()}`; // append timestamp to make it unique
+      }
+
       const [result] = await db.query(
-        "INSERT INTO articles (title, summary, imageUrl, slug, content, categoryId, videoUrl, adminId, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO articles (title, summary, imageUrl, slug, type, content, categoryId, videoUrl, adminId, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           title,
           summary || null,
           imageUrl || null,
           slug || null,
+          type || null,
           content || null,
           categoryId,
           videoUrl || null,
@@ -291,16 +320,25 @@ export default async function handler(
   }
 
   if (req.method === "PATCH") {
-    const { id } = req.body as { id?: number };
+    const { isAdmin: adminCheck, userId: adminId, adminType } = await isAdmin(req);
+
+    if (!adminCheck || !adminId || adminType === 'editor') {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized: Admin access required" });
+    }
+    console.log(adminType)
+    const { id, status } = req.body as { id?: number, status?: string };
+
 
     if (!id) {
-      return res.status(400).json({ message: "Article ID is required" });
+      return res.status(400).json({ message: `"Article ID is required` });
     }
 
     try {
       const [result] = await db.query(
         "UPDATE articles SET status = ? WHERE id = ?",
-        ["archived", id]
+        [status, id]
       );
 
       const updateResult = result as { affectedRows: number };
@@ -310,7 +348,7 @@ export default async function handler(
       }
 
       return res.status(200).json({
-        message: "Article deleted successfully",
+        message: `Article ${status} successfully`,
         userId: id,
       });
     } catch (err) {
@@ -322,36 +360,92 @@ export default async function handler(
   }
 
   if (req.method === "PUT") {
-    const { id, title, summary, slug, imageUrl } = req.body as {
+    const { isAdmin: adminCheck, userId: adminId } = await isAdmin(req);
+
+    if (!adminCheck || !adminId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized: Admin access required" });
+    }
+    const {
+      id,
+      title,
+      summary,
+      type,
+      imageUrl,
+      categoryId,
+      content,
+      videoUrl,
+    } = req.body as {
       id?: number;
       title?: string;
+      type?: string;
       summary?: string;
-      slug?: string;
       imageUrl?: string;
+      categoryId?: number;
+      content?: string;
+      videoUrl?: string;
     };
-
+  
     if (!id || !title) {
       return res.status(400).json({
         message: "Missing required fields (id, title)",
       });
     }
-
+  
     try {
-      await db.query(
-        "UPDATE articles SET title = ?, summary = ?, slug = ?, imageUrl = ? WHERE id = ?",
-        [title, summary || null, slug || null, imageUrl || null, id]
-      );
 
+        // ✅ Generate slug from title
+        let slug = slugify(title, { lower: true, strict: true });
+
+        // ✅ Check for duplicate slug
+        const [existing] = await db.query<RowDataPacket[]>(
+          "SELECT id FROM articles WHERE slug = ?",
+          [slug]
+        );
+        if (existing.length > 0) {
+          slug = `${slug}-${Date.now()}`; // append timestamp to make it unique
+        }
+      
+      await db.query(
+        `
+        UPDATE articles
+        SET 
+          title = ?, 
+          summary = ?, 
+          slug = ?, 
+          categoryId = ?, 
+          content = ?, 
+          videoUrl = ?, 
+          type = ?, 
+          imageUrl = ?
+        WHERE id = ?
+        `,
+        [
+          title,
+          summary || null,
+          slug || null,
+          categoryId || null,
+          content || null,
+          videoUrl || null,
+          type || null,
+          imageUrl || null,
+          id,
+        ]
+      );
+  
       return res.status(200).json({
         message: "Article updated successfully",
       });
     } catch (err) {
+      console.error("Error updating article:", err);
       return res.status(500).json({
         message: "Error updating article",
         error: err instanceof Error ? err.message : "Unknown error",
       });
     }
   }
+  
 
   res.status(405).json({ message: "Method Not Allowed" });
 }

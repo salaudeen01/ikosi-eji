@@ -1,29 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
+import { Category } from "@/api/clients";
 import { Button } from "@/components/ui/button";
 import { Menu, Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 interface NavItem {
-  label: string;
+  label?: string;
   href?: string;
   children?: { label: string; href: string }[];
+  categories: Category[];
 }
 
-const Navigation = () => {
+const Navigation = ({categories}: NavItem) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const navItems: NavItem[] = [
-    { label: "Home", href: "/" },
-    {
-      label: "Economy",
-      href: "/category/economy",
-    },
-    {
-      label: "Tech Sector",
-      href: "/category/tech-sector",
-    },
-  ];
 
   return (
     <nav className="bg-[hsl(var(--background))] border-b border-[hsl(var(--border))] sticky top-0 z-50">
@@ -45,13 +35,13 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
-            {navItems.map((item) =>
-              <Link key={item.label} href={item.href || "#"}>
+            {categories.map((item) =>
+              <Link key={item.name} href={`/category/${item.slug}` || "#"}>
                 <Button
                   variant="ghost"
                   className="text-sm font-medium text-[hsl(var(--foreground))] hover:text-[hsl(var(--primary))] hover:bg-transparent"
                 >
-                  {item.label}
+                  {item.name}
                 </Button>
               </Link>
             )}
@@ -80,33 +70,14 @@ const Navigation = () => {
         {isMenuOpen && (
           <div className="lg:hidden py-4 border-t border-[hsl(var(--border))]">
             <div className="flex flex-col space-y-3">
-              {navItems.map((item) =>
-                item.children ? (
-                  <div key={item.label} className="space-y-2">
-                    <div className="text-sm font-semibold text-[hsl(var(--foreground))]">
-                      {item.label}
-                    </div>
-                    <div className="pl-4 space-y-2">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href}
-                          className="block text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--primary))] transition-colors"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <Link
-                    key={item.label}
-                    href={item.href || "#"}
-                    className="text-sm font-medium text-[hsl(var(--foreground))] hover:text-[hsl(var(--primary))] transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                )
+              {categories.map((item) =>
+                <Link
+                  key={item.name}
+                  href={`/category/${item.slug}` || "#"}
+                  className="text-sm font-medium text-[hsl(var(--foreground))] hover:text-[hsl(var(--primary))] transition-colors"
+                >
+                  {item.name}
+                </Link>
               )}
             </div>
           </div>

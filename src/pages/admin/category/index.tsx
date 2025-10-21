@@ -14,6 +14,9 @@ import { useCreateCategory, useFetchCategories, usePatchCategory, useUpdateCateg
 import { useCategoryStore } from "@/store/useCategoryStore";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Confirmation from "@/components/Confirmation";
+import ArticleSkeleton from "@/components/ArticleSkeleton";
+import { ErrorState } from "@/components/ui/error-state";
+import EmptyState from "@/components/EmptyState";
 
 
 const CategoryManager = () => {
@@ -21,7 +24,7 @@ const CategoryManager = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const { categories } = useCategoryStore(); // page, total, nextPage, prevPage, setSearch
-  const { isLoading, isError } = useFetchCategories();
+  const { isLoading, isError, refetch } = useFetchCategories();
 
   const [form, setForm] = useState<CreateCategoryPayload>({
     name: "",
@@ -78,9 +81,11 @@ const CategoryManager = () => {
     setDialogOpen(true)
     setImage(category.imageUrl)
   };
+
   const onClose =()=>{
     setDialogOpen(false);
     setForm({...form, name: '', slug: '', imageUrl: '', status:'', description:'', id:''});
+    setImage('')
   }
 
   const handleDelete = async (e: CreateCategoryPayload) => {
@@ -88,8 +93,15 @@ const CategoryManager = () => {
     setOpen(true)
   };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Failed to load admins</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (isError) return <p>Failed to load admins</p>;
+  if (isLoading) return <ArticleSkeleton />;
+  if (isError) return (
+    <ErrorState
+      message="Failed to fetch article details."
+      onRetry={() => refetch()}
+    />
+  );
 
   return (
     <Layout>
@@ -178,7 +190,7 @@ const CategoryManager = () => {
                   {isLoading ? (
                     <p>Loading...</p>
                   ) : categories.length === 0 ? (
-                    <p className="text-muted-foreground">No categories yet. Create one to get started.</p>
+                    <EmptyState /> 
                   ) : (
                     <div className="space-y-4 lg:space-y-0 lg:grid grid-cols-2 gap-4">
                       {categories.map((category) => (
@@ -223,7 +235,7 @@ const CategoryManager = () => {
           </div>
         </div>
 
-        <Confirmation data={form} open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
+        <Confirmation name={form?.name} status="delete" open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
       </div>
     </Layout>
   );

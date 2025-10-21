@@ -3,40 +3,25 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSimpleArticleStore } from "@/hooks/ArticleStore";
+import { Article } from "@/api/clients";
 
 interface ArticleCardProps {
-  image: string;
-  category: string;
-  title: string;
-  excerpt: string;
-  date: string;
+  category?: string;
   featured?: boolean;
+  data: Article
 }
 
 const ArticleCard = ({
-  image,
   category,
-  title,
-  excerpt,
-  date,
   featured = false,
+  data
 }: ArticleCardProps) => {
   const router = useRouter();
-  const { setArticle } = useSimpleArticleStore();
-
   const handleClick = () => {
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    setArticle({
-      image,
-      category,
-      title,
-      excerpt,
-      date,
-      author: "Editorial Team",
-    });
-    router.push(`/${category}/article/1/${slug}`);
+    router.push(`/${category}/article/1/${data?.slug}`);
   };
+
+  // console.log(featured)
 
   if (featured) {
     return (
@@ -46,8 +31,8 @@ const ArticleCard = ({
       >
         <div className="relative h-[500px] overflow-hidden">
           <img
-            src={image}
-            alt={title}
+            src={data?.imageUrl || ''}
+            alt={data?.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
@@ -56,12 +41,12 @@ const ArticleCard = ({
               {category}
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-3 leading-tight">
-              {title}
+              {data?.title}
             </h2>
-            <p className="text-lg text-white/90 mb-4 line-clamp-2">{excerpt}</p>
+            <p className="text-lg text-white/90 mb-4 line-clamp-2">{data?.summary}</p>
             <div className="flex items-center text-sm text-white/80">
               <Calendar className="h-4 w-4 mr-2" />
-              {date}
+              {data?.createdAt}
             </div>
           </div>
         </div>
@@ -76,8 +61,8 @@ const ArticleCard = ({
     >
       <div className="relative h-48 overflow-hidden">
         <img
-          src={image}
-          alt={title}
+          src={data?.imageUrl || ''}
+          alt={data?.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
@@ -86,14 +71,14 @@ const ArticleCard = ({
           {category}
         </Badge>
         <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-[hsl(var(--primary))] transition-colors">
-          {title}
+          {data?.title}
         </h3>
         <p className="text-sm text-[hsl(var(--muted-foreground))] mb-3 line-clamp-2">
-          {excerpt}
+          {data?.summary}
         </p>
         <div className="flex items-center text-xs text-[hsl(var(--muted-foreground))]">
           <Calendar className="h-3 w-3 mr-1" />
-          {date}
+          {new Date(data.createdAt).toDateString()}
         </div>
       </CardContent>
     </Card>

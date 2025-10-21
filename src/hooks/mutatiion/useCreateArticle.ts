@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createArticle, fetchArticles, patchCategory, updateCategory } from "@/api/admin";
+import { createArticle, fetchArticleBySlug, fetchArticles, patchArticle, patchCategory, updateArticle, updateCategory } from "@/api/admin";
 import { useToast } from "@/hooks/use-toast";
 import { CreateArticlePayload, CreateCategoryPayload } from "../../../type";
 import { useRouter } from "next/navigation";
@@ -15,12 +15,12 @@ interface ApiError {
   };
 }
 
-interface UseCreateCategoryOptions {
+interface UseCreateOptions {
   onSuccessCallback?: () => void;
 }
 
 // ✅ CREATE ADMIN HOOK
-export const useCreateArticle = ({ onSuccessCallback }: UseCreateCategoryOptions = {}) => {
+export const useCreateArticle = ({ onSuccessCallback }: UseCreateOptions = {}) => {
   const { toast } = useToast();
   const router = useRouter();
   const queryClient = useQueryClient(); // 👈 access React Query cache
@@ -50,20 +50,20 @@ export const useCreateArticle = ({ onSuccessCallback }: UseCreateCategoryOptions
 };
 
 // ✅ UPDATE ADMIN HOOK
-export const useUpdateCategory = ({ onSuccessCallback }: UseCreateCategoryOptions = {}) => {
+export const useUpdateArticle = ({ onSuccessCallback }: UseCreateOptions = {}) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, ApiError, CreateCategoryPayload>({
-    mutationFn: updateCategory,
+  return useMutation<unknown, ApiError, CreateArticlePayload>({
+    mutationFn: updateArticle,
     onSuccess: async (_, variables) => {
       toast({
         title: "Category updated successfully ✅",
-        description: `${variables.name} has been updated.`,
+        description: `${variables.title} has been updated.`,
       });
 
       // 👇 refresh list after update too
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      await queryClient.invalidateQueries({ queryKey: ["articles"] });
 
       if (onSuccessCallback) onSuccessCallback();
     },
@@ -78,26 +78,26 @@ export const useUpdateCategory = ({ onSuccessCallback }: UseCreateCategoryOption
 };
 
 // ✅ UPDATE ADMIN HOOK
-export const usePatchCategory = ({ onSuccessCallback }: UseCreateCategoryOptions = {}) => {
+export const usePatchArticle = ({ onSuccessCallback }: UseCreateOptions = {}) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, ApiError, CreateCategoryPayload>({
-    mutationFn: patchCategory,
+  return useMutation<unknown, ApiError, CreateArticlePayload>({
+    mutationFn: patchArticle,
     onSuccess: async (_, variables) => {
       toast({
-        title: "Category updated successfully ✅",
-        description: `${variables.name} has been updated.`,
+        title: "Article updated successfully ✅",
+        description: `${variables.title} has been updated.`,
       });
 
       // 👇 refresh list after update too
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      await queryClient.invalidateQueries({ queryKey: ["articles"] });
 
       if (onSuccessCallback) onSuccessCallback();
     },
     onError: (error) => {
       toast({
-        title: "Error updating category",
+        title: "Error updating article",
         description: error?.response?.data?.message || "Something went wrong",
         variant: "destructive",
       });
@@ -126,15 +126,12 @@ export const useFetchArticle = () => {
     });
 };
 
-// const filters: Record<string, string | number | null> = {
-//     slug: params.slug ?? null,
-//     search: params.search ?? null,
-//     status: params.status ?? null,
-//     categoryId: params.categoryId ?? null,
-//     adminId: params.adminId ?? null,
-//     startDate: params.startDate ?? null,
-//     endDate: params.endDate ?? null,
-//     page: params.page ?? 1,
-//     limit: params.limit ?? 10,
-//   };
+export const useArticle = () => {
+  const { slug } = useArticleStore();
 
+  return useQuery({
+    queryKey: ["article", slug],
+    queryFn: () => fetchArticleBySlug(slug!),
+    enabled: !!slug, // only run if slug is set
+  });
+};

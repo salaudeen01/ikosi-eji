@@ -1,18 +1,11 @@
 import { ChevronRight } from "lucide-react";
 import ArticleCard from "./ArticleCard";
 import Link from "next/link";
-
-interface Article {
-  image: string;
-  category: string;
-  title: string;
-  excerpt: string;
-  date: string;
-}
+import { ArticleSummary } from "../../type";
 
 interface CategorySectionProps {
   title: string;
-  articles: Article[];
+  articles: ArticleSummary[];
   categorySlug: string;
 }
 
@@ -32,7 +25,7 @@ const CategorySection = ({ title, articles, categorySlug }: CategorySectionProps
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article, index) => (
-          <ArticleCard key={index} {...article} category={categorySlug} />
+          <ArticleCard key={index} data={article} category={categorySlug} />
         ))}
       </div>
     </section>

@@ -3,9 +3,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createCategory, fetchCategories, patchCategory, updateCategory } from "@/api/admin";
 import { useToast } from "@/hooks/use-toast";
-import { CreateCategoryPayload, FetchCategoriesResponse } from "../../../type";
+import { ClientCategory, CreateCategoryPayload, FetchCategoriesResponse } from "../../../type";
 import { useRouter } from "next/navigation";
 import { useCategoryStore } from "@/store/useCategoryStore";
+import { fetchNavbar } from "@/api/clients";
 
 interface ApiError {
   response?: {

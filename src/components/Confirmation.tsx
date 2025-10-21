@@ -2,28 +2,34 @@ import React from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog'
 import { OctagonAlert } from 'lucide-react'
 import { Button } from './ui/button'
-import { CreateCategoryPayload } from '../../type'
+// import { CreateArticlePayload, CreateCategoryPayload } from '../../type'
 
 type ConfirmProps = {
   open: boolean;
+  name?: string;
+  status?: string;
   onClose: ()=>void;
   onSubmit: (e: React.FormEvent) => void | Promise<void>;
-  data: CreateCategoryPayload
+  // data: CreateCategoryPayload | CreateArticlePayload
 }
 
-const Confirmation = ({open, onClose, data, onSubmit}: ConfirmProps) => {
+const Confirmation = ({open, onClose, name, status, onSubmit}: ConfirmProps) => {
   return (
     <div>
       <Dialog open={open} onOpenChange={onClose}>
         <DialogContent>
           <DialogHeader>
             <DialogDescription className='text-center'>
-              <OctagonAlert className='mx-auto mb-4 h-14 w-14 text-red-400' />
-              <DialogTitle>Are you sure you want to delete</DialogTitle>
-              {data?.name}
+              <OctagonAlert className={`mx-auto mb-4 h-14 w-14 ${status === 'draft'? 'text-[hsl(var(--primary))]': 'text-red-400'}`} />
+              {status === 'delete' && 
+                <DialogTitle>Are you sure you want to delete this <br /> <br /> {name} </DialogTitle>
+              }
+              {status !== 'delete' &&
+                <DialogTitle>Are you sure you want to move this <br /> <br /> {name} <br /> <br /> {status === 'draft' ? 'publish': 'draft'} </DialogTitle>
+              }
             </DialogDescription>
             <div className='py-5 flex gap-4'>
-              <Button variant={`destructive`} onClick={onSubmit} className='w-full'>
+              <Button variant={status === 'draft' ?`default`:`destructive`} onClick={onSubmit} className='w-full'>
                 {`Yes, I'm sure`}
               </Button>
               <Button type="button" variant="outline" onClick={onClose} className='w-full'>

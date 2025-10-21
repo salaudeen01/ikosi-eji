@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../lib/db";
+import slugify from "slugify";
+import { RowDataPacket } from "mysql2";
 
 // id	name	slug	imageUrl	description	status	createdAt	updatedAt	
 
@@ -64,10 +66,9 @@ export default async function handler(
   }
 
   if (req.method === "POST") {
-    const { name, description, slug, imageUrl } = req.body as {
+    const { name, description, imageUrl } = req.body as {
       name?: string;
       description?: string;
-      slug: string | null;
       imageUrl: string | null;
       createdAt: string;
     };
@@ -80,6 +81,19 @@ export default async function handler(
     }
 
     try {
+
+      // ✅ Generate slug from title
+      let slug = slugify(name, { lower: true, strict: true });
+
+      // ✅ Check for duplicate slug
+      const [existing] = await db.query<RowDataPacket[]>(
+        "SELECT id FROM articles WHERE slug = ?",
+        [slug]
+      );
+      if (existing.length > 0) {
+        slug = `${slug}-${Date.now()}`; // append timestamp to make it unique
+      }
+
       const [result] = await db.query(
         "INSERT INTO categories (name, description, imageUrl, slug, createdAt) VALUES (?, ?, ?, ?, ?)",
         [name, description || null, imageUrl, slug, now]
@@ -131,12 +145,11 @@ export default async function handler(
   }
 
   if (req.method === "PUT") {
-    const { id, name, description, slug, imageUrl } = req.body as {
+    const { id, name, description, imageUrl } = req.body as {
       id?: number;
       desc?: string;
       name?: string;
       description?: string;
-      slug: string | null;
       imageUrl: string | null;
     };
 
@@ -147,6 +160,19 @@ export default async function handler(
     }
 
     try {
+
+      // ✅ Generate slug from title
+      let slug = slugify(name, { lower: true, strict: true });
+
+      // ✅ Check for duplicate slug
+      const [existing] = await db.query<RowDataPacket[]>(
+        "SELECT id FROM articles WHERE slug = ?",
+        [slug]
+      );
+      if (existing.length > 0) {
+        slug = `${slug}-${Date.now()}`; // append timestamp to make it unique
+      }
+
       await db.query(
         "UPDATE categories SET name = ?, description = ?, slug = ?, imageUrl = ? WHERE id = ?",
         [name, description || null, slug || null, imageUrl || null, id]

@@ -1,5 +1,5 @@
 import { authApi } from "@/lib/axios";
-import { ArticleQueryParams, CreateAdminPayload, CreateArticlePayload, CreateCategoryPayload, FetchAdminsResponse, FetchArticlesResponse, FetchCategoriesResponse } from "../../type";
+import { ArticleQueryParams, CreateAdminPayload, CreateArticlePayload, CreateCategoryPayload, FetchAdminsResponse, FetchArticleResponse, FetchArticlesResponse, FetchCategoriesResponse } from "../../type";
 
 
 
@@ -10,6 +10,11 @@ export const createAdmin = async (payload: CreateAdminPayload) => {
 
 export const updateAdmin = async (payload: CreateAdminPayload) => {
     const { data } = await authApi.put("/api/admin", payload);
+    return data;
+  };
+
+  export const patchAdmin = async (payload: CreateAdminPayload) => {
+    const { data } = await authApi.patch("/api/admin", payload);
     return data;
   };
 
@@ -62,15 +67,15 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
     return data;
   };
   
-    // export const updateCategory = async (payload: CreateCategoryPayload) => {
-    //   const { data } = await authApi.put("/api/categories", payload);
-    //   return data;
-    // };
+    export const updateArticle = async (payload: CreateArticlePayload) => {
+      const { data } = await authApi.put("/api/articles", payload);
+      return data;
+    };
   
-    // export const patchCategory = async (payload: CreateCategoryPayload) => {
-    //   const { data } = await authApi.patch("/api/categories", payload);
-    //   return data;
-    // };
+    export const patchArticle = async (payload: CreateArticlePayload) => {
+      const { data } = await authApi.patch("/api/articles", payload);
+      return data;
+    };
   
     export const fetchArticles = async (
         params: ArticleQueryParams,
@@ -80,3 +85,12 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
     );
         return response.data;
       };
+
+
+    export const fetchArticleBySlug = async (slug: string): Promise<FetchArticleResponse> => {
+      const response = await authApi.get<FetchArticleResponse>(`/api/articles`, {
+        params: { slug },
+      });
+      return response.data;
+    };
+

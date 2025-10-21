@@ -6,23 +6,30 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Calendar, Eye, FilePlus, FileText, Pencil, Search, Trash2 } from 'lucide-react'
+import { Calendar, CheckCheck, Eye, FilePlus, FileText, Pencil, Search, Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
 import { Article, CreateArticlePayload } from '../../../../type'
-import { useCreateArticle, useFetchArticle } from '@/hooks/mutatiion/useCreateArticle'
+import { useCreateArticle, useFetchArticle, usePatchArticle, useUpdateArticle } from '@/hooks/mutatiion/useCreateArticle'
 import { useUploadStore } from '@/store/useUploadStore'
 import { useArticleStore } from '@/store/useArticleStore'
 import { useSimpleArticleStore } from '@/hooks/ArticleStore'
 import { useRouter } from 'next/navigation'
+import Confirmation from '@/components/Confirmation'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useAuth } from '@/store/useAuth'
+import ArticleSkeleton from '@/components/ArticleSkeleton'
+import { ErrorState } from '@/components/ui/error-state'
 
 const Index = () => {
 
   const { imageUrl, setImage } = useUploadStore();
   const [content, setContent] = useState("");
   const [seValue, setSeValue] = useState("");
+  const [open, setOpen] = useState(false);
   const [section, setSection] = useState('main');
   const { setArticle } = useSimpleArticleStore();
   const router = useRouter();
+  const { user } = useAuth();
   const [form, setForm] = useState<CreateArticlePayload>({
     title: "",
     slug: "",
@@ -37,13 +44,13 @@ const Index = () => {
   });
 
   const {
-    search,
-    // status,
+    // search,
+    status,
     page,
     setSearch,
-    // setStatus,
+    setStatus,
     setPage,
-    // resetFilters,
+    resetFilters,
   } = useArticleStore();
 
   const { data, isLoading, error } = useFetchArticle();
@@ -51,7 +58,24 @@ const Index = () => {
   const createAMutation = useCreateArticle({
     onSuccessCallback: () =>{ 
       setSection('main');
-      setForm({...form, title: '', slug: '', imageUrl: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
+      setForm({...form, title: '', slug: '', imageUrl: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
+      setImage('')
+      setContent('')
+    },
+  });  
+  const updateMutation = useUpdateArticle({
+    onSuccessCallback: () =>{ 
+      setSection('main');
+      setForm({...form, title: '', slug: '', imageUrl: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
+      setImage('')
+      setContent('')
+    },
+  });
+  const patchMutation = usePatchArticle({
+    onSuccessCallback: () =>{ 
+      setSection('main');
+      setOpen(false)
+      setForm({...form, title: '', slug: '', imageUrl: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
       setImage('')
       setContent('')
     },
@@ -77,12 +101,35 @@ const Index = () => {
     createAMutation.mutate(payload);
   };
 
+  const handleSubmitEdit = async (e: React.FormEvent) => {
+    const payload: CreateArticlePayload ={...form, imageUrl: imageUrl || '', content: content}
+    e.preventDefault();
+    updateMutation.mutate(payload);
+  };
+
+  const handleSubmitDelete = async (e: React.FormEvent) => {
+    e.preventDefault();
+    patchMutation.mutate(form);
+  };
+
+  const handleDelete = async (e: Article) => {
+    setForm({...form, title: e.title, slug: e.slug, imageUrl: e.imageUrl, summary: e.summary, status: e.status ==='draft' ? 'published': 'draft', id: String(e.id)});
+    setOpen(true)
+  };
+
   const handleEdit = (e: Article) => {
     setForm({...form, title: e.title, slug: e.slug, videoUrl: e.videoUrl, categoryId: String(e.categoryId), type: e.type, imageUrl: e.imageUrl, content: e.content, id: String(e.id), summary: e.summary});
     setSection('edit')
     setImage(e.imageUrl)
     setContent(e.content)
   };
+
+  const handleCloseContent = ()=>{
+    setSection('main');
+    setForm({...form, title: '', slug: '', imageUrl: '', status:'', type: '',  summary:'', categoryId:'', content:'', videoUrl:'' });
+    setImage('')
+    setContent('')
+  }
 
   const articles = [
     {
@@ -111,8 +158,15 @@ const Index = () => {
     },
   ];
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Failed to load admins</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Failed to load admins</p>;
+  if (isLoading) return <ArticleSkeleton />;
+  if (error) return (
+    <ErrorState
+      message="Failed to fetch article details."
+      // onRetry={() => refetch()}
+    />
+  );
 
   return (
     <Layout>
@@ -122,11 +176,32 @@ const Index = () => {
             <div className="flex flex-col lg:flex-row justify-between items-center mb-8">
               <h1 className="text-3xl py-2 lg:py-0 font-bold">Article Management</h1>
               <div className='flex flex-col md:flex-row gap-2'>
-                <div className='flex py-2 md:py-0'>
+                {/* <div className='flex py-2 md:py-0'>
                   <Input 
                     className='w-full'
                     placeholder='search...'
-                    value={seValue || search}
+                    value={seValue}
+                    onChange={(e)=>setSeValue(e.target.value)}
+                  />
+                  <Button
+                    onClick={() =>setSearch(seValue)}
+                    className='rounded-r-lg'
+                  >
+                    <Search className="h-4 w-4" />
+                  </Button>
+                </div> */}
+                <Button onClick={()=>setSection('create')}>
+                  Create New Article
+                </Button>
+              </div>
+            </div>
+            <div className=" mb-8">
+              <div className='grid grid-cols-4 gap-2'>
+                <div className='flex py-2 md:py-0'>
+                  <Input 
+                    className=''
+                    placeholder='search...'
+                    value={seValue}
                     onChange={(e)=>setSeValue(e.target.value)}
                   />
                   <Button
@@ -136,9 +211,20 @@ const Index = () => {
                     <Search className="h-4 w-4" />
                   </Button>
                 </div>
-                <Button onClick={()=>setSection('create')}>
-                  Create New Article
-                </Button>
+                <div className='flex gap-2'>
+                  <Select value={status} onValueChange={(e) => setStatus((e))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={'draft'}>{`Draft`}</SelectItem>
+                      <SelectItem value={'published'}>{`Published`}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant={`outline`} className='font-bold' onClick={()=>resetFilters()}>
+                    Reset
+                  </Button>
+                </div>
               </div>
             </div>
             {/* Statistics Cards */}
@@ -151,7 +237,7 @@ const Index = () => {
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{10}</div>
+                  <div className="text-2xl font-bold">{data?.stats.total}</div>
                 </CardContent>
               </Card>
 
@@ -163,7 +249,7 @@ const Index = () => {
                   <Eye className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{6}</div>
+                  <div className="text-2xl font-bold">{data?.stats.published}</div>
                 </CardContent>
               </Card>
 
@@ -175,7 +261,7 @@ const Index = () => {
                   <FilePlus className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{4}</div>
+                  <div className="text-2xl font-bold">{data?.stats.draft}</div>
                 </CardContent>
               </Card>
             </div>
@@ -194,9 +280,14 @@ const Index = () => {
                     />
                   </div>
                   <CardContent className="p-4">
-                    <Badge className="mb-2 bg-[hsl(var(--primary))]/10 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/20 border-0">
-                      {item?.categoryName}
-                    </Badge>
+                    <div className='flex justify-between'>
+                      <Badge className="mb-2 bg-[hsl(var(--primary))]/10 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/20 border-0">
+                        {item?.categoryName}
+                      </Badge>
+                      <Badge className="mb-2 bg-gray-300 text-black hover:bg-[hsl(var(--primary))]/20 border-0">
+                        {item?.status}
+                      </Badge>
+                    </div>
                     <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-[hsl(var(--primary))] transition-colors">
                       {item?.title}
                     </h3>
@@ -215,13 +306,30 @@ const Index = () => {
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() =>(console.log('first'))}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {user?.role !== 'editor' &&
+                      item?.status === 'draft' &&
+                        <Button
+                          variant="default" // destructive
+                          size="sm"
+                          onClick={() =>(handleDelete(item))}
+                        >
+                          {/* <Trash2 className="h-4 w-4" /> */}
+                          <CheckCheck className="h-4 w-4" />
+                          Publish
+                        </Button>
+                      }
+                      {user?.role !== 'editor' &&
+                      item?.status === 'published' &&
+                        <Button
+                          variant="destructive" // destructive
+                          size="sm"
+                          onClick={() =>(handleDelete(item))}
+                        >
+                          {/* <Trash2 className="h-4 w-4" /> */}
+                          <CheckCheck className="h-4 w-4" />
+                          Draft
+                        </Button>
+                      }
                       <Button
                         variant="default"
                         size="sm"
@@ -230,11 +338,17 @@ const Index = () => {
                         <Eye className="h-4 w-4" />
                       </Button>
                     </div>
+                    <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
+                      <span>👁️ {item.viewNo} views</span>
+                      <span>📤 {item.shareNo} shares</span>
+                      {/* <span>🔖 {item.saveNo} saves</span> */}
+                    </div>
                   </CardContent>
+
                 </Card>
               ))}
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden'>
+            <div className='gri grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden'>
               {articles?.map((item, index)=>(
                 <Card
                   key={index}
@@ -315,12 +429,14 @@ const Index = () => {
           </>
         }
         {section === 'create' &&
-          <CreateArticle form={form} setForm={setForm} setSection={()=>setSection('main')} content={content} setContent={setContent} pageTitle='Create New Article' handleSubmit={handleSubmit} />
+          <CreateArticle form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle='Create New Article' handleSubmit={handleSubmit} />
         }
         {section === 'edit' &&
-          <CreateArticle form={form} setForm={setForm} setSection={()=>setSection('main')} content={content} setContent={setContent} pageTitle="Edit Article" handleSubmit={handleSubmit} />
+          <CreateArticle form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle="Edit Article" handleSubmit={handleSubmitEdit} />
         }
       </div>
+
+      <Confirmation name={form?.title} status={form?.status === 'draft' ? 'publish': 'draft'} open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
 
     </Layout>
   )

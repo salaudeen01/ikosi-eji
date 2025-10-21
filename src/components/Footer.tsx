@@ -1,8 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
+import { Category } from '@/api/clients';
 import Link from 'next/link'
 import React from 'react'
 
-const Footer = () => {
+interface NavItem {
+  label?: string;
+  href?: string;
+  children?: { label: string; href: string }[];
+  categories: Category[];
+}
+
+const Footer = ({categories}: NavItem) => {
   return (
     <footer className="bg-[hsl(var(--secondary))] mt-16 py-12 border-t border-[hsl(var(--border))]">
       <div className="container mx-auto px-4">
@@ -24,26 +32,14 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Categories</h4>
             <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))] ">
-              {/* <li>
-                <Link href="/category/market-news" className="hover:text-[hsl(var(--primary))] transition-colors">
-                  Market News
-                </Link>
-              </li> */}
-              {/* <li>
-                <Link href="/category/business" className="hover:text-[hsl(var(--primary))] transition-colors">
-                  Business
-                </Link>
-              </li> */}
-              <li>
-                <Link href="/category/economy" className="hover:text-[hsl(var(--primary))] transition-colors">
-                  Economy
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/investing" className="hover:text-[hsl(var(--primary))] transition-colors">
-                  Technology
-                </Link>
-              </li>
+              {categories?.map((e)=>(
+                <li key={e?.id}>
+                  <Link href={`/category/${e.slug}` || "#"} className="hover:text-[hsl(var(--primary))] transition-colors">
+                    {e?.name}
+                  </Link>
+                </li>
+                  
+                ))}
             </ul>
           </div>
           <div>
