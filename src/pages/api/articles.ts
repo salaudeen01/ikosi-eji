@@ -213,13 +213,23 @@ export default async function handler(
       const articles = rows as Article[];
 
       // ✅ Stats query
+        // const [[stats]] = await db.query<Stats[]>(`
+        //   SELECT
+        //     COUNT(*) AS total,
+        //     SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS published,
+        //     SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) AS draft
+        //   FROM articles
+        // `);
         const [[stats]] = await db.query<Stats[]>(`
           SELECT
-            COUNT(*) AS total,
-            SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS published,
-            SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) AS draft
-          FROM articles
+            COUNT(a.id) AS total,
+            SUM(CASE WHEN a.status = 'published' THEN 1 ELSE 0 END) AS published,
+            SUM(CASE WHEN a.status = 'draft' THEN 1 ELSE 0 END) AS draft
+          FROM articles AS a
+          JOIN categories AS c ON a.categoryId = c.id
+          WHERE c.status = 'active'
         `);
+        
 
       return res.status(200).json({
         message: "Articles fetched successfully",

@@ -28,8 +28,9 @@ export const useLogin = () => {
         title: "Login successful 🎉",
         description: `Welcome back, ${data.user.name}!`,
       });
-
-      router.push("/admin/dashboard");
+      
+      // router.push("/admin/dashboard");
+      router.push("/admin/article");
     },
 
     onError: (error) => {
