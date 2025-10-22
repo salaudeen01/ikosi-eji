@@ -20,7 +20,7 @@ const { data, isLoading, isError, refetch } = useCategoryArticles(category!, {
   enabled: !!category, // ✅ prevents running before category exists
 });
 
-if (!category) return null; // or show loader while waiting for router params
+if (!category) return null; // or show loader while waiting for router paramsx
 
 if (isLoading) return <ArticleSkeleton />;
 if (isError) return (

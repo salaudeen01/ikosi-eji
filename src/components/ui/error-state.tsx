@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
-import Layout from "../layout";
+// import Layout from "../layout";
 
 interface ErrorStateProps {
   message?: string;
@@ -9,7 +9,7 @@ interface ErrorStateProps {
 
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <Layout>
+    // <Layout>
       <div className="flex flex-col items-center justify-center text-center py-20 px-4">
         <div className="flex flex-col items-center gap-4 max-w-md">
           <AlertTriangle className="h-12 w-12 text-destructive" />
@@ -26,6 +26,6 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
           )}
         </div>
       </div>
-    </Layout>
+    // </Layout>
   );
 }
