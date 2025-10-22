@@ -9,7 +9,7 @@ export const uploadImage = async (file: File): Promise<UploadResponse> => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await publicApi.post("/api/upload", formData, {
+  const res = await publicApi.post("/upload", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

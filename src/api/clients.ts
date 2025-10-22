@@ -35,7 +35,7 @@ export interface PaginatedResponse<T> {
 }
 
 export const fetchNavbar = async (): Promise<FetchCategoriesResponse> => {
-  const res = await publicApi.get("/api/categories/nav");
+  const res = await publicApi.get("/categories/nav");
   return res.data;
 };
 
@@ -44,7 +44,7 @@ export const fetchArticlesByCategor = async (
   page: number = 1,
   limit: number = 20
 ): Promise<PaginatedResponse<Article>> => {
-  const res = await publicApi.get(`/api/public/articles/category/${slug}`, {
+  const res = await publicApi.get(`/public/articles/category/${slug}`, {
     params: { page, limit },
   });
   return res.data;
@@ -55,21 +55,21 @@ export const fetchArticlesByCategory = async (
   page = 1,
   limit = 20
 ): Promise<PaginatedResponse<Article>> => {
-  const res = await publicApi.get(`/api/categories/${slug}/articles`, {
+  const res = await publicApi.get(`/categories/${slug}/articles`, {
     params: { page, limit },
   });
   return res.data;
 };
 
 export const fetchHomeData = async (): Promise<HomeResponse> => {
-  const response = await publicApi.get<HomeResponse>("/api/home");
+  const response = await publicApi.get<HomeResponse>("/home");
   return response.data;
 };
 
 export const fetchArticleBySlug = async (slug: string): Promise<ArticleResponse> => {
   if (!slug) throw new Error("Missing article slug");
 
-  const response = await publicApi.get<ArticleResponse>(`/api/news/${slug}`);
+  const response = await publicApi.get<ArticleResponse>(`/news/${slug}`);
   return response.data;
 };
 

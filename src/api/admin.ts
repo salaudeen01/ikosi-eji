@@ -4,17 +4,17 @@ import { ArticleQueryParams, CreateAdminPayload, CreateArticlePayload, CreateCat
 
 
 export const createAdmin = async (payload: CreateAdminPayload) => {
-  const { data } = await authApi.post("/api/admin", payload);
+  const { data } = await authApi.post("/admin", payload);
   return data;
 };
 
 export const updateAdmin = async (payload: CreateAdminPayload) => {
-    const { data } = await authApi.put("/api/admin", payload);
+    const { data } = await authApi.put("/admin", payload);
     return data;
   };
 
   export const patchAdmin = async (payload: CreateAdminPayload) => {
-    const { data } = await authApi.patch("/api/admin", payload);
+    const { data } = await authApi.patch("/admin", payload);
     return data;
   };
 
@@ -22,7 +22,7 @@ export const fetchAdmins = async (
     // page: number,
     // search: string
   ): Promise<FetchAdminsResponse> => {
-    const { data } = await authApi.get(`/api/admin`,
+    const { data } = await authApi.get(`/admin`,
          {
     //   params: { page, search },
     }
@@ -32,17 +32,17 @@ export const fetchAdmins = async (
 
   // Caategories 
 export const createCategory = async (payload: CreateCategoryPayload) => {
-  const { data } = await authApi.post("/api/categories", payload);
+  const { data } = await authApi.post("/categories", payload);
   return data;
 };
 
   export const updateCategory = async (payload: CreateCategoryPayload) => {
-    const { data } = await authApi.put("/api/categories", payload);
+    const { data } = await authApi.put("/categories", payload);
     return data;
   };
 
   export const patchCategory = async (payload: CreateCategoryPayload) => {
-    const { data } = await authApi.patch("/api/categories", payload);
+    const { data } = await authApi.patch("/categories", payload);
     return data;
   };
 
@@ -50,7 +50,7 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
       // page: number,
       // search: string
     ): Promise<FetchCategoriesResponse> => {
-      const { data } = await authApi.get(`/api/categories`,
+      const { data } = await authApi.get(`/categories`,
            {
       //   params: { page, search },
       }
@@ -63,24 +63,24 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
 
   // Caategories 
   export const createArticle = async (payload: CreateArticlePayload) => {
-    const { data } = await authApi.post("/api/articles", payload);
+    const { data } = await authApi.post("/articles", payload);
     return data;
   };
   
     export const updateArticle = async (payload: CreateArticlePayload) => {
-      const { data } = await authApi.put("/api/articles", payload);
+      const { data } = await authApi.put("/articles", payload);
       return data;
     };
   
     export const patchArticle = async (payload: CreateArticlePayload) => {
-      const { data } = await authApi.patch("/api/articles", payload);
+      const { data } = await authApi.patch("/articles", payload);
       return data;
     };
   
     export const fetchArticles = async (
         params: ArticleQueryParams,
       ): Promise<FetchArticlesResponse> => {
-        const response = await authApi.get(`/api/articles`,
+        const response = await authApi.get(`/articles`,
              { params }
     );
         return response.data;
@@ -88,7 +88,7 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
 
 
     export const fetchArticleBySlug = async (slug: string): Promise<FetchArticleResponse> => {
-      const response = await authApi.get<FetchArticleResponse>(`/api/articles`, {
+      const response = await authApi.get<FetchArticleResponse>(`/articles`, {
         params: { slug },
       });
       return response.data;
