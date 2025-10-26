@@ -1,5 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import Layout from "./layout";
+import { Loader2 } from "lucide-react";
 
 export default function ArticleSkeleton() {
   return (
@@ -16,6 +17,9 @@ export default function ArticleSkeleton() {
 
         {/* Image */}
         <Skeleton className="h-64 w-full rounded-lg mb-6" />
+        <div className="flex justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
 
         {/* Paragraph lines */}
         <div className="space-y-3">

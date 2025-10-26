@@ -5,7 +5,7 @@ import Layout from "@/components/layout";
 import ShareDialog from "@/components/ShareDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, User, Bookmark } from "lucide-react";
+import { Calendar, User, Bookmark, Loader2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useArticleData } from "@/hooks/mutatiion/clients/useArticleData";
 import { useClientUrl } from "@/hooks/mutatiion/clients/useBreakingNewsRotation";
@@ -13,10 +13,16 @@ import { DataCon } from "../../../../../../type";
 import ArticleSkeleton from "@/components/ArticleSkeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import EmptyState from "@/components/EmptyState";
+import { useSaveArticle } from "@/hooks/mutatiion/clients/useSaveArticle";
+import { useAuthStore } from "@/store/clients/useAuthStore";
+import { useLoginModalStore } from "@/store/useLoginModalStore";
 
 const Article = () => {
   const { currentUrl, origin } = useClientUrl();
-  
+  const { mutate: saveArticle, isPending } = useSaveArticle();  
+  const { token, isAuthenticated } = useAuthStore();
+  const { openLogin } = useLoginModalStore();
+
   const params = useParams<{ slug: string}>();
   const slug = params?.slug;
 
@@ -40,10 +46,12 @@ const Article = () => {
 
 
   const handleClick = () => {
-    // router.push(`/${category}/article/1/${data?.slug}`);
+    if (!token || !isAuthenticated) {
+      openLogin()
+    }else{
+      saveArticle(articleData?.id || 0)
+    }
   };
-
-  console.log(related)
 
   // const fullImageUrl = articleData?.imageUrl.startsWith("https")
   //   ? articleData?.imageUrl
@@ -94,8 +102,17 @@ const Article = () => {
               url={currentUrl}
               image={articleData?.imageUrl}
             />
-            <Button variant="outline" size="sm">
-              <Bookmark className="h-4 w-4 mr-2" />
+            <Button 
+              variant="outline" 
+              size="sm"
+              disabled={isPending}
+              onClick={() => handleClick()}
+            >
+              {isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <Bookmark className="h-4 w-4 mr-2" />
+              )}
               Save
             </Button>
           </div>

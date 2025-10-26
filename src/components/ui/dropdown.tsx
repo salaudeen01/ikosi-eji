@@ -1,21 +1,20 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 interface UserData {
-  user?: {
-    username?: string;
-    email?: string;
-  };
+  id?: number | string;
+  names?: string;
+  email?: string;
 }
 
 interface DropdownProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   user?: UserData;
   onLogout: () => void;
+  type?: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ open, setOpen, user, onLogout }) => {
+const Dropdown: React.FC<DropdownProps> = ({ user, onLogout, type }) => {
+  const [open, setOpen] = useState(false)
   return (
     <div className="relative">
       <div
@@ -41,23 +40,25 @@ const Dropdown: React.FC<DropdownProps> = ({ open, setOpen, user, onLogout }) =>
           id="dropdownAvatar"
           className="absolute right-5 mt-1 z-10 rounded-lg shadow-sm w-44 bg-gray-700 divide-gray-600"
         >
-          <div className="px-4 py-3 text-sm text-white">
-            <div>{user?.user?.username}</div>
-            <div className="font-medium truncate">{user?.user?.email}</div>
+          <div className="px-4 pt-3 text-sm text-white">
+            <div>{user?.names}</div>
+            <div className="font-medium truncate">{user?.email}</div>
           </div>
 
           <ul
             className="py-2 text-sm text-gray-200"
             aria-labelledby="dropdownUserAvatarButton"
           >
+          {type &&
             <li>
               <Link
-                href="/admin/pricing"
+                href="/article/saved"
                 className="block px-4 py-2 hover:bg-gray-600 hover:text-white"
               >
-                Dashboard
+                Saved News
               </Link>
             </li>
+          }
           </ul>
 
           <div onClick={onLogout} className="py-2 cursor-pointer">

@@ -4,9 +4,11 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Dropdown from "./ui/dropdown";
+import { useAuth } from "@/store/useAuth";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { logout, user } = useAuth();
 
   return (
     <nav className="bg-[hsl(var(--background))] border-b border-[hsl(var(--border))] sticky top-0 z-50">
@@ -37,7 +39,7 @@ const Navbar = () => {
               <Menu className="h-5 w-5" />
             </Button>
             <div className="w-full block md:w-auto" id="navbar-default">
-              <Dropdown open={false} setOpen={()=>(console.log('first'))} user={{}} onLogout={()=>(console.log('first'))} />
+              <Dropdown user={user || {}} onLogout={logout} />
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { publicApi } from "@/lib/axios"; // axios instance without auth headers
+import { clientApi, publicApi } from "@/lib/axios"; // axios instance without auth headers
 import { ArticleResponse, HomeResponse, Pagination } from "../../type";
 
 export interface Category {
@@ -32,6 +32,45 @@ export interface PaginatedResponse<T> {
   total: number;
   currentPage: number;
   totalPages: number;
+}
+export interface SearchResponse {
+  message: string;
+  data: {
+    id: number;
+    title: string;
+    slug: string;
+    summary: string;
+    imageUrl: string;
+    categoryName:string
+    category: string;
+    createdAt: string;
+  }[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalPages: number;
+    totalItems: number;
+  };
+}
+
+export interface SaveArticleResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface SavedArticle {
+  id: number;
+  title: string;
+  slug: string;
+  summary: string | null;
+  imageUrl: string | null;
+  categoryName: string;
+  createdAt: string;
+}
+
+export interface SavedArticlesResponse {
+  message: string;
+  savedArticles: SavedArticle[];
 }
 
 export const fetchNavbar = async (): Promise<FetchCategoriesResponse> => {
@@ -71,6 +110,23 @@ export const fetchArticleBySlug = async (slug: string): Promise<ArticleResponse>
 
   const response = await publicApi.get<ArticleResponse>(`/news/${slug}`);
   return response.data;
+};
+
+export const fetchSearchResults = async (query: string, page = 1, limit = 20): Promise<SearchResponse> => {
+  const { data } = await publicApi.get(`/news/search`, {
+    params: { query, page, limit },
+  });
+  return data;
+};
+
+export const saveArticle = async (articleId: number): Promise<SaveArticleResponse> => {
+  const { data } = await clientApi.post("/news/save", { articleId });
+  return data;
+};
+
+export const fetchSavedArticles = async (): Promise<SavedArticlesResponse> => {
+  const { data } = await clientApi.get("/news/save");
+  return data;
 };
 
 

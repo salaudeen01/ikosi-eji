@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Menu, Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import Dropdown from "./ui/dropdown";
+import { useLoginModalStore } from "@/store/useLoginModalStore";
+import AuthModal from "./authModal";
+import { useAuthStore } from "@/store/clients/useAuthStore";
 
 interface NavItem {
   label?: string;
@@ -14,6 +18,8 @@ interface NavItem {
 
 const Navigation = ({categories}: NavItem) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { token, isAuthenticated, logout, user } = useAuthStore();
+  const { openLogin } = useLoginModalStore();
 
   return (
     <nav className="bg-[hsl(var(--background))] border-b border-[hsl(var(--border))] sticky top-0 z-50">
@@ -49,9 +55,11 @@ const Navigation = ({categories}: NavItem) => {
 
           {/* Right Actions */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" className="text-[hsl(var(--foreground))]">
-              <Search className="h-5 w-5" />
-            </Button>
+            <Link href={'/article/search'}>
+              <Button variant="ghost" size="icon" className="text-[hsl(var(--foreground))]">
+                <Search className="h-5 w-5" />
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               size="icon"
@@ -60,9 +68,21 @@ const Navigation = ({categories}: NavItem) => {
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <Button className="hidden md:flex bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--news-hover))]">
-              Subscribe
-            </Button>
+            {(!token || !isAuthenticated) ?
+              <div className="flex items-center gap-2">
+
+                <Button onClick={openLogin} variant="outline" className="hidden md:flex">
+                  Login
+                </Button>
+                <Button className="hidden md:flex bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--news-hover))]">
+                  Register
+                </Button>
+              </div>:
+              <div className="w-full block md:w-auto" id="navbar-default">
+                <Dropdown user={user || {}} onLogout={logout} type={'clients'} />
+              </div>
+             }
+
           </div>
         </div>
 
@@ -83,6 +103,7 @@ const Navigation = ({categories}: NavItem) => {
           </div>
         )}
       </div>
+      <AuthModal />
     </nav>
   );
 };

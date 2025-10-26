@@ -72,7 +72,7 @@ const Footer = ({categories}: NavItem) => {
             <p className="text-sm text-[hsl(var(--muted-foreground))]  mb-4">
               Get daily business insights delivered to your inbox.
             </p>
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               <input
                 type="email"
                 placeholder="Your email"
@@ -81,7 +81,7 @@ const Footer = ({categories}: NavItem) => {
               <button className="px-4 py-2 text-sm font-medium bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] rounded-md hover:bg-[hsl(var(--news-hover))]  transition-colors">
                 Subscribe
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-[hsl(var(--border))] text-center text-sm text-[hsl(var(--muted-foreground))] ">
