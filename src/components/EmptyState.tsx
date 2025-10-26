@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function EmptyState({
   title = "No Articles Found",
-  description = "We couldn’t find any articles in this category yet.",
+  description = "We couldn’t find any articles.",
   onRefresh,
 }: {
   title?: string;
