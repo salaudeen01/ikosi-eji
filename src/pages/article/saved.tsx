@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/clients/useAuthStore";
 import { useEffect } from "react";
 import { useLoginModalStore } from "@/store/useLoginModalStore";
 import ArticleCard from "@/components/ArticleCard";
+import EmptyState from "@/components/EmptyState";
 
 const SavedArticle = () => {
   const { token, isAuthenticated } = useAuthStore();
@@ -51,6 +52,10 @@ const SavedArticle = () => {
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           )}
+
+          {!isLoading && results.length === 0 &&
+            <EmptyState onRefresh={refetch} />
+          }
 
           {/* Results */}
           {!isLoading && results.length > 0 && (
