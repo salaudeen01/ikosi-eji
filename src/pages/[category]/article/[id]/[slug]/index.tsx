@@ -17,7 +17,6 @@ import { useSaveArticle } from "@/hooks/mutatiion/clients/useSaveArticle";
 import { useAuthStore } from "@/store/clients/useAuthStore";
 import { useLoginModalStore } from "@/store/useLoginModalStore";
 import Link from "next/link";
-import { Helmet } from "react-helmet";
 
 const Article = () => {
   const { currentUrl, origin } = useClientUrl();
@@ -55,9 +54,9 @@ const Article = () => {
     }
   };
 
-  // const fullImageUrl = articleData?.imageUrl.startsWith("https")
-  //   ? articleData?.imageUrl
-  //   : `${origin}${articleData?.image.startsWith("/") ? "" : "/"}${articleData?.image}`;
+  const fullImageUrl = articleData?.imageUrl.startsWith("https")
+    ? articleData?.imageUrl
+    : `${origin}${articleData?.imageUrl.startsWith("/") ? "" : "/"}${articleData?.imageUrl}`;
 
   return (
     <Layout>
@@ -68,33 +67,14 @@ const Article = () => {
         <meta property="og:url" content={currentUrl} />
         <meta property="og:title" content={articleData?.title} />
         <meta property="og:description" content={articleData?.summary} />
-        <meta property="og:image" content={articleData?.imageUrl} />
+        <meta property="og:image" content={fullImageUrl || articleData?.imageUrl} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={currentUrl} />
         <meta name="twitter:title" content={articleData?.title} />
         <meta name="twitter:description" content={articleData?.summary} />
-        <meta name="twitter:image" content={articleData?.imageUrl} />
+        <meta name="twitter:image" content={fullImageUrl || articleData?.imageUrl} />
         <link rel="canonical" href={currentUrl} />
       </Head>
-
-      <Helmet>
-        <title>{articleData?.title} | Nairametrics</title>
-        <meta name="description" content={articleData?.summary} />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={window.location.href} />
-        <meta property="og:title" content={articleData?.title} />
-        <meta property="og:description" content={articleData?.summary} />
-        <meta property="og:image" content={articleData?.imageUrl} />
-        
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={window.location.href} />
-        <meta name="twitter:title" content={articleData?.title} />
-        <meta name="twitter:description" content={articleData?.summary} />
-        <meta name="twitter:image" content={articleData?.imageUrl} />
-      </Helmet>
 
       <article className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
