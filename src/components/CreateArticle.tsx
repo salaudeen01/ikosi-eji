@@ -93,6 +93,19 @@ const CreateArticle = ({setSection, pageTitle, form, setForm, content, setConten
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="break">Set Breaking News</Label>
+                <Select value={form?.isBreak} onValueChange={(e) => setForm({...form, isBreak: e})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={`1`}>Is Breaking</SelectItem>
+                    <SelectItem value={`0`}>Not Breaking</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="category">Select Article Type</Label>
                 <Select value={form?.type} onValueChange={(e) => setForm({...form, type: e})}>
                   <SelectTrigger>

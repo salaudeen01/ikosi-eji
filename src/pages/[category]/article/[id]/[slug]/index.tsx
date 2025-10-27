@@ -16,6 +16,7 @@ import EmptyState from "@/components/EmptyState";
 import { useSaveArticle } from "@/hooks/mutatiion/clients/useSaveArticle";
 import { useAuthStore } from "@/store/clients/useAuthStore";
 import { useLoginModalStore } from "@/store/useLoginModalStore";
+import Link from "next/link";
 
 const Article = () => {
   const { currentUrl, origin } = useClientUrl();
@@ -144,18 +145,21 @@ const Article = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {related?.map((item, index)=>(
                   <div key={index} className="border border-[hsl(var(--border))] rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer">
-                    <Badge className="mb-2 bg-primary/10 text-[hsl(var(--primary))] hover:bg-primary/20 border-0">
-                      {item?.categorySlug}
-                    </Badge>
-                    <h4 className="font-bold mb-2">
-                      {item?.title}
-                    </h4>
-                    <p className="text-sm text-[hsl(var(--muted-foreground))]">
-                      {item?.summary}
-                    </p>
+                    <Link href={`/${item?.categoryName}/article/1/${item?.slug}`}>
+                      <Badge className="mb-2 bg-primary/10 text-[hsl(var(--primary))] hover:bg-primary/20 border-0">
+                        {item?.categorySlug}
+                      </Badge>
+                      <h4 className="font-bold mb-2">
+                        {item?.title}
+                      </h4>
+                      <p className="text-sm text-[hsl(var(--muted-foreground))]">
+                        {item?.summary}
+                      </p>
+                    </Link>
                   </div>
                 ))}
-                <div className="border border-[hsl(var(--border))] rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer">
+                {/* `/${category}/article/1/${data?.slug}` */}
+                {/* <div className="border border-[hsl(var(--border))] rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer">
                   <Badge className="mb-2 bg-primary/10 text-[hsl(var(--primary))] hover:bg-primary/20 border-0">
                     Market News
                   </Badge>
@@ -165,7 +169,7 @@ const Article = () => {
                   <p className="text-sm text-[hsl(var(--muted-foreground))]">
                     The NSE All-Share Index gained 2.5% as investors showed renewed confidence...
                   </p>
-                </div>
+                </div> */}
               </div>
             }
           </div>

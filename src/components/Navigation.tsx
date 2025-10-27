@@ -74,9 +74,9 @@ const Navigation = ({categories}: NavItem) => {
                 <Button onClick={openLogin} variant="outline" className="hidden md:flex">
                   Login
                 </Button>
-                <Button className="hidden md:flex bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--news-hover))]">
+                {/* <Button className="hidden md:flex bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--news-hover))]">
                   Register
-                </Button>
+                </Button> */}
               </div>:
               <div className="w-full block md:w-auto" id="navbar-default">
                 <Dropdown user={user || {}} onLogout={logout} type={'clients'} />

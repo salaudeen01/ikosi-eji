@@ -2,7 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import { ChartBarBig, Newspaper, ShieldUser } from "lucide-react";
+import { ChartBarBig, LayoutDashboard, Newspaper, ShieldUser, Users } from "lucide-react";
 
 interface NavItem {
   label: string;
@@ -15,12 +15,12 @@ const Sidebar: React.FC = () => {
   const location = usePathname();
 
   const navItems: NavItem[] = [
-    // { label: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboard /> },
+    { label: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboard /> },
     { label: "categories", href: "/admin/category", icon: <ChartBarBig /> },
     { label: "Articles", href: "/admin/article", icon: <Newspaper /> },
     { label: "Admins", href: "/admin/admins", icon: <ShieldUser />},
     // { label: "Features", href: "/admin/features", icon: <Wallpaper /> },
-    // { label: "Users", href: "/admin/users", icon: <Users /> },
+    { label: "Users", href: "/admin/users", icon: <Users /> },
   ];
 
   return (

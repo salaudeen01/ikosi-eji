@@ -5,6 +5,7 @@ interface UserData {
   id?: number | string;
   names?: string;
   email?: string;
+  role?: string
 }
 
 interface DropdownProps {
@@ -49,6 +50,15 @@ const Dropdown: React.FC<DropdownProps> = ({ user, onLogout, type }) => {
             className="py-2 text-sm text-gray-200"
             aria-labelledby="dropdownUserAvatarButton"
           >
+          {user?.role &&
+            <li>
+              <p
+                className="block px-4 py-2 hover:bg-gray-600 hover:text-white"
+              >
+                Role: {user?.role}
+              </p>
+            </li>
+          }
           {type &&
             <li>
               <Link

@@ -264,6 +264,7 @@ export default async function handler(
       title,
       summary,
       type,
+      isBreak,
       imageUrl,
       categoryId,
       content,
@@ -272,6 +273,7 @@ export default async function handler(
       title?: string;
       summary?: string;
       type?: string;
+      isBreak?: string;
       imageUrl?: string;
       categoryId?: number;
       content?: string;
@@ -289,7 +291,7 @@ export default async function handler(
 
     // ✅ Generate slug from title
       let slug = slugify(title, { lower: true, strict: true });
-
+      const isBreaking = isBreak === '1' ? true:false;
       // ✅ Check for duplicate slug
       const [existing] = await db.query<RowDataPacket[]>(
         "SELECT id FROM articles WHERE slug = ?",
@@ -300,12 +302,13 @@ export default async function handler(
       }
 
       const [result] = await db.query(
-        "INSERT INTO articles (title, summary, imageUrl, slug, type, content, categoryId, videoUrl, adminId, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO articles (title, summary, imageUrl, slug, isBreaking, type, content, categoryId, videoUrl, adminId, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           title,
           summary || null,
           imageUrl || null,
           slug || null,
+          isBreaking || null,
           type || null,
           content || null,
           categoryId,
@@ -337,7 +340,6 @@ export default async function handler(
         .status(403)
         .json({ message: "Unauthorized: Admin access required" });
     }
-    console.log(adminType)
     const { id, status } = req.body as { id?: number, status?: string };
 
 
@@ -382,6 +384,7 @@ export default async function handler(
       title,
       summary,
       type,
+      isBreak,
       imageUrl,
       categoryId,
       content,
@@ -390,6 +393,7 @@ export default async function handler(
       id?: number;
       title?: string;
       type?: string;
+      isBreak?: string;
       summary?: string;
       imageUrl?: string;
       categoryId?: number;
@@ -407,6 +411,7 @@ export default async function handler(
 
         // ✅ Generate slug from title
         let slug = slugify(title, { lower: true, strict: true });
+        const isBreaking = isBreak === '1' ? true:false;
 
         // ✅ Check for duplicate slug
         const [existing] = await db.query<RowDataPacket[]>(
@@ -424,6 +429,7 @@ export default async function handler(
           title = ?, 
           summary = ?, 
           slug = ?, 
+          isBreaking = ?, 
           categoryId = ?, 
           content = ?, 
           videoUrl = ?, 
@@ -435,6 +441,7 @@ export default async function handler(
           title,
           summary || null,
           slug || null,
+          isBreaking || null,
           categoryId || null,
           content || null,
           videoUrl || null,

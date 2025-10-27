@@ -34,6 +34,7 @@ const Index = () => {
     title: "",
     slug: "",
     imageUrl: "",
+    isBreak: '',
     status: "",
     summary: "",
     categoryId: "",

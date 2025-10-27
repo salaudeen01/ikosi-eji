@@ -2,6 +2,9 @@
 import { Category } from '@/api/clients';
 import Link from 'next/link'
 import React from 'react'
+import { Button } from './ui/button';
+import { useAuthStore } from '@/store/clients/useAuthStore';
+import { useLoginModalStore } from '@/store/useLoginModalStore';
 
 interface NavItem {
   label?: string;
@@ -11,6 +14,8 @@ interface NavItem {
 }
 
 const Footer = ({categories}: NavItem) => {
+  const { token, isAuthenticated } = useAuthStore();
+  const { openLogin } = useLoginModalStore();
   return (
     <footer className="bg-[hsl(var(--secondary))] mt-16 py-12 border-t border-[hsl(var(--border))]">
       <div className="container mx-auto px-4">
@@ -72,6 +77,11 @@ const Footer = ({categories}: NavItem) => {
             <p className="text-sm text-[hsl(var(--muted-foreground))]  mb-4">
               Get daily business insights delivered to your inbox.
             </p>
+            {(!token || !isAuthenticated) &&
+              <Button onClick={openLogin} className="flex bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--news-hover))]">
+                Login
+              </Button>
+            }
             {/* <div className="flex gap-2">
               <input
                 type="email"

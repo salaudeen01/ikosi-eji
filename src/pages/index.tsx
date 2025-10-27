@@ -26,7 +26,7 @@ const Index = () => {
   if (isLoading) {
     return <ArticleSkeleton />;
   }
-
+  
   return (
     <Layout>
       <div>
@@ -68,7 +68,7 @@ const Index = () => {
               <div className="relative flex-1 h-5">
                 {breakingNews.map((news, index) => (
                   <Link
-                    href={news?.slug}
+                    href={`/${news?.categoryName}/article/1/${news?.slug}`}
                     key={index}
                     className={`text-sm absolute inset-0 transition-all duration-500 ${
                       index === currentNewsIndex
@@ -83,7 +83,6 @@ const Index = () => {
             </div>
           </div>
         </div>
-
         
         <div className="container mx-auto px-4">
 

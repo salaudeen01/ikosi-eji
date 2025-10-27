@@ -106,6 +106,7 @@ import { RowDataPacket } from "mysql2";
     title: string;
     slug: string;
     imageUrl: string;
+    isBreak: string;
     status: string;
     summary: string;
     categoryId: string;

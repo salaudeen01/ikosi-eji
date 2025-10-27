@@ -111,7 +111,7 @@ export const useFetchCategories = () => {
   const { setCategories, setPagination } = useCategoryStore(); // page, search, 
 
   return useQuery<FetchCategoriesResponse>({
-    queryKey: ["categories" ], // 👈 include pagination/search in key page, search
+    queryKey: ["category" ], // 👈 include pagination/search in key page, search
     queryFn: async () => {
       const data = await fetchCategories(); // page, search
       setCategories(data.data);
