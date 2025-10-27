@@ -62,17 +62,17 @@ const Article = () => {
     <Layout>
       <Head>
         <title>{articleData?.title} | Econonetrics</title>
-        <meta name="description" content={articleData?.summary} />
+        <meta name="description" content={articleData.summary} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={currentUrl} />
-        <meta property="og:title" content={articleData?.title} />
-        <meta property="og:description" content={articleData?.summary} />
-        <meta property="og:image" content={fullImageUrl || articleData?.imageUrl} />
+        <meta property="og:title" content={articleData.title} />
+        <meta property="og:description" content={articleData.summary} />
+        <meta property="og:image" content={fullImageUrl || articleData.imageUrl} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={currentUrl} />
-        <meta name="twitter:title" content={articleData?.title} />
-        <meta name="twitter:description" content={articleData?.summary} />
-        <meta name="twitter:image" content={fullImageUrl || articleData?.imageUrl} />
+        <meta name="twitter:title" content={articleData.title} />
+        <meta name="twitter:description" content={articleData.summary} />
+        <meta name="twitter:image" content={fullImageUrl || articleData.imageUrl} />
         <link rel="canonical" href={currentUrl} />
       </Head>
 
