@@ -59,7 +59,7 @@ const Index = () => {
   const createAMutation = useCreateArticle({
     onSuccessCallback: () =>{ 
       setSection('main');
-      setForm({...form, title: '', slug: '', imageUrl: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
+      setForm({...form, title: '', slug: '', imageUrl: '', isBreak: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
       setImage('')
       setContent('')
     },
@@ -67,7 +67,7 @@ const Index = () => {
   const updateMutation = useUpdateArticle({
     onSuccessCallback: () =>{ 
       setSection('main');
-      setForm({...form, title: '', slug: '', imageUrl: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
+      setForm({...form, title: '', slug: '', imageUrl: '', isBreak: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
       setImage('')
       setContent('')
     },
@@ -76,7 +76,7 @@ const Index = () => {
     onSuccessCallback: () =>{ 
       setSection('main');
       setOpen(false)
-      setForm({...form, title: '', slug: '', imageUrl: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
+      setForm({...form, title: '', slug: '', imageUrl: '', type: '', isBreak: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
       setImage('')
       setContent('')
     },
