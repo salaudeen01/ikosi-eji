@@ -31,11 +31,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const article = await fetchArticle(slug);
 
+    console.log(article)
+
     if (!article) return { notFound: true };
 
     // Optionally: you can compute full canonical URL here
-    const siteUrl = `${process.env.NEXT_PUBLIC_API_URL}/api` || "/api";
-    const canonical = `${siteUrl}/articles/${article.slug}`;
+    const siteUrl = `${process.env.NEXT_PUBLIC_API_URL}` || "/api";
+    const canonical = `${siteUrl}/${article.categorySlug}/articles/${article.slug}`;
     console.log(siteUrl)
     console.log(canonical)
     return {
@@ -56,6 +58,8 @@ export default function ArticlePage({ article, canonical }: { article: Article; 
   useEffect(() => {
     if (article) setArticle(article);
   }, [article, setArticle]);
+
+  console.log(canonical)
   
   // Optionally use React Query to keep client fresh or pre-fetch additional content
   // Query key uses slug. It will find server state if you used dehydrate (optional).
