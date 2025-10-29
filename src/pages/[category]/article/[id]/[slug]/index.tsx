@@ -53,8 +53,6 @@ export default function ArticlePage({ article, canonical }: { article: Article; 
   useEffect(() => {
     if (article) setArticle(article);
   }, [article, setArticle]);
-
-  console.log(canonical)
   
   // Optionally use React Query to keep client fresh or pre-fetch additional content
   // Query key uses slug. It will find server state if you used dehydrate (optional).

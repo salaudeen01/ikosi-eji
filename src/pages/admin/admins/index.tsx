@@ -230,7 +230,7 @@ const Index = () => {
           ) : users.length === 0 ? (
             <p className="text-muted-foreground">No users found.</p>
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

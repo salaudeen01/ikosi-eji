@@ -1,6 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-
-import Head from "next/head";
 import Layout from "@/components/layout";
 import ShareDialog from "@/components/ShareDialog";
 import { Badge } from "@/components/ui/badge";
@@ -53,28 +51,8 @@ const ArticleMainPage = () => {
       saveArticle(articleData?.id || 0)
     }
   };
-
-  const fullImageUrl = articleData?.imageUrl.startsWith("https")
-    ? articleData?.imageUrl
-    : `${origin}${articleData?.imageUrl.startsWith("/") ? "" : "/"}${articleData?.imageUrl}`;
-
   return (
     <Layout>
-      {/* <Head>
-        <title>{articleData?.title} | Econonetrics</title>
-        <meta name="description" content={articleData?.summary} />
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={currentUrl} />
-        <meta property="og:title" content={articleData?.title} />
-        <meta property="og:description" content={articleData?.summary} />
-        <meta property="og:image" content={fullImageUrl || articleData?.imageUrl} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={currentUrl} />
-        <meta name="twitter:title" content={articleData?.title} />
-        <meta name="twitter:description" content={articleData?.summary} />
-        <meta name="twitter:image" content={fullImageUrl || articleData?.imageUrl} />
-        <link rel="canonical" href={currentUrl} />
-      </Head> */}
 
       <article className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
@@ -93,7 +71,8 @@ const ArticleMainPage = () => {
             </div>
             <div className="flex items-center">
               <Calendar className="h-4 w-4 mr-2" />
-              <span>{articleData?.createdAt}</span>
+              {/* <span>{articleData?.createdAt}</span> */}
+              <span>{new Date(articleData?.createdAt || '').toLocaleString()}</span>
             </div>
           </div>
 

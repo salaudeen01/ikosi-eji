@@ -368,3 +368,29 @@ import { RowDataPacket } from "mysql2";
     data: DataCon;
   }
   
+
+  // activitylog
+
+export interface ActivityLog {
+  id: number;
+  userName: string | null;
+  adminName: string | null;
+  userEmail: string | null;
+  adminEmail: string | null;
+  action: string;
+  ipAddress: string;
+  userAgent: string;
+  description: string;
+  createdAt: string;
+}
+
+export interface ActivityLogResponse {
+  message: string;
+  data: ActivityLog[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}

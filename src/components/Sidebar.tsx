@@ -2,7 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import { ChartBarBig, LayoutDashboard, Newspaper, ShieldUser, Users } from "lucide-react";
+import { ChartBarBig, LayoutDashboard, Newspaper, ShieldUser, Users, Wallpaper } from "lucide-react";
 
 interface NavItem {
   label: string;
@@ -43,9 +43,18 @@ const Sidebar: React.FC = () => {
                 <span className="ms-3 font-semibold text-base">{items.label}</span>
               </a>
             </li>
-            
           ))}
-
+            <li>
+              <a
+                href={`/admin/activity-log`}
+                className={`${
+                  location === `/admin/activity-log` ? "border-[hsl(var(--primary))] border bg-[hsl(var(--primary))] text-white" : "text-gray-600 "
+                } flex items-center p-3 rounded-lg hover:bg-[hsl(var(--primary))] hover:text-white group`}
+              >
+                <Wallpaper />
+                <span className="ms-3 font-semibold text-base">{`Activity Log`}</span>
+              </a>
+            </li>
           {/* <li>
             <a
               href="/admin/categories"

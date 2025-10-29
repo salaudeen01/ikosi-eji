@@ -1,5 +1,5 @@
 import { authApi } from "@/lib/axios";
-import { ArticleQueryParams, CreateAdminPayload, CreateArticlePayload, CreateCategoryPayload, FetchAdminsResponse, FetchArticleResponse, FetchArticlesResponse, FetchCategoriesResponse } from "../../type";
+import { ActivityLogResponse, ArticleQueryParams, CreateAdminPayload, CreateArticlePayload, CreateCategoryPayload, FetchAdminsResponse, FetchArticleResponse, FetchArticlesResponse, FetchCategoriesResponse } from "../../type";
 
 
 
@@ -92,5 +92,19 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
         params: { slug },
       });
       return response.data;
+    };
+
+    export const fetchActivityLogs = async (params: {
+      page?: number;
+      limit?: number;
+      search?: string;
+      action?: string;
+      userId?: number;
+      adminId?: number;
+    }): Promise<ActivityLogResponse> => {
+      const { data } = await authApi.get<ActivityLogResponse>("/auth/log", {
+        params,
+      });
+      return data;
     };
 
