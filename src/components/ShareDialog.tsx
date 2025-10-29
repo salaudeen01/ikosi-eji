@@ -78,7 +78,7 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
 
   console.log(article?.title)
 
-  const encodedUrl = encodeURIComponent(`${window.location.origin}/articles/${article?.slug}`);
+  const encodedUrl = encodeURIComponent(`${window.location.origin}/articles/${article?.id}/${article?.slug}`);
   const encodedTitle = encodeURIComponent(article?.title || '');
 
 // const shareLinks = {

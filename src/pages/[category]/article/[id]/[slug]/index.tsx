@@ -33,9 +33,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!article) return { notFound: true };
 
     // Optionally: you can compute full canonical URL here
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+    const siteUrl = `${process.env.NEXT_PUBLIC_API_URL}` || "api";
     const canonical = `${siteUrl}/articles/${article.slug}`;
-
+    console.log(siteUrl)
+    console.log(canonical)
     return {
       props: {
         article,
