@@ -190,7 +190,7 @@ const Login = () => {
               {loading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
             </Button>
           </form>
-          <div className="mt-4 text-center">
+          {/* <div className="mt-4 text-center">
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
@@ -200,7 +200,7 @@ const Login = () => {
                 ? "Don't have an account? Sign up"
                 : "Already have an account? Login"}
             </button>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>
