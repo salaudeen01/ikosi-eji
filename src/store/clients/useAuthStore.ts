@@ -11,6 +11,7 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  isUser: boolean;
   setAuth: (user: User, token: string) => void;
   logout: () => void;
 }
@@ -21,6 +22,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      isUser: false,
 
       // ✅ Save user and token
       setAuth: (user, token) => {
@@ -28,6 +30,7 @@ export const useAuthStore = create<AuthState>()(
           user,
           token,
           isAuthenticated: !!token && !!user,
+          isUser: true
         });
       },
 
@@ -37,16 +40,18 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           token: null,
           isAuthenticated: false,
+          isUser: false
         });
       },
     }),
     {
-      name: "auth-storage", // key in localStorage
+      name: "auth-user-storage", // key in localStorage
       // ✅ This ensures it doesn’t crash during SSR
       partialize: (state) => ({
         user: state.user,
         token: state.token,
         isAuthenticated: state.isAuthenticated,
+        isUser: true
       }),
     }
   )

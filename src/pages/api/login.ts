@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import {db} from "@/lib/db";
 import bcrypt from "bcryptjs";
+import { logActivity } from "@/lib/logActivity";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -34,6 +35,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       JWT_SECRET,
       { expiresIn: "7d" }
     );
+
+    // ✅ Automatically log who did this
+    await logActivity({
+      req,
+      action: "USER_LOGIN",
+      id: user.id,
+      type: 'users',
+      description: `${user.names} with email ${user.email} loged in`,
+    });
 
     return res.status(200).json({
       message: "Login successful",

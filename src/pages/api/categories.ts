@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../lib/db";
 import slugify from "slugify";
 import { RowDataPacket } from "mysql2";
+import { logActivity } from "@/lib/logActivity";
 
 // id	name	slug	imageUrl	description	status	createdAt	updatedAt	
 
@@ -101,6 +102,14 @@ export default async function handler(
 
       const insertResult = result as { insertId: number };
 
+      // ✅ Automatically log who did this
+      await logActivity({
+        req,
+        action: "CREATE_CATEGORY",
+        type: 'admin',
+        description: `A new category with name: ${name} has been created`,
+      });
+
       return res.status(201).json({
         message: "Category created successfully",
         id: insertResult.insertId,
@@ -127,6 +136,14 @@ export default async function handler(
       );
 
       const updateResult = result as { affectedRows: number };
+
+      // ✅ Automatically log who did this
+      await logActivity({
+        req,
+        action: "DELETE_CATEGORY",
+        type: 'admin',
+        description: `A new category with name: ${id} has been archived`,
+      });
 
       if (updateResult.affectedRows === 0) {
         return res.status(404).json({ message: "Category not found" });
@@ -177,6 +194,14 @@ export default async function handler(
         "UPDATE categories SET name = ?, description = ?, slug = ?, imageUrl = ? WHERE id = ?",
         [name, description || null, slug || null, imageUrl || null, id]
       );
+
+      // ✅ Automatically log who did this
+      await logActivity({
+        req,
+        action: "UPDATE_CATEGORY",
+        type: 'admin',
+        description: `A new category with name: ${name} was updated`,
+      });
 
       return res.status(200).json({
         message: "Category updated successfully",

@@ -17,7 +17,6 @@ const fetchArticle = async (slug: string) => {
     typeof window === "undefined"
       ? process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
       : window.location.origin;
-      console.log(process.env.NEXT_PUBLIC_SITE_URL)
   const res = await axios.get(`${baseUrl}/api/news/${slug}`);
   return res.data.data;
 };
@@ -31,15 +30,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const article = await fetchArticle(slug);
 
-    console.log(article)
-
     if (!article) return { notFound: true };
 
     // Optionally: you can compute full canonical URL here
     const siteUrl = `${process.env.NEXT_PUBLIC_API_URL}` || "/api";
     const canonical = `${siteUrl}/${article.categorySlug}/articles/${article.slug}`;
-    console.log(siteUrl)
-    console.log(canonical)
     return {
       props: {
         article,

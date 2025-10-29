@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../lib/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { logActivity } from "@/lib/logActivity";
 
 interface User {
   id: number;
@@ -88,6 +89,15 @@ export default async function handler(
       secret,
       { expiresIn: "1d" }
     );
+
+    // ✅ Automatically log who did this
+    await logActivity({
+      req,
+      action: "ADMIN_LOGIN",
+      id: user.id,
+      type: 'admin',
+      description: `${user.name} with email ${user.email} loged in as ${user.role}`,
+    });
 
     res.status(200).json({
       token,

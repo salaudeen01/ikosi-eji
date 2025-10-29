@@ -19,8 +19,6 @@ export function getAdminFromToken(req: NextApiRequest): { isAdmin: boolean; admi
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
-    console.log(decoded)
-
     if (decoded.role !== "admin") {
       return { isAdmin: false };
     }

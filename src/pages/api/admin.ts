@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { sendAdminWelcomeEmail } from "@/lib/mailer";
+import { logActivity } from "@/lib/logActivity";
 
 // ✅ Define the user row shape
 interface User extends RowDataPacket {
@@ -70,7 +71,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (method) {
     // ============================= POST
     case "POST": {
-      const { isAdmin: isUserAdmin } = await isAdmin(req);
+      const { isAdmin: isUserAdmin, userId } = await isAdmin(req);
 
       if (!isUserAdmin) {
         return res.status(403).json({ message: "Access denied. Admins only." });
@@ -109,6 +110,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           // send reactivation mail
           await sendAdminWelcomeEmail(email, name, password);
 
+          // ✅ Automatically log who did this
+          await logActivity({
+            req,
+            action: "ADMIN_LOGIN",
+            id: userId,
+            type: 'admin',
+            description: `A new member with ${email} is re-activated`,
+          });
+
           return res.status(200).json({
             message: "Admin re-activated successfully",
             email,
@@ -123,6 +133,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // send welcome mail
         await sendAdminWelcomeEmail(email, name, password);
+
+        // ✅ Automatically log who did this
+        await logActivity({
+          req,
+          action: "ADMIN_LOGIN",
+          id: userId,
+          type: 'admin',
+          description: `A new member with ${email} is created`,
+        });
 
         return res.status(201).json({
           message: "Admin created successfully",
@@ -154,7 +173,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // ============================= DELETE
     case "DELETE": {
-      const { isAdmin: isUserAdmin } = await isAdmin(req);
+      const { isAdmin: isUserAdmin, userId } = await isAdmin(req);
 
       if (!isUserAdmin) {
         return res.status(403).json({ message: "Access denied. Admins only." });
@@ -170,6 +189,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           "UPDATE admin SET status = ? WHERE id = ?",
           ["archived", id]
         );
+
+        const [rows] = await db.query<User[]>(
+          "SELECT * FROM admin WHERE id = ?",
+          id
+        );
+
+        // ✅ Automatically log who did this
+        await logActivity({
+          req,
+          action: "DELETE_ADMIN",
+          id: userId,
+          type: 'admin',
+          description: `the admin with ${rows[0]?.email} has been deleted`,
+        });
+
         return res.status(200).json({ message: "User entry deleted" });
       } catch (err) {
         const error = err as MySqlError;
@@ -179,7 +213,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // ============================= PATCH
     case "PATCH": {
-      const { isAdmin: isUserAdmin } = await isAdmin(req);
+      const { isAdmin: isUserAdmin, userId } = await isAdmin(req);
 
       if (!isUserAdmin) {
         return res.status(403).json({ message: "Access denied. Admins only." });
@@ -195,6 +229,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           "UPDATE admin SET status = ? WHERE id = ?",
           ["archived", id]
         );
+
+        const [rows] = await db.query<User[]>(
+          "SELECT * FROM admin WHERE id = ?",
+          id
+        );
+
+        // ✅ Automatically log who did this
+        await logActivity({
+          req,
+          action: "ARCHIVED_ADMIN",
+          id: userId,
+          type: 'admin',
+          description: `the admin with ${rows[0]?.email} has been archived`,
+        });
+
 
         if (result.affectedRows === 0) {
           return res.status(404).json({ message: "Admin not found" });
@@ -212,7 +261,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // ============================= PUT
     case "PUT": {
-      const { isAdmin: isUserAdmin } = await isAdmin(req);
+      const { isAdmin: isUserAdmin, userId } = await isAdmin(req);
 
       if (!isUserAdmin) {
         return res.status(403).json({ message: "Access denied. Admins only." });
@@ -235,6 +284,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           "UPDATE admin SET name = ?, phone = ?, email = ?, password = ?, role = ? WHERE id = ?",
           [name || null, phone || null, email || null, password || null, role || null, id]
         );
+
+        const [rows] = await db.query<User[]>(
+          "SELECT * FROM admin WHERE id = ?",
+          id
+        );
+
+        // ✅ Automatically log who did this
+        await logActivity({
+          req,
+          action: "UPDATE_ADMIN",
+          id: userId,
+          type: 'admin',
+          description: `the admin with ${rows[0]?.email} was updated`,
+        });
 
         return res.status(200).json({ message: "Admin entry updated" });
       } catch (err) {

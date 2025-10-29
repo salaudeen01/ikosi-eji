@@ -26,7 +26,6 @@ const AdminDashboard = () => {
 
   const stats = data?.stats || {};
 
-  console.log(stats)
 
   return (
     <Layout>

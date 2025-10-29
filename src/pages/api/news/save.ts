@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { JwtPayload } from "jsonwebtoken";
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from 'jsonwebtoken';
+import { logActivity } from "@/lib/logActivity";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -72,6 +73,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         [userId, articleId]
       );
 
+      // ✅ Automatically log who did this
+      await logActivity({
+        req,
+        action: "SAVE_ARTICLE",
+        // id: userId,
+        type: 'users',
+        description: `user with email ${user.email} saved article with ${articleId}`,
+      });
+
       return res.status(201).json({ message: "Article saved successfully" });
     }
 
@@ -84,6 +94,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `DELETE FROM saved_articles WHERE userId = ? AND articleId = ?`,
         [userId, articleId]
       );
+
+      // ✅ Automatically log who did this
+      await logActivity({
+        req,
+        action: "SAVE_ARTICLE",
+        // id: userId,
+        type: 'users',
+        description: `user with email ${user.email} deleted article with ${articleId}`,
+      });
 
       return res.status(200).json({ message: "Article removed from saved list" });
     }

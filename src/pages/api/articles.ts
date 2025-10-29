@@ -3,6 +3,7 @@ import { db } from "../../lib/db";
 import slugify from "slugify";
 import jwt from "jsonwebtoken";
 import { RowDataPacket } from "mysql2";
+import { logActivity } from "@/lib/logActivity";
 
 // ✅ DB Model
 interface Stats extends RowDataPacket {
@@ -320,6 +321,15 @@ export default async function handler(
 
       const insertResult = result as { insertId: number };
 
+      // ✅ Automatically log who did this
+      await logActivity({
+        req,
+        action: "UPDATE_ARTICLE",
+        id: adminId,
+        type: 'admin',
+        description: `A new article has been created to draft with the title: ${title}`,
+      });
+
       return res.status(201).json({
         message: "Article created successfully",
         id: insertResult?.insertId,
@@ -358,6 +368,14 @@ export default async function handler(
       if (updateResult.affectedRows === 0) {
         return res.status(404).json({ message: "Article not found" });
       }
+      // ✅ Automatically log who did this
+      await logActivity({
+        req,
+        action: "PUBLISHED_ARTICLE",
+        id: adminId,
+        type: 'admin',
+        description: `An article  with the id: ${id} has been ${status}`,
+      });
 
       return res.status(200).json({
         message: `Article ${status} successfully`,
@@ -450,6 +468,15 @@ export default async function handler(
           id,
         ]
       );
+
+      // ✅ Automatically log who did this
+      await logActivity({
+        req,
+        action: "UPDATE_ARTICLE",
+        id: adminId,
+        type: 'admin',
+        description: `An article  with the title: ${title} has been updated`,
+      });
   
       return res.status(200).json({
         message: "Article updated successfully",

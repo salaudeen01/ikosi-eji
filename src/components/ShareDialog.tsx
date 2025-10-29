@@ -65,7 +65,7 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-        console.log("Article shared successfully");
+        // console.log("Article shared successfully");
       } catch (err) {
         console.error("Share cancelled or failed", err);
       }
@@ -75,8 +75,6 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
       alert("Link copied to clipboard!");
     }
   };
-
-  console.log(article)
 
   const encodedUrl = encodeURIComponent(`${window.location.origin}/${article?.categoryName}/article/${article?.id}/${article?.slug}`);
   const encodedTitle = encodeURIComponent(article?.title || '');

@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
+import { logActivity } from "@/lib/logActivity";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -26,6 +27,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email,
       hashedPassword,
     ]);
+       // ✅ Automatically log who did this
+       await logActivity({
+        req,
+        action: "USER_REGISTRATION",
+        type: 'users',
+        description: `New member with ${names} and ${email} rigisttered`,
+      });
 
     return res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
