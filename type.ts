@@ -117,6 +117,7 @@ import { RowDataPacket } from "mysql2";
   }
 
   export interface Article {
+    [x: string]: any;
     id: number;
     title: string;
     slug: string;

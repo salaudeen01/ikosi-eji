@@ -19,6 +19,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useArticleStore } from "@/store/clients/useArticleStore";
 
 interface ShareDialogProps {
   title: string;
@@ -27,6 +28,7 @@ interface ShareDialogProps {
 }
 
 const ShareDialog = ({ title, url }: ShareDialogProps) => {
+  const article = useArticleStore((s) => s.article);
   const { toast } = useToast();
   const [fullUrl, setFullUrl] = useState<string>("");
 
@@ -40,8 +42,8 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
     }
   }, [url]);
 
-  const encodedUrl = encodeURIComponent(fullUrl);
-  const encodedTitle = encodeURIComponent(title);
+  // const encodedUrl = encodeURIComponent(fullUrl);
+  // const encodedTitle = encodeURIComponent(title);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(fullUrl);
@@ -50,6 +52,41 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
       description: "Article link has been copied to clipboard.",
     });
   };
+  const handleShare = async () => {
+    if (!article) return;
+
+    const shareData = {
+      title: article.title,
+      text: article.summary || "Check out this article!",
+      url: `${window.location.origin}/articles/${article.slug}`,
+    };
+
+    // ✅ Use Web Share API if available (mobile-friendly)
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        console.log("Article shared successfully");
+      } catch (err) {
+        console.error("Share cancelled or failed", err);
+      }
+    } else {
+      // ✅ Fallback: copy link to clipboard
+      await navigator.clipboard.writeText(shareData.url);
+      alert("Link copied to clipboard!");
+    }
+  };
+
+  console.log(article?.title)
+
+  const encodedUrl = encodeURIComponent(`${window.location.origin}/articles/${article?.slug}`);
+  const encodedTitle = encodeURIComponent(article?.title || '');
+
+// const shareLinks = {
+//   twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+//   facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+//   whatsapp: `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`,
+// };
+
 
   const openShareWindow = (shareUrl: string) => {
     window.open(shareUrl, "_blank", "width=600,height=400");
@@ -65,12 +102,13 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
     openShareWindow(`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`);
 
   const shareToWhatsApp = () =>
-    openShareWindow(`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`);
+    openShareWindow(`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`);
+  // openShareWindow(`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button onClick={handleShare} variant="outline" size="sm">
           <Share2 className="h-4 w-4 mr-2" />
           Share
         </Button>

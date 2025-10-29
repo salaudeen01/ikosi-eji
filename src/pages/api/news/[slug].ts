@@ -102,21 +102,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       article.viewNo = String(Number(article.viewNo) + 1);
     }
 
-    // 5️⃣ Fetch related articles
-    // const [relatedRows] = await db.query<Article[]>(
-    //   `
-    //   SELECT 
-    //     id, title, slug, summary, imageUrl, createdAt
-    //   FROM articles
-    //   WHERE 
-    //     categoryId = ? 
-    //     AND id != ? 
-    //     AND status = 'published'
-    //   ORDER BY createdAt DESC
-    //   LIMIT 2
-    //   `,
-    //   [article.categoryId, article.id]
-    // );
     const [relatedRows] = await db.query<Article[]>(
       `
       SELECT 
