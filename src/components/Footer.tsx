@@ -95,7 +95,7 @@ const Footer = ({categories}: NavItem) => {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-[hsl(var(--border))] text-center text-sm text-[hsl(var(--muted-foreground))] ">
-          <p>© 2025 EconoNetrics. All rights reserved.</p>
+          <p>© 2025 Ecometrics. All rights reserved.</p>
         </div>
       </div>
   </footer>

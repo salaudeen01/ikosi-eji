@@ -71,8 +71,8 @@ export function adminWelcomeTemplate(name?: string, password?: string) {
         <div class="container">
           <div class="header">
             <div class="dlex">
-                <img src="https://res.cloudinary.com/orestech/image/upload/v1759767961/econo_elexj1.png" width="50" height="50" alt="Econonetrics Logo" />
-                <h3 style="color: #1a6540; font-size:28px; font-style: bold">Econonetrics</h3>
+                <img src="https://res.cloudinary.com/orestech/image/upload/v1759767961/econo_elexj1.png" width="50" height="50" alt="Ecometrics Logo" />
+                <h3 style="color: #1a6540; font-size:28px; font-style: bold">Ecometrics</h3>
             </div>
             <h1>Welcome to the Admin Portal</h1>
           </div>
