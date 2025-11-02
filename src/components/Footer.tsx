@@ -27,7 +27,7 @@ const Footer = ({categories}: NavItem) => {
               alt={'logo'}
               className="w-10 h-auto"
             />
-            conoNetrics
+            cometrics
             </h3>
             <p className="text-sm text-[hsl(var(--muted-foreground))] ">
               Nigeria&apos;s leading business and financial news platform. Stay

@@ -34,7 +34,7 @@ const Navigation = ({categories}: NavItem) => {
                 className="w-10 h-auto"
               />
               <h1 className="text-2xl font-bold text-[hsl(var(--primary))] cursor-pointer hover:text-[hsl(var(--news-hover))] transition-colors">
-                conoNetrics
+                cometrics
               </h1>
             </Link>
           </div>
