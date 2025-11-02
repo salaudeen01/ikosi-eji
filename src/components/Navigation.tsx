@@ -42,7 +42,7 @@ const Navigation = ({categories}: NavItem) => {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
             {categories.map((item) =>
-              <Link key={item.name} href={`/category/${item.slug}` || "#"}>
+              <Link key={item.name} href={`/ca/${item.slug}` || "#"}>
                 <Button
                   variant="ghost"
                   className="text-sm font-medium text-[hsl(var(--foreground))] hover:text-[hsl(var(--primary))] hover:bg-transparent"
@@ -93,7 +93,7 @@ const Navigation = ({categories}: NavItem) => {
               {categories.map((item) =>
                 <Link
                   key={item.name}
-                  href={`/category/${item.slug}` || "#"}
+                  href={`/ca/${item.slug}` || "#"}
                   className="text-sm font-medium text-[hsl(var(--foreground))] hover:text-[hsl(var(--primary))] transition-colors"
                 >
                   {item.name}

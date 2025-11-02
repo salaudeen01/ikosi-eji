@@ -16,7 +16,7 @@ const CategorySection = ({ title, articles, categorySlug }: CategorySectionProps
         <h2 className="text-3xl font-bold text-[hsl(var(--foreground))] ">{title}</h2>
         <Link
           // href={`#`}
-          href={`/category/${categorySlug}`}
+          href={`/ca/${categorySlug}`}
           className="flex items-center text-sm font-medium text-[hsl(var(--primary))] hover:text-[hsl(var(--news-hover))] transition-colors"
         >
           View All
