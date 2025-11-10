@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@/generated/client";
 
 // --- Define strict types for response ---
 interface ActivityLogRow {
@@ -32,7 +32,7 @@ export default async function handler(
     const skip = (pageNumber - 1) * pageSize;
 
     // 1️⃣ Build filters dynamically
-    const filters: any = {};
+    const filters: Prisma.ActivityLogWhereInput = {};
     if (userId) filters.userId = Number(userId);
     if (adminId) filters.adminId = Number(adminId);
     if (action) filters.action = { contains: action as string };
