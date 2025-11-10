@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcryptjs";
-import { db } from "@/lib/db";
+import prisma from "@/lib/prisma"; // Shared Prisma client
 import { logActivity } from "@/lib/logActivity";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,24 +16,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const [existing] = await db.query(`SELECT id FROM users WHERE email = ?`, [email]);
-    if ((existing as any[]).length > 0) {
+    // ✅ Check if email already exists
+    const existing = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (existing) {
       return res.status(409).json({ message: "Email already registered" });
     }
 
+    // ✅ Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.query(`INSERT INTO users (names, email, password) VALUES (?, ?, ?)`, [
-      names,
-      email,
-      hashedPassword,
-    ]);
-       // ✅ Automatically log who did this
-       await logActivity({
-        req,
-        action: "USER_REGISTRATION",
-        type: 'users',
-        description: `New member with ${names} and ${email} rigisttered`,
-      });
+
+    // ✅ Create user
+    const newUser = await prisma.user.create({
+      data: {
+        names,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    // ✅ Log activity
+    await logActivity({
+      req,
+      action: "USER_REGISTRATION",
+      type: "user",
+      id: newUser.id,
+      description: `New member registered: ${names} (${email})`,
+    });
 
     return res.status(201).json({ message: "User registered successfully" });
   } catch (err) {

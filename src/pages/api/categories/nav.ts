@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "@/lib/db";
+import prisma from "@/lib/prisma";
 import { ClientCategory } from "../../../../type";
-
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
@@ -11,14 +10,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const limit = parseInt((req.query.limit as string) || "5", 10);
 
-    const [rows] = await db.query<ClientCategory[]>(
-      `SELECT id, name, slug 
-       FROM categories 
-       WHERE status = 'active'
-       ORDER BY createdAt DESC
-       LIMIT ?`,
-      [limit]
-    );
+    // ✅ Fetch active categories with Prisma
+    const rows = await prisma.category.findMany({
+      where: { status: "active" },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+    });
 
     return res.status(200).json({
       message: "Categories fetched successfully",

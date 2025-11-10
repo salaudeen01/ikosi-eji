@@ -35,7 +35,7 @@ export const useCreateCategory = ({ onSuccessCallback }: UseCreateCategoryOption
       });
 
       // 👇 automatically refresh the admin list
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      await queryClient.invalidateQueries({ queryKey: ["category"] });
 
       if (onSuccessCallback) onSuccessCallback();
       router.push("/admin/category");
@@ -64,7 +64,7 @@ export const useUpdateCategory = ({ onSuccessCallback }: UseCreateCategoryOption
       });
 
       // 👇 refresh list after update too
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      await queryClient.invalidateQueries({ queryKey: ["category"] });
 
       if (onSuccessCallback) onSuccessCallback();
     },
@@ -92,7 +92,7 @@ export const usePatchCategory = ({ onSuccessCallback }: UseCreateCategoryOptions
       });
 
       // 👇 refresh list after update too
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      await queryClient.invalidateQueries({ queryKey: ["category"] });
 
       if (onSuccessCallback) onSuccessCallback();
     },

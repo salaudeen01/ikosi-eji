@@ -1,27 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "@/lib/db";
+import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
-import { RowDataPacket } from "mysql2";
 
-interface Article extends RowDataPacket {
-  id: number;
-  title: string;
-  slug: string;
-  summary: string | null;
-  imageUrl: string | null;
-  videoUrl: string | null;
-  content: string | null;
-  type: string | null;
-  status: string;
-  categoryId: number;
-  shareNo: string;
-  viewNo: string;
-  createdAt: string;
-  categoryName: string;
-  adminName: string;
-}
-
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
@@ -34,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ message: "Missing required slug" });
     }
 
-    // 1️⃣ Extract user or IP
+    // 1️⃣ Extract userId from token or null
     let userId: number | null = null;
     const userIp: string | null =
       (req.headers["x-forwarded-for"] as string)?.split(",")[0] ||
@@ -48,92 +29,67 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const decoded = jwt.verify(token, JWT_SECRET) as { id?: number };
         if (decoded?.id) userId = decoded.id;
       } catch {
-        // Invalid token → ignore (treat as guest)
+        // Invalid token → ignore
       }
     }
 
-    // 2️⃣ Fetch the article
-    const [articleRows] = await db.query<Article[]>(
-      `
-      SELECT 
-        a.*,
-        c.name AS categoryName,
-        u.name AS adminName,
-        u.email AS adminEmail
-      FROM articles a
-      LEFT JOIN categories c ON a.categoryId = c.id
-      LEFT JOIN admin u ON a.adminId = u.id
-      WHERE a.slug = ? AND a.status = 'published'
-      LIMIT 1
-      `,
-      [slug]
-    );
+    // 2️⃣ Fetch article by slug
+    const article = await prisma.article.findFirst({
+      where: { slug, status: "published" },
+      include: {
+        category: true,
+        admin: {
+          select: { name: true, email: true },
+        },
+      },
+    });
 
-    const article = articleRows[0];
     if (!article) {
       return res.status(404).json({ message: "Article not found" });
     }
 
     // 3️⃣ Check if this user/IP already viewed
-    const [existingViews] = await db.query<RowDataPacket[]>(
-      `
-      SELECT id 
-      FROM article_views 
-      WHERE articleId = ? 
-        AND (
-          (userId IS NOT NULL AND userId = ?) OR 
-          (userId IS NULL AND userIp = ?)
-        )
-      `,
-      [article.id, userId, userIp]
-    );
+    const existingView = await prisma.articleView.findFirst({
+      where: {
+        articleId: article.id,
+        OR: [
+          { userId: userId ?? undefined },
+          { userId: null, userIp },
+        ],
+      },
+    });
 
     // 4️⃣ If not viewed yet → insert + increment
-    if (existingViews.length === 0) {
-      await db.query(
-        `
-        INSERT INTO article_views (articleId, userId, userIp)
-        VALUES (?, ?, ?)
-        `,
-        [article.id, userId, userIp]
-      );
+    if (!existingView) {
+      await prisma.articleView.create({
+        data: { articleId: article.id, userId: userId ?? null, userIp },
+      });
 
-      await db.query(`UPDATE articles SET viewNo = viewNo + 1 WHERE id = ?`, [article.id]);
-      article.viewNo = String(Number(article.viewNo) + 1);
+      // Increment viewNo
+      await prisma.article.update({
+        where: { id: article.id },
+        data: { viewNo: { increment: 1 } },
+      });
+
+      article.viewNo = (Number(article.viewNo) + 1);
     }
 
-    const [relatedRows] = await db.query<Article[]>(
-      `
-      SELECT 
-        a.id,
-        a.title,
-        a.slug,
-        a.summary,
-        a.imageUrl,
-        a.createdAt,
-        c.name AS categoryName,
-        c.slug AS categorySlug
-      FROM articles a
-      JOIN categories c ON a.categoryId = c.id
-      WHERE 
-        a.categoryId = ? 
-        AND a.id != ? 
-        AND a.status = 'published'
-        AND c.status = 'active'
-      ORDER BY a.createdAt DESC
-      LIMIT 2
-      `,
-      [article.categoryId, article.id]
-    );
-    
+    // 5️⃣ Fetch related articles (same category, exclude current)
+    const related = await prisma.article.findMany({
+      where: {
+        categoryId: article.categoryId,
+        id: { not: article.id },
+        status: "published",
+        category: { status: "active" },
+      },
+      include: { category: true },
+      orderBy: { createdAt: "desc" },
+      take: 2,
+    });
 
-    // ✅ 6️⃣ Send response
     return res.status(200).json({
       message: "Article fetched successfully",
-      data: {
-        article,
-        related: relatedRows,
-      },
+      data: { article, related },
     });
   } catch (err) {
     console.error("Error fetching article:", err);

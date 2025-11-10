@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import prisma from "@/lib/prisma"; // Make sure you have a shared Prisma client
 import jwt from "jsonwebtoken";
 import { NextApiRequest } from "next";
 
@@ -13,8 +13,8 @@ interface LogPayload {
   req: NextApiRequest; // we use this to read token, ip, user-agent
   action: string;
   description?: string;
-  id?:number;
-  type?: string
+  id?: number;
+  type?: "user" | "admin";
 }
 
 export async function logActivity({ req, action, description, id, type }: LogPayload) {
@@ -39,20 +39,26 @@ export async function logActivity({ req, action, description, id, type }: LogPay
       }
     }
 
-    // ✅ if no token (e.g., login), fall back to provided id + role
+    // ✅ Fallback if no token (e.g., login)
     if (!token && id) {
-        if (type === "admin") adminId = id;
-        else userId = id;
-      }
+      if (type === "admin") adminId = id;
+      else userId = id;
+    }
 
     const ipAddress = req.socket.remoteAddress || null;
     const userAgent = req.headers["user-agent"] || null;
 
-    await db.query(
-      `INSERT INTO activity_logs (userId, adminId, action, description, ipAddress, userAgent)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [userId, adminId, action, description || null, ipAddress, userAgent]
-    );
+    // ✅ Use Prisma to insert the log
+    await prisma.activityLog.create({
+      data: {
+        action,
+        description: description || null,
+        ipAddress,
+        userAgent,
+        userId,
+        adminId,
+      },
+    });
   } catch (error) {
     console.error("Error logging activity:", error);
   }

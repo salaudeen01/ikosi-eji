@@ -1,18 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../lib/db";
+import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { logActivity } from "@/lib/logActivity";
-
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  role: string;
-  username: string;
-  password: string;
-  status: string;
-}
 
 interface LoginResponse {
   token?: string;
@@ -21,7 +11,6 @@ interface LoginResponse {
     email: string;
     name: string;
     role: string;
-    username: string;
   };
   message?: string;
 }
@@ -35,10 +24,7 @@ export default async function handler(
     return;
   }
 
-  const { email, password } = req.body as {
-    email?: string;
-    password?: string;
-  };
+  const { email, password } = req.body as { email?: string; password?: string };
 
   if (!email || !password) {
     res.status(400).json({ message: "Email and password are required" });
@@ -46,19 +32,23 @@ export default async function handler(
   }
 
   try {
-    const [rows] = await db.query("SELECT * FROM admin WHERE email = ?", [
-      email,
-    ]);
+    // 1️⃣ Fetch admin by email
+    const user = await prisma.admin.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        password: true,
+        status: true,
+      },
+    });
 
-    // Ensure the result is typed properly
-    const admin = rows as unknown as User[];
-
-    if (admin.length === 0) {
+    if (!user) {
       res.status(401).json({ message: "Invalid credentials" });
       return;
     }
-
-    const user = admin[0];
 
     if (user.status !== "active") {
       res
@@ -67,12 +57,14 @@ export default async function handler(
       return;
     }
 
+    // 2️⃣ Verify password
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       res.status(401).json({ message: "Invalid credentials" });
       return;
     }
 
+    // 3️⃣ Generate JWT
     const secret = process.env.JWT_SECRET;
     if (!secret) {
       throw new Error("JWT_SECRET is not defined in environment variables");
@@ -84,21 +76,21 @@ export default async function handler(
         email: user.email,
         name: user.name,
         role: user.role,
-        username: user.username,
       },
       secret,
       { expiresIn: "1d" }
     );
 
-    // ✅ Automatically log who did this
+    // 4️⃣ Log login activity
     await logActivity({
       req,
       action: "ADMIN_LOGIN",
       id: user.id,
-      type: 'admin',
-      description: `${user.name} with email ${user.email} loged in as ${user.role}`,
+      type: "admin",
+      description: `${user.name} with email ${user.email} logged in as ${user.role}`,
     });
 
+    // 5️⃣ Return response
     res.status(200).json({
       token,
       user: {
@@ -106,7 +98,6 @@ export default async function handler(
         email: user.email,
         name: user.name,
         role: user.role,
-        username: user.username,
       },
     });
   } catch (error) {

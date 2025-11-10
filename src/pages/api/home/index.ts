@@ -1,6 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "@/lib/db";
-import { ClientArticle, ClientCategory } from "../../../../type";
+import prisma from "@/lib/prisma";
+
+interface CategoryWithArticles {
+  id: number;
+  name: string;
+  slug: string;
+  imageUrl: string | null;
+  articles: {
+    id: number;
+    title: string;
+    slug: string;
+    imageUrl: string | null;
+    summary: string | null;
+    createdAt: Date;
+  }[];
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
@@ -9,62 +23,65 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // 1️⃣ Get all active categories
-    const [categories] = await db.query<ClientCategory[]>(
-      `SELECT id, name, slug, imageUrl 
-       FROM categories 
-       WHERE status = 'active' 
-       ORDER BY createdAt ASC`
-    );
+    const categories = await prisma.category.findMany({
+      where: { status: "active" },
+      orderBy: { createdAt: "asc" },
+      select: { id: true, name: true, slug: true, imageUrl: true },
+    });
 
     // 2️⃣ Fetch 3 latest published articles per category
     const categoriesWithArticles = await Promise.all(
       categories.map(async (cat) => {
-        const [articles] = await db.query<ClientArticle[]>(
-          `SELECT id, title, slug, imageUrl, summary, createdAt 
-           FROM articles 
-           WHERE categoryId = ? AND status = 'published' 
-           ORDER BY createdAt DESC 
-           LIMIT 3`,
-          [cat.id]
-        );
+        const articles = await prisma.article.findMany({
+          where: { categoryId: cat.id, status: "published" },
+          orderBy: { createdAt: "desc" },
+          take: 3,
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            imageUrl: true,
+            summary: true,
+            createdAt: true,
+          },
+        });
 
-        // ❌ If no articles, skip this category
         if (articles.length === 0) return null;
-
-        return { ...cat, articles };
+        return { ...cat, articles } as CategoryWithArticles;
       })
     );
 
-    // ✅ Filter out empty/null categories
-    const filteredCategories = categoriesWithArticles.filter(
-      (cat): cat is ClientCategory & { articles: ClientArticle[] } => cat !== null
+    // 3️⃣ Filter out null categories safely
+    const filteredCategories: CategoryWithArticles[] = categoriesWithArticles.filter(
+      (cat): cat is CategoryWithArticles => cat !== null
     );
 
-    // 3️⃣ Fetch breaking news (join to get category name + slug)
-    const [breakingNews] = await db.query<ClientArticle[]>(
-      `SELECT 
-         a.id, a.title, a.slug, a.imageUrl, a.createdAt,
-         c.name AS categoryName, c.slug AS categorySlug
-       FROM articles a
-       LEFT JOIN categories c ON a.categoryId = c.id
-       WHERE a.isBreaking = 1 AND a.status = 'published' AND c.status = 'active'
-       ORDER BY a.createdAt DESC
-       LIMIT 5`
-    );
+    // 4️⃣ Fetch breaking news (with category details)
+    const breakingNews = await prisma.article.findMany({
+      where: {
+        isBreaking: true,
+        status: "published",
+        category: { status: "active" },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        category: { select: { name: true, slug: true } },
+      },
+    });
 
-    // 4️⃣ Fetch 4 banner categories (join to get category details)
-    const [banners] = await db.query<ClientArticle[]>(
-      `SELECT 
-         a.id, a.title, a.slug, a.imageUrl, a.createdAt, a.summary,
-         c.name AS categoryName, c.slug AS categorySlug
-       FROM articles a
-       LEFT JOIN categories c ON a.categoryId = c.id
-       WHERE a.status = 'published' AND c.status = 'active' AND a.imageUrl IS NOT NULL
-       ORDER BY a.createdAt DESC
-       LIMIT 4`
-    );
+    // 5️⃣ Fetch banner articles (with category details)
+    const banners = await prisma.article.findMany({
+      where: {
+        status: "published",
+        imageUrl: { not: null },
+        category: { status: "active" },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 4,
+      include: { category: { select: { name: true, slug: true } } },
+    });
 
-    // ✅ Final response
     return res.status(200).json({
       message: "Home data fetched successfully",
       categories: filteredCategories,
@@ -79,4 +96,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 }
-

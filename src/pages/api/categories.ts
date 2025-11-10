@@ -1,57 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../lib/db";
 import slugify from "slugify";
-import { RowDataPacket } from "mysql2";
+import prisma from "@/lib/prisma";
 import { logActivity } from "@/lib/logActivity";
-
-// id	name	slug	imageUrl	description	status	createdAt	updatedAt	
-
-interface Category {
-  id: number;
-  name: string;
-  description: string | null;
-  slug: string | null;
-  status: string;
-  createdAt: string;
-}
 
 interface ApiResponse {
   message: string;
-  data?: Category[];
+  data?: any;
   id?: number;
-  userId?: number;
   error?: string;
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse>
-): Promise<void> {
+) {
+  const now = new Date();
+
+  // -----------------------------
+  // GET categories
+  // -----------------------------
   if (req.method === "GET") {
     try {
-      const { slug, search } = req.query as {
-        slug?: string;
-        search?: string;
-      };
+      const { slug, search } = req.query as { slug?: string; search?: string };
 
-      let query = `SELECT * FROM categories WHERE status = 'active'`;
-      const params: (string | number)[] = [];
-
-      if (slug) {
-        query += ` AND slug = ?`;
-        params.push(slug);
-      }
-
-      if (search) {
-        query += ` AND (name LIKE ? OR description LIKE ?)`;
-        const searchTerm = `%${search}%`;
-        params.push(searchTerm, searchTerm);
-      }
-
-      query += ` ORDER BY id ASC`;
-
-      const [rows] = await db.query(query, params);
-      const categories = rows as unknown as Category[];
+      const categories = await prisma.category.findMany({
+        where: {
+          status: "active",
+          slug: slug ?? undefined,
+          OR: search
+            ? [
+                { name: { contains: search, mode: "insensitive" } },
+                { description: { contains: search, mode: "insensitive" } },
+              ]
+            : undefined,
+        },
+        orderBy: { id: "asc" },
+      });
 
       return res.status(200).json({
         data: categories,
@@ -66,53 +51,52 @@ export default async function handler(
     }
   }
 
+  // -----------------------------
+  // CREATE category
+  // -----------------------------
   if (req.method === "POST") {
     const { name, description, imageUrl } = req.body as {
       name?: string;
       description?: string;
-      imageUrl: string | null;
-      createdAt: string;
+      imageUrl?: string | null;
     };
-    const now = new Date();
 
     if (!name) {
-      return res
-        .status(400)
-        .json({ message: "Name and Category are required" });
+      return res.status(400).json({ message: "Name is required" });
     }
 
     try {
-
-      // ✅ Generate slug from title
       let slug = slugify(name, { lower: true, strict: true });
 
-      // ✅ Check for duplicate slug
-      const [existing] = await db.query<RowDataPacket[]>(
-        "SELECT id FROM articles WHERE slug = ?",
-        [slug]
-      );
-      if (existing.length > 0) {
-        slug = `${slug}-${Date.now()}`; // append timestamp to make it unique
+      // ✅ Check duplicate slug
+      const existingSlug = await prisma.category.findFirst({
+        where: { slug },
+        select: { id: true },
+      });
+      if (existingSlug) {
+        slug = `${slug}-${Date.now()}`;
       }
 
-      const [result] = await db.query(
-        "INSERT INTO categories (name, description, imageUrl, slug, createdAt) VALUES (?, ?, ?, ?, ?)",
-        [name, description || null, imageUrl, slug, now]
-      );
+      const category = await prisma.category.create({
+        data: {
+          name,
+          description: description ?? null,
+          imageUrl: imageUrl ?? null,
+          slug,
+          createdAt: now,
+        },
+      });
 
-      const insertResult = result as { insertId: number };
-
-      // ✅ Automatically log who did this
       await logActivity({
         req,
         action: "CREATE_CATEGORY",
-        type: 'admin',
+        type: "admin",
         description: `A new category with name: ${name} has been created`,
       });
 
       return res.status(201).json({
         message: "Category created successfully",
-        id: insertResult.insertId,
+        id: category.id,
       });
     } catch (err) {
       return res.status(500).json({
@@ -122,6 +106,9 @@ export default async function handler(
     }
   }
 
+  // -----------------------------
+  // ARCHIVE category
+  // -----------------------------
   if (req.method === "PATCH") {
     const { id } = req.body as { id?: number };
 
@@ -130,30 +117,27 @@ export default async function handler(
     }
 
     try {
-      const [result] = await db.query(
-        "UPDATE categories SET status = ? WHERE id = ?",
-        ["archived", id]
-      );
+      const category = await prisma.category.update({
+        where: { id },
+        data: { status: "archived" },
+      });
 
-      const updateResult = result as { affectedRows: number };
-
-      // ✅ Automatically log who did this
       await logActivity({
         req,
         action: "DELETE_CATEGORY",
-        type: 'admin',
-        description: `A new category with name: ${id} has been archived`,
+        type: "admin",
+        description: `Category with id ${id} has been archived`,
       });
-
-      if (updateResult.affectedRows === 0) {
-        return res.status(404).json({ message: "Category not found" });
-      }
 
       return res.status(200).json({
         message: "Category deleted successfully",
-        userId: id,
+        id: category.id,
       });
-    } catch (err) {
+    } catch (err: any) {
+      if (err.code === "P2025") {
+        // Prisma error if record not found
+        return res.status(404).json({ message: "Category not found" });
+      }
       return res.status(500).json({
         message: "Error deleting category",
         error: err instanceof Error ? err.message : "Unknown error",
@@ -161,52 +145,57 @@ export default async function handler(
     }
   }
 
+  // -----------------------------
+  // UPDATE category
+  // -----------------------------
   if (req.method === "PUT") {
     const { id, name, description, imageUrl } = req.body as {
       id?: number;
-      desc?: string;
       name?: string;
       description?: string;
-      imageUrl: string | null;
+      imageUrl?: string | null;
     };
 
     if (!id || !name) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields (id, name)" });
+      return res.status(400).json({ message: "Missing required fields (id, name)" });
     }
 
     try {
-
-      // ✅ Generate slug from title
       let slug = slugify(name, { lower: true, strict: true });
 
-      // ✅ Check for duplicate slug
-      const [existing] = await db.query<RowDataPacket[]>(
-        "SELECT id FROM articles WHERE slug = ?",
-        [slug]
-      );
-      if (existing.length > 0) {
-        slug = `${slug}-${Date.now()}`; // append timestamp to make it unique
+      const existingSlug = await prisma.category.findFirst({
+        where: { slug, NOT: { id } }, // exclude current record
+        select: { id: true },
+      });
+
+      if (existingSlug) {
+        slug = `${slug}-${Date.now()}`;
       }
 
-      await db.query(
-        "UPDATE categories SET name = ?, description = ?, slug = ?, imageUrl = ? WHERE id = ?",
-        [name, description || null, slug || null, imageUrl || null, id]
-      );
+      await prisma.category.update({
+        where: { id },
+        data: {
+          name,
+          description: description ?? null,
+          imageUrl: imageUrl ?? null,
+          slug,
+        },
+      });
 
-      // ✅ Automatically log who did this
       await logActivity({
         req,
         action: "UPDATE_CATEGORY",
-        type: 'admin',
-        description: `A new category with name: ${name} was updated`,
+        type: "admin",
+        description: `Category with name: ${name} was updated`,
       });
 
       return res.status(200).json({
         message: "Category updated successfully",
       });
-    } catch (err) {
+    } catch (err: any) {
+      if (err.code === "P2025") {
+        return res.status(404).json({ message: "Category not found" });
+      }
       return res.status(500).json({
         message: "Error updating category",
         error: err instanceof Error ? err.message : "Unknown error",

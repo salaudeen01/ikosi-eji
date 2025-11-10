@@ -1,0 +1,54 @@
+VERCEL_TOKEN: awM1Jd0wRMDc0M7aSIbqAHq3
+# DB_PASSWORD: ""
+# DB_NAME: "econonetric"
+# DB_USER: "root"
+# DB_HOST: "localhost"
+
+# DB_PASSWORD: "rxPNhMlbP9"
+# DB_NAME: "sql8803792"
+# DB_USER: "sql8803792"
+# DB_HOST: "sql8.freesqldatabase.com"
+
+
+DB_PASSWORD: "ecometrics@1"
+DB_NAME: "ecometrics"
+DB_USER: "ecometrics"
+DB_HOST: "194.163.155.98"
+DB_PORT: "3307"
+
+JWT_SECRET: "xyxyxyx"
+
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+# NEXT_PUBLIC_API_URL=http://localhost:3000
+
+
+CLOUDINARY_CLOUD_NAME="orestech"
+CLOUDINARY_API_KEY="245662553674249"
+CLOUDINARY_API_SECRET="XFIF8PeCRfitHDIFXIfkxG-wQ3c"
+
+GMAIL_USER="salaudeenadedejihameed@gmail.com"
+GMAIL_APP_PASSWORD="wksb vgyg dnvp qydv"
+
+# This was inserted by `prisma init`:
+# Environment variables declared in this file are NOT automatically loaded by Prisma.
+# Please add `import "dotenv/config";` to your `prisma.config.ts` file, or use the Prisma CLI with Bun
+# to load environment variables from .env files: https://pris.ly/prisma-config-env-vars.
+
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+# The following `prisma+postgres` URL is similar to the URL produced by running a local Prisma Postgres 
+# server with the `prisma dev` CLI command, when not choosing any non-default ports or settings. The API key, unlike the 
+# one found in a remote Prisma Postgres URL, does not contain any sensitive information.
+
+# DATABASE_URL="mysql://ecometrics:ecometrics@1@ecometrics-database-kgmsjk:3306/ecometrics"
+DATABASE_URL="mysql://ecometrics:ecometrics@1@194.163.155.98:3307/ecometrics"
+
+# SHADOW_DATABASE_URL="mysql://ecometrics:ecometrics@1@194.163.155.98:3307/ecometrics_shadow"
+
+
+SHADOW_DATABASE_URL="mysql://ecometrics-shadow:ecometrics-shadow@194.163.155.98:3309/ecometrics-shadow"
+
+
+# For more information, refer to the documentation: https://pris.ly/d/prisma-schema#the-environment-variables-file
+

@@ -1,15 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { RowDataPacket } from "mysql2";
-import { db } from "@/lib/db";
-import { JwtPayload } from "jsonwebtoken";
-import jwt from 'jsonwebtoken';
+import prisma from "@/lib/prisma";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-// ✅ Define strict types
-interface CountRow extends RowDataPacket {
-  total: number;
-}
-
-interface TopArticle extends RowDataPacket {
+// ✅ Define strict types inside the component
+interface TopArticle {
   id: number;
   title: string;
   slug: string;
@@ -17,12 +11,12 @@ interface TopArticle extends RowDataPacket {
   views: number;
 }
 
-interface RecentArticle extends RowDataPacket {
+interface RecentArticle {
   id: number;
   title: string;
   slug: string;
   imageUrl: string | null;
-  createdAt: string;
+  createdAt: Date;
   categoryName: string;
 }
 
@@ -40,26 +34,26 @@ interface DashboardStats {
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 interface AuthPayload extends JwtPayload {
-    id: number;
-    email: string;
-  }
-  
-export function verifyToken(req: NextApiRequest): AuthPayload {
-const authHeader = req.headers.authorization;
-if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new Error("Unauthorized");
+  id: number;
+  email: string;
 }
 
-const token = authHeader.split(" ")[1];
+// ✅ Token verification
+export function verifyToken(req: NextApiRequest): AuthPayload {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    throw new Error("Unauthorized");
+  }
 
-try {
-    // ✅ Verify and cast the token payload
+  const token = authHeader.split(" ")[1];
+
+  try {
     const decoded = jwt.verify(token, JWT_SECRET) as AuthPayload;
     if (!decoded.id) throw new Error("Invalid token payload");
     return decoded;
-} catch (err) {
+  } catch (err) {
     throw new Error("Invalid or expired token");
-}
+  }
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -70,69 +64,81 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // ✅ 1. Verify admin authentication
     const admin = verifyToken(req);
-    if (!admin) { //  || admin.role !== "admin"
+    if (!admin) {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
     // ✅ 2. Fetch stats in parallel
     const [
-      [articleCount],
-      [categoryCount],
-      [adminCount],
-      [userCount],
-      [savedCount],
-      [viewCount],
-      [topArticles],
-      [recentArticles],
+      totalArticles,
+      totalCategories,
+      totalAdmins,
+      totalUsers,
+      totalSaved,
+      totalViews,
+      topArticlesRaw,
+      recentArticlesRaw,
     ] = await Promise.all([
-      db.query<CountRow[]>(`SELECT COUNT(a.id) AS total
-        FROM articles a
-        JOIN categories c ON a.categoryId = c.id
-        WHERE c.status = 'active'`),
-      db.query<CountRow[]>(`SELECT COUNT(*) AS total FROM categories WHERE status = 'active'`),
-      db.query<CountRow[]>(`SELECT COUNT(*) AS total FROM admin WHERE status = 'active'`),
-      db.query<CountRow[]>(`SELECT COUNT(*) AS total FROM users`),
-      db.query<CountRow[]>(`SELECT COUNT(*) AS total FROM saved_articles`),
-      db.query<CountRow[]>(`SELECT COUNT(*) AS total FROM article_views`),
-
-      db.query<TopArticle[]>(`
-        SELECT 
-          a.id, 
-          a.title, 
-          a.slug, 
-          a.imageUrl,
-          COUNT(v.id) AS views
-        FROM article_views v
-        JOIN articles a ON v.articleId = a.id
-        GROUP BY a.id
-        ORDER BY views DESC
-        LIMIT 5
-      `),
-
-      db.query<RecentArticle[]>(`
-        SELECT 
-          a.id, 
-          a.title, 
-          a.slug, 
-          a.imageUrl, 
-          a.createdAt,
-          c.name AS categoryName
-        FROM articles a
-        JOIN categories c ON a.categoryId = c.id
-        WHERE a.status = 'published'
-        ORDER BY a.createdAt DESC
-        LIMIT 5
-      `),
+      prisma.article.count({ where: { category: { status: "active" } } }),
+      prisma.category.count({ where: { status: "active" } }),
+      prisma.admin.count({ where: { status: "active" } }),
+      prisma.user.count(),
+      prisma.savedArticle.count(),
+      prisma.articleView.count(),
+      // Top 5 articles by views
+      prisma.article.findMany({
+        orderBy: { articleViews: { _count: "desc" } }, // relation count
+        take: 5,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          imageUrl: true,
+          _count: { select: { articleViews: true } }, // count views from relation
+        },
+      }),
+      // Recent 5 articles
+      prisma.article.findMany({
+        where: { status: "published" },
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          imageUrl: true,
+          createdAt: true,
+          category: { select: { name: true } },
+        },
+      }),
     ]);
 
-    // ✅ 3. Combine and respond
+    // Map topArticles to include `views` property
+    const topArticles: TopArticle[] = topArticlesRaw.map((a) => ({
+      id: a.id,
+      title: a.title,
+      slug: a.slug,
+      imageUrl: a.imageUrl,
+      views: a._count.articleViews ?? 0,
+    }));
+
+    // Map recentArticles to include categoryName
+    const recentArticles: RecentArticle[] = recentArticlesRaw.map((a) => ({
+      id: a.id,
+      title: a.title,
+      slug: a.slug,
+      imageUrl: a.imageUrl,
+      createdAt: a.createdAt,
+      categoryName: a.category.name,
+    }));
+
     const stats: DashboardStats = {
-      totalArticles: articleCount[0]?.total ?? 0,
-      totalCategories: categoryCount[0]?.total ?? 0,
-      totalUsers: userCount[0]?.total ?? 0,
-      totalAdmins: adminCount[0]?.total ?? 0,
-      totalSaved: savedCount[0]?.total ?? 0,
-      totalViews: viewCount[0]?.total ?? 0,
+      totalArticles,
+      totalCategories,
+      totalUsers,
+      totalAdmins,
+      totalSaved,
+      totalViews,
       topArticles,
       recentArticles,
     };

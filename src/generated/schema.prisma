@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  name         String
+  role         String
+  status       String        @default("active")
+  phone        String? // Optional
+  imageUrl     String? // Optional
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  articles     Article[]
+  activityLogs ActivityLog[]
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  names         String
+  email         String         @unique
+  password      String
+  status        String         @default("active")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  savedArticles SavedArticle[]
+  articleViews  ArticleView[]
+  activityLogs  ActivityLog[]
+}
+
+model Article {
+  id            Int            @id @default(autoincrement())
+  title         String
+  slug          String         @unique
+  summary       String?
+  content       String?        @db.Text // PostgreSQL compatible
+  status        String         @default("draft")
+  imageUrl      String?
+  videoUrl      String?
+  type          String?
+  shareNo       Int?           @default(0)
+  viewNo        Int?           @default(0)
+  isBreaking    Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  categoryId    Int
+  adminId       Int
+  category      Category       @relation(fields: [categoryId], references: [id])
+  admin         Admin          @relation(fields: [adminId], references: [id])
+  savedArticles SavedArticle[]
+  articleViews  ArticleView[]
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  imageUrl    String?
+  description String?
+  status      String    @default("active")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  articles    Article[]
+}
+
+model ActivityLog {
+  id          Int      @id @default(autoincrement())
+  action      String
+  description String?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  userId      Int?
+  adminId     Int?
+  user        User?    @relation(fields: [userId], references: [id])
+  admin       Admin?   @relation(fields: [adminId], references: [id])
+}
+
+model SavedArticle {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  articleId Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  article Article @relation(fields: [articleId], references: [id])
+
+  @@unique([userId, articleId])
+}
+
+model ArticleView {
+  id        Int      @id @default(autoincrement())
+  articleId Int
+  userId    Int?
+  userIp    String?
+  viewedAt  DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
+}

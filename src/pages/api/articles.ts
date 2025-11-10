@@ -1,39 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../lib/db";
 import slugify from "slugify";
 import jwt from "jsonwebtoken";
-import { RowDataPacket } from "mysql2";
+import prisma from "@/lib/prisma";
 import { logActivity } from "@/lib/logActivity";
-
-// ✅ DB Model
-interface Stats extends RowDataPacket {
-  total: number;
-  published: number;
-  draft: number;
-}
-
-interface Article {
-  id: number;
-  title: string;
-  categoryId: number;
-  adminId: number;
-  summary: string | null;
-  content: string | null;
-  imageUrl: string | null;
-  videoUrl: string | null;
-  slug: string | null;
-  status: string;
-  shareNo: string;
-  viewNo: string;
-  createdAt: string;
-}
 
 interface ApiResponse {
   message: string;
-  data?: Article[];
+  data?: any;
   id?: number;
   userId?: number;
-  stats?: Stats;
+  stats?: { total: number; published: number; draft: number };
   pagination?: {
     total: number;
     page: number;
@@ -43,61 +20,47 @@ interface ApiResponse {
   error?: string;
 }
 
-interface User extends RowDataPacket {
-  id: number;
-  email: string;
-  password: string;
-  name: string;
-  role: string;
-  status: "active" | "archived" | string;
-}
-
 interface JwtPayload {
   id: number;
   role: string;
   email: string;
 }
 
-// ✅ Check if token is valid and user is admin
-async function isAdmin(
-  req: NextApiRequest
-): Promise<{ isAdmin: boolean; userId?: number, adminType?: string }> {
+// ---------------------------
+// Check admin access
+// ---------------------------
+async function isAdmin(req: NextApiRequest) {
   const authHeader = req.headers.authorization;
-
-  if (!authHeader?.startsWith("Bearer ")) {
-    return { isAdmin: false };
-  }
+  if (!authHeader?.startsWith("Bearer ")) return { isAdmin: false };
 
   const token = authHeader.split(" ")[1];
-
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    if (!decoded.role) return { isAdmin: false };
 
-    if (decoded.role === "") {
-      return { isAdmin: false };
-    }
+    const admin = await prisma.admin.findFirst({
+      where: { id: decoded.id, status: "active" },
+    });
 
-    const [rows] = await db.query<User[]>(
-      "SELECT id FROM admin WHERE id = ? AND status = ?",
-      [decoded.id, "active"]
-    );
-
-    if (!rows.length) return { isAdmin: false };
-
+    if (!admin) return { isAdmin: false };
     return { isAdmin: true, userId: decoded.id, adminType: decoded.role };
   } catch {
     return { isAdmin: false };
   }
 }
 
+// ---------------------------
+// API Handler
+// ---------------------------
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse>
-): Promise<void> {
- 
+) {
+  const now = new Date();
+
+  // -----------------------------
+  // GET Articles
+  // -----------------------------
   if (req.method === "GET") {
     try {
       const {
@@ -110,127 +73,57 @@ export default async function handler(
         endDate,
         page = "1",
         limit = "10",
-      } = req.query as {
-        slug?: string;
-        search?: string;
-        status?: string;
-        categoryId?: string;
-        adminId?: string;
-        startDate?: string;
-        endDate?: string;
-        page?: string;
-        limit?: string;
+      } = req.query as Record<string, string>;
+
+      const pageNumber = Math.max(parseInt(page), 1);
+      const pageSize = Math.max(parseInt(limit), 1);
+      const skip = (pageNumber - 1) * pageSize;
+
+      // Build filter for Prisma
+      const where: any = {
+        category: { status: "active" },
+        slug: slug ?? undefined,
+        status: status ?? undefined,
+        categoryId: categoryId ? Number(categoryId) : undefined,
+        adminId: adminId ? Number(adminId) : undefined,
       };
 
-      const pageNumber = Math.max(parseInt(page, 10), 1);
-      const pageSize = Math.max(parseInt(limit, 10), 1);
-      const offset = (pageNumber - 1) * pageSize;
-
-      // ✅ Base query — now ensures category is active
-      let query = `
-        SELECT 
-          a.id,
-          a.title,
-          a.slug,
-          a.summary,
-          a.imageUrl,
-          a.videoUrl,
-          a.content,
-          a.type,
-          a.status,
-          a.categoryId,
-          a.shareNo,
-          a.viewNo,
-          a.createdAt,
-          c.name AS categoryName,
-          u.name AS adminName,
-          u.email AS adminEmail
-        FROM articles a
-        LEFT JOIN categories c ON a.categoryId = c.id
-        LEFT JOIN admin u ON a.adminId = u.id
-        WHERE 1=1
-          AND (c.status = 'active' OR c.status IS NULL)
-      `;
-
-      const params: (string | number)[] = [];
-
-      // ✅ Optional filters
-      if (slug) {
-        query += " AND a.slug = ?";
-        params.push(slug);
-      }
-
-      if (status) {
-        query += " AND a.status = ?";
-        params.push(status);
-      }
-
-      if (categoryId) {
-        query += " AND a.categoryId = ?";
-        params.push(Number(categoryId));
-      }
-
-      if (adminId) {
-        query += " AND a.adminId = ?";
-        params.push(Number(adminId));
-      }
-
       if (search) {
-        query += " AND (a.title LIKE ? OR a.summary LIKE ?)";
-        const searchTerm = `%${search}%`;
-        params.push(searchTerm, searchTerm);
+        where.OR = [
+          { title: { contains: search, mode: "insensitive" } },
+          { summary: { contains: search, mode: "insensitive" } },
+        ];
       }
 
-      // ✅ Date filter
-      if (startDate && endDate) {
-        query += " AND DATE(a.createdAt) BETWEEN ? AND ?";
-        params.push(startDate, endDate);
-      } else if (startDate) {
-        query += " AND DATE(a.createdAt) >= ?";
-        params.push(startDate);
-      } else if (endDate) {
-        query += " AND DATE(a.createdAt) <= ?";
-        params.push(endDate);
+      if (startDate || endDate) {
+        where.createdAt = {};
+        if (startDate) where.createdAt.gte = new Date(startDate);
+        if (endDate) where.createdAt.lte = new Date(endDate);
       }
 
-      // ✅ Count query
-      const countQuery = `
-        SELECT COUNT(*) as total 
-        FROM articles a
-        LEFT JOIN categories c ON a.categoryId = c.id
-        LEFT JOIN users u ON a.adminId = u.id
-        WHERE 1=1
-          AND (c.status = 'active' OR c.status IS NULL)
-          ${query.split("WHERE 1=1")[1]}
-      `;
-      const [countRows] = await db.query(countQuery, params);
-      const total = (countRows as { total: number }[])[0]?.total || 0;
+      const [articles, total] = await Promise.all([
+        prisma.article.findMany({
+          where,
+          include: {
+            category: { select: { name: true } },
+            admin: { select: { name: true, email: true } },
+          },
+          orderBy: { createdAt: "desc" },
+          skip,
+          take: pageSize,
+        }),
+        prisma.article.count({ where }),
+      ]);
 
-      // ✅ Pagination + ordering
-      query += " ORDER BY a.createdAt DESC LIMIT ? OFFSET ?";
-      params.push(pageSize, offset);
-
-      const [rows] = await db.query(query, params);
-      const articles = rows as Article[];
-
-      // ✅ Stats query
-        // const [[stats]] = await db.query<Stats[]>(`
-        //   SELECT
-        //     COUNT(*) AS total,
-        //     SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS published,
-        //     SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) AS draft
-        //   FROM articles
-        // `);
-        const [[stats]] = await db.query<Stats[]>(`
-          SELECT
-            COUNT(a.id) AS total,
-            SUM(CASE WHEN a.status = 'published' THEN 1 ELSE 0 END) AS published,
-            SUM(CASE WHEN a.status = 'draft' THEN 1 ELSE 0 END) AS draft
-          FROM articles AS a
-          JOIN categories AS c ON a.categoryId = c.id
-          WHERE c.status = 'active'
-        `);
-        
+      const stats = await prisma.article.aggregate({
+        _count: {
+          _all: true,
+        },
+        _sum: {
+          viewNo: true,
+        },
+        where: { category: { status: "active" } },
+      });
 
       return res.status(200).json({
         message: "Articles fetched successfully",
@@ -241,7 +134,11 @@ export default async function handler(
           limit: pageSize,
           totalPages: Math.ceil(total / pageSize),
         },
-        stats, // ✅ Added stats to response
+        stats: {
+          total: stats._count._all,
+          published: await prisma.article.count({ where: { status: "published" } }),
+          draft: await prisma.article.count({ where: { status: "draft" } }),
+        },
       });
     } catch (err) {
       console.error("Error fetching articles:", err);
@@ -252,89 +149,57 @@ export default async function handler(
     }
   }
 
+  // -----------------------------
+  // CREATE Article
+  // -----------------------------
   if (req.method === "POST") {
-    const { isAdmin: adminCheck, userId: adminId, adminType } = await isAdmin(req);
-
+    const { isAdmin: adminCheck, userId: adminId } = await isAdmin(req);
     if (!adminCheck || !adminId) {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized: Admin access required" });
+      return res.status(403).json({ message: "Unauthorized: Admin access required" });
     }
 
-    const {
-      title,
-      summary,
-      type,
-      isBreak,
-      imageUrl,
-      categoryId,
-      content,
-      videoUrl,
-    } = req.body as {
-      title?: string;
-      summary?: string;
-      type?: string;
-      isBreak?: string;
-      imageUrl?: string;
-      categoryId?: number;
-      content?: string;
-      videoUrl?: string;
-    };
+    const { title, summary, type, isBreak, imageUrl, categoryId, content, videoUrl } =
+      req.body as any;
 
     if (!title || !categoryId) {
-      return res
-        .status(400)
-        .json({ message: "Title and Category ID are required" });
+      return res.status(400).json({ message: "Title and Category ID are required" });
     }
 
     try {
-      const now = new Date();
-
-    // ✅ Generate slug from title
       let slug = slugify(title, { lower: true, strict: true });
-      const isBreaking = isBreak === '1' ? true:false;
-      // ✅ Check for duplicate slug
-      const [existing] = await db.query<RowDataPacket[]>(
-        "SELECT id FROM articles WHERE slug = ?",
-        [slug]
-      );
-      if (existing.length > 0) {
-        slug = `${slug}-${Date.now()}`; // append timestamp to make it unique
-      }
+      const isBreaking = isBreak === "1";
 
-      const [result] = await db.query(
-        "INSERT INTO articles (title, summary, imageUrl, slug, isBreaking, type, content, categoryId, videoUrl, adminId, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [
+      // Check for duplicate slug
+      const existing = await prisma.article.findFirst({ where: { slug } });
+      if (existing) slug = `${slug}-${Date.now()}`;
+
+      const article = await prisma.article.create({
+        data: {
           title,
-          summary || null,
-          imageUrl || null,
-          slug || null,
-          isBreaking || null,
-          type || null,
-          content || null,
+          summary: summary ?? null,
+          slug,
+          isBreaking,
+          type: type ?? null,
+          content: content ?? null,
+          imageUrl: imageUrl ?? null,
+          videoUrl: videoUrl ?? null,
           categoryId,
-          videoUrl || null,
           adminId,
-          now,
-        ]
-      );
+          createdAt: now,
+        },
+      });
 
-      const insertResult = result as { insertId: number };
-
-      // ✅ Automatically log who did this
       await logActivity({
         req,
-        action: "UPDATE_ARTICLE",
+        action: "CREATE_ARTICLE",
+        type: "admin",
         id: adminId,
-        type: 'admin',
-        description: `A new article has been created to draft with the title: ${title}`,
+        description: `A new article has been created with title: ${title}`,
       });
 
-      return res.status(201).json({
-        message: "Article created successfully",
-        id: insertResult?.insertId,
-      });
+      return res.status(201).json({ message: "Article created successfully", id: article.id });
     } catch (err) {
+      console.error("Error creating article:", err);
       return res.status(500).json({
         message: "Error creating article",
         error: err instanceof Error ? err.message : "Unknown error",
@@ -342,145 +207,55 @@ export default async function handler(
     }
   }
 
-  if (req.method === "PATCH") {
-    const { isAdmin: adminCheck, userId: adminId, adminType } = await isAdmin(req);
-
-    if (!adminCheck || !adminId || adminType === 'editor') {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized: Admin access required" });
-    }
-    const { id, status } = req.body as { id?: number, status?: string };
-
-
-    if (!id) {
-      return res.status(400).json({ message: `"Article ID is required` });
-    }
-
-    try {
-      const [result] = await db.query(
-        "UPDATE articles SET status = ? WHERE id = ?",
-        [status, id]
-      );
-
-      const updateResult = result as { affectedRows: number };
-
-      if (updateResult.affectedRows === 0) {
-        return res.status(404).json({ message: "Article not found" });
-      }
-      // ✅ Automatically log who did this
-      await logActivity({
-        req,
-        action: "PUBLISHED_ARTICLE",
-        id: adminId,
-        type: 'admin',
-        description: `An article  with the id: ${id} has been ${status}`,
-      });
-
-      return res.status(200).json({
-        message: `Article ${status} successfully`,
-        userId: id,
-      });
-    } catch (err) {
-      return res.status(500).json({
-        message: "Error deleting article",
-        error: err instanceof Error ? err.message : "Unknown error",
-      });
-    }
-  }
-
+  // -----------------------------
+  // UPDATE Article
+  // -----------------------------
   if (req.method === "PUT") {
     const { isAdmin: adminCheck, userId: adminId } = await isAdmin(req);
-
     if (!adminCheck || !adminId) {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized: Admin access required" });
+      return res.status(403).json({ message: "Unauthorized: Admin access required" });
     }
-    const {
-      id,
-      title,
-      summary,
-      type,
-      isBreak,
-      imageUrl,
-      categoryId,
-      content,
-      videoUrl,
-    } = req.body as {
-      id?: number;
-      title?: string;
-      type?: string;
-      isBreak?: string;
-      summary?: string;
-      imageUrl?: string;
-      categoryId?: number;
-      content?: string;
-      videoUrl?: string;
-    };
-  
+
+    const { id, title, summary, type, isBreak, imageUrl, categoryId, content, videoUrl } =
+      req.body as any;
+
     if (!id || !title) {
-      return res.status(400).json({
-        message: "Missing required fields (id, title)",
-      });
+      return res.status(400).json({ message: "Missing required fields (id, title)" });
     }
-  
+
     try {
+      let slug = slugify(title, { lower: true, strict: true });
+      const isBreaking = isBreak === "1";
 
-        // ✅ Generate slug from title
-        let slug = slugify(title, { lower: true, strict: true });
-        const isBreaking = isBreak === '1' ? true:false;
+      const existingSlug = await prisma.article.findFirst({
+        where: { slug, NOT: { id } },
+      });
+      if (existingSlug) slug = `${slug}-${Date.now()}`;
 
-        // ✅ Check for duplicate slug
-        const [existing] = await db.query<RowDataPacket[]>(
-          "SELECT id FROM articles WHERE slug = ?",
-          [slug]
-        );
-        if (existing.length > 0) {
-          slug = `${slug}-${Date.now()}`; // append timestamp to make it unique
-        }
-      
-      await db.query(
-        `
-        UPDATE articles
-        SET 
-          title = ?, 
-          summary = ?, 
-          slug = ?, 
-          isBreaking = ?, 
-          categoryId = ?, 
-          content = ?, 
-          videoUrl = ?, 
-          type = ?, 
-          imageUrl = ?
-        WHERE id = ?
-        `,
-        [
+      await prisma.article.update({
+        where: { id },
+        data: {
           title,
-          summary || null,
-          slug || null,
-          isBreaking || null,
-          categoryId || null,
-          content || null,
-          videoUrl || null,
-          type || null,
-          imageUrl || null,
-          id,
-        ]
-      );
+          summary: summary ?? null,
+          slug,
+          isBreaking,
+          type: type ?? null,
+          content: content ?? null,
+          imageUrl: imageUrl ?? null,
+          videoUrl: videoUrl ?? null,
+          categoryId: categoryId ?? undefined,
+        },
+      });
 
-      // ✅ Automatically log who did this
       await logActivity({
         req,
         action: "UPDATE_ARTICLE",
+        type: "admin",
         id: adminId,
-        type: 'admin',
-        description: `An article  with the title: ${title} has been updated`,
+        description: `An article with the title: ${title} has been updated`,
       });
-  
-      return res.status(200).json({
-        message: "Article updated successfully",
-      });
+
+      return res.status(200).json({ message: "Article updated successfully" });
     } catch (err) {
       console.error("Error updating article:", err);
       return res.status(500).json({
@@ -489,7 +264,42 @@ export default async function handler(
       });
     }
   }
-  
 
-  res.status(405).json({ message: "Method Not Allowed" });
+  // -----------------------------
+  // PUBLISH / STATUS Change
+  // -----------------------------
+  if (req.method === "PATCH") {
+    const { isAdmin: adminCheck, userId: adminId, adminType } = await isAdmin(req);
+    if (!adminCheck || !adminId || adminType === "editor") {
+      return res.status(403).json({ message: "Unauthorized: Admin access required" });
+    }
+
+    const { id, status } = req.body as any;
+    if (!id) return res.status(400).json({ message: "Article ID is required" });
+
+    try {
+      const article = await prisma.article.update({
+        where: { id },
+        data: { status },
+      });
+
+      await logActivity({
+        req,
+        action: "PUBLISH_ARTICLE",
+        type: "admin",
+        id: adminId,
+        description: `An article with id: ${id} has been ${status}`,
+      });
+
+      return res.status(200).json({ message: `Article ${status} successfully`, userId: id });
+    } catch (err: any) {
+      if (err.code === "P2025") return res.status(404).json({ message: "Article not found" });
+      return res.status(500).json({
+        message: "Error updating article",
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
+    }
+  }
+
+  return res.status(405).json({ message: "Method Not Allowed" });
 }
