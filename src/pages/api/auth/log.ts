@@ -68,9 +68,9 @@ export default async function handler(
     const logs: ActivityLogRow[] = logsRaw.map((log) => ({
       id: log.id,
       action: log.action,
-      description: log.description,
-      ipAddress: log.ipAddress,
-      userAgent: log.userAgent,
+      description: log.description ?? null,
+      ipAddress: log.ipAddress ?? null,
+      userAgent: log.userAgent ?? null,
       createdAt: log.createdAt,
       userName: log.user?.names ?? null,
       userEmail: log.user?.email ?? null,
