@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { logActivity } from "@/lib/logActivity";
 import { verifyToken } from "@/lib/verifyToken";
 
+// Response type
 interface FormattedArticle {
   id: number;
   title: string;
@@ -23,6 +24,7 @@ export default async function handler(
     const userId = user.id;
 
     if (req.method === "GET") {
+      // ✅ Include category details
       const savedArticles = await prisma.savedArticle.findMany({
         where: { userId },
         orderBy: { createdAt: "desc" },
@@ -41,9 +43,9 @@ export default async function handler(
         },
       });
 
-      // ✅ Cast element inside map to inferred type
+      // ✅ Explicitly type 'sa' to avoid 'any'
       const formattedArticles: FormattedArticle[] = savedArticles.map(
-        (sa) => {
+        (sa: typeof savedArticles[number]) => {
           const article = sa.article;
           return {
             id: article.id,
