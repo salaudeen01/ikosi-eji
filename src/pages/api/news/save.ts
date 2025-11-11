@@ -3,13 +3,26 @@ import prisma from "@/lib/prisma";
 import { logActivity } from "@/lib/logActivity";
 import { verifyToken } from "@/lib/verifyToken";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+interface FormattedArticle {
+  id: number;
+  title: string;
+  slug: string;
+  summary: string | null;
+  imageUrl: string | null;
+  createdAt: Date;
+  categoryName: string | null;
+  categorySlug: string | null;
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
-    const user = verifyToken(req); // Ensure valid auth token
+    const user = verifyToken(req);
     const userId = user.id;
 
     if (req.method === "GET") {
-      // Fetch saved articles
       const savedArticles = await prisma.savedArticle.findMany({
         where: { userId },
         orderBy: { createdAt: "desc" },
@@ -28,11 +41,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
-      const formattedArticles = savedArticles.map((sa) => ({
-        ...sa.article,
-        categoryName: sa.article.category?.name ?? null,
-        categorySlug: sa.article.category?.slug ?? null,
-      }));
+      // ✅ Cast element inside map to inferred type
+      const formattedArticles: FormattedArticle[] = savedArticles.map(
+        (sa) => {
+          const article = sa.article;
+          return {
+            id: article.id,
+            title: article.title,
+            slug: article.slug,
+            summary: article.summary,
+            imageUrl: article.imageUrl,
+            createdAt: article.createdAt,
+            categoryName: article.category?.name ?? null,
+            categorySlug: article.category?.slug ?? null,
+          };
+        }
+      );
 
       return res.status(200).json({
         message: "Saved articles fetched successfully",
@@ -44,15 +68,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { articleId } = req.body;
       if (!articleId) return res.status(400).json({ message: "Missing articleId" });
 
-      // Check if already saved
       const existing = await prisma.savedArticle.findFirst({
         where: { userId, articleId },
       });
 
       if (!existing) {
-        await prisma.savedArticle.create({
-          data: { userId, articleId },
-        });
+        await prisma.savedArticle.create({ data: { userId, articleId } });
 
         await logActivity({
           req,
@@ -69,9 +90,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { articleId } = req.body;
       if (!articleId) return res.status(400).json({ message: "Missing articleId" });
 
-      await prisma.savedArticle.deleteMany({
-        where: { userId, articleId },
-      });
+      await prisma.savedArticle.deleteMany({ where: { userId, articleId } });
 
       await logActivity({
         req,
