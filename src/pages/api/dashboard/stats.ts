@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-// ✅ Define strict types inside the component
+// --- Define strict types ---
 interface TopArticle {
   id: number;
   title: string;
@@ -38,7 +38,7 @@ interface AuthPayload extends JwtPayload {
   email: string;
 }
 
-// ✅ Token verification
+// --- Verify JWT ---
 export function verifyToken(req: NextApiRequest): AuthPayload {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -51,11 +51,12 @@ export function verifyToken(req: NextApiRequest): AuthPayload {
     const decoded = jwt.verify(token, JWT_SECRET) as AuthPayload;
     if (!decoded.id) throw new Error("Invalid token payload");
     return decoded;
-  } catch (err) {
+  } catch {
     throw new Error("Invalid or expired token");
   }
 }
 
+// --- API handler ---
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method Not Allowed" });
@@ -64,9 +65,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // ✅ 1. Verify admin authentication
     const admin = verifyToken(req);
-    if (!admin) {
-      return res.status(403).json({ message: "Access denied. Admins only." });
-    }
+
+    // --- Type helpers for Prisma return types ---
+    type TopArticleRaw = {
+      id: number;
+      title: string;
+      slug: string;
+      imageUrl: string | null;
+      _count: { articleViews: number };
+    };
+
+    type RecentArticleRaw = {
+      id: number;
+      title: string;
+      slug: string;
+      imageUrl: string | null;
+      createdAt: Date;
+      category: { name: string };
+    };
 
     // ✅ 2. Fetch stats in parallel
     const [
@@ -87,16 +103,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       prisma.articleView.count(),
       // Top 5 articles by views
       prisma.article.findMany({
-        orderBy: { articleViews: { _count: "desc" } }, // relation count
+        orderBy: { articleViews: { _count: "desc" } },
         take: 5,
         select: {
           id: true,
           title: true,
           slug: true,
           imageUrl: true,
-          _count: { select: { articleViews: true } }, // count views from relation
+          _count: { select: { articleViews: true } },
         },
-      }),
+      }) as Promise<TopArticleRaw[]>,
       // Recent 5 articles
       prisma.article.findMany({
         where: { status: "published" },
@@ -110,11 +126,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           createdAt: true,
           category: { select: { name: true } },
         },
-      }),
+      }) as Promise<RecentArticleRaw[]>,
     ]);
 
-    // Map topArticles to include `views` property
-    const topArticles: TopArticle[] = topArticlesRaw.map((a) => ({
+    // ✅ 3. Map topArticles with type safety
+    const topArticles: TopArticle[] = topArticlesRaw.map((a: TopArticleRaw) => ({
       id: a.id,
       title: a.title,
       slug: a.slug,
@@ -122,8 +138,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       views: a._count.articleViews ?? 0,
     }));
 
-    // Map recentArticles to include categoryName
-    const recentArticles: RecentArticle[] = recentArticlesRaw.map((a) => ({
+    // ✅ 4. Map recentArticles with type safety
+    const recentArticles: RecentArticle[] = recentArticlesRaw.map((a: RecentArticleRaw) => ({
       id: a.id,
       title: a.title,
       slug: a.slug,
@@ -132,6 +148,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       categoryName: a.category.name,
     }));
 
+    // ✅ 5. Return final stats
     const stats: DashboardStats = {
       totalArticles,
       totalCategories,
