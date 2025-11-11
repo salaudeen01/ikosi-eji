@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
-import { Prisma } from "@/generated/client";
 
-// --- Define strict types for response ---
+// --- Define strict response shape ---
 interface ActivityLogRow {
   id: number;
   action: string;
@@ -20,6 +19,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Reject unsupported methods
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
@@ -31,8 +31,12 @@ export default async function handler(
     const pageSize = Math.max(parseInt(limit as string, 10), 1);
     const skip = (pageNumber - 1) * pageSize;
 
-    // 1️⃣ Build filters dynamically
-    const filters: Prisma.ActivityLogWhereInput = {};
+    // ✅ Safely infer where input type from Prisma client
+    type FindManyArgs = NonNullable<Parameters<typeof prisma.activityLog.findMany>[0]>;
+    type ActivityLogWhereInput = NonNullable<FindManyArgs["where"]>;
+
+    const filters: ActivityLogWhereInput = {};
+
     if (userId) filters.userId = Number(userId);
     if (adminId) filters.adminId = Number(adminId);
     if (action) filters.action = { contains: action as string };
@@ -64,7 +68,7 @@ export default async function handler(
       },
     });
 
-    // 4️⃣ Map to response shape
+    // 4️⃣ Map to response shape (fully typed)
     const logs: ActivityLogRow[] = logsRaw.map((log) => ({
       id: log.id,
       action: log.action,
@@ -78,6 +82,7 @@ export default async function handler(
       adminEmail: log.admin?.email ?? null,
     }));
 
+    // 5️⃣ Send response
     return res.status(200).json({
       message: "Activity logs fetched successfully",
       data: logs,

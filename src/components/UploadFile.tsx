@@ -34,7 +34,7 @@ export default function UploadImageForm({imageFile }:UploadProps) {
         />
         <Button
           onClick={() => {}}
-          disabled={uploadMutation.isPending}
+          disabled
           className="absolute z-0 end-0 bottom-0"
         >
           {uploadMutation.isPending ? "Uploading..." : "Upload Image"}
