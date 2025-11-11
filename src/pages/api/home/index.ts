@@ -1,22 +1,35 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 
+// --- Strict types ---
+interface ArticleSummary {
+  id: number;
+  title: string;
+  slug: string;
+  imageUrl: string | null;
+  summary: string | null;
+  createdAt: Date;
+}
+
 interface CategoryWithArticles {
   id: number;
   name: string;
   slug: string;
   imageUrl: string | null;
-  articles: {
-    id: number;
-    title: string;
-    slug: string;
-    imageUrl: string | null;
-    summary: string | null;
-    createdAt: Date;
-  }[];
+  articles: ArticleSummary[];
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+interface HomeDataResponse {
+  message: string;
+  categories: CategoryWithArticles[];
+  breakingNews: (ArticleSummary & { category: { name: string; slug: string } })[];
+  banners: (ArticleSummary & { category: { name: string; slug: string } })[];
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<HomeDataResponse | { message: string; error?: string }>
+) {
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
@@ -30,9 +43,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // 2️⃣ Fetch 3 latest published articles per category
-    const categoriesWithArticles = await Promise.all(
+    const categoriesWithArticles: (CategoryWithArticles | null)[] = await Promise.all(
       categories.map(async (cat) => {
-        const articles = await prisma.article.findMany({
+        const articles: ArticleSummary[] = await prisma.article.findMany({
           where: { categoryId: cat.id, status: "published" },
           orderBy: { createdAt: "desc" },
           take: 3,
@@ -47,7 +60,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         if (articles.length === 0) return null;
-        return { ...cat, articles } as CategoryWithArticles;
+
+        return { ...cat, articles };
       })
     );
 
