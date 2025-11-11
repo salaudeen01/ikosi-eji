@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 
+// --- Define response types ---
 interface Article {
   id: number;
   title: string;
@@ -49,7 +50,7 @@ export default async function handler(
 
     const searchTerm = query.trim();
 
-    // ✅ 1. Count total matching articles
+    // 1️⃣ Count total matching articles
     const total = await prisma.article.count({
       where: {
         status: "published",
@@ -61,7 +62,7 @@ export default async function handler(
       },
     });
 
-    // ✅ 2. Fetch matching articles
+    // 2️⃣ Fetch matching articles with category
     const articlesRaw = await prisma.article.findMany({
       where: {
         status: "published",
@@ -84,23 +85,25 @@ export default async function handler(
       take: limit,
     });
 
-    // ✅ 3. Map to API response shape
-    const articles: Article[] = articlesRaw.map((a) => ({
-      id: a.id,
-      title: a.title,
-      slug: a.slug,
-      summary: a.summary,
-      imageUrl: a.imageUrl,
-      videoUrl: a.videoUrl,
-      type: a.type,
-      status: a.status,
-      categoryId: a.categoryId,
-      shareNo: a.shareNo !== null ? a.shareNo.toString() : "",
-      viewNo: a.viewNo !== null ? a.viewNo.toString() : "",
-      createdAt: a.createdAt,
-      categoryName: a.category?.name ?? null,
-      categorySlug: a.category?.slug ?? null,
-    }));
+    // 3️⃣ Map to API response shape with explicit typing
+    const articles: Article[] = articlesRaw.map(
+      (a: typeof articlesRaw[number]) => ({
+        id: a.id,
+        title: a.title,
+        slug: a.slug,
+        summary: a.summary,
+        imageUrl: a.imageUrl,
+        videoUrl: a.videoUrl,
+        type: a.type,
+        status: a.status,
+        categoryId: a.categoryId,
+        shareNo: a.shareNo !== null ? a.shareNo.toString() : "",
+        viewNo: a.viewNo !== null ? a.viewNo.toString() : "",
+        createdAt: a.createdAt,
+        categoryName: a.category?.name ?? null,
+        categorySlug: a.category?.slug ?? null,
+      })
+    );
 
     return res.status(200).json({
       message: "Search results fetched successfully",
