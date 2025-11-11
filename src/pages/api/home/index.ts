@@ -44,7 +44,7 @@ export default async function handler(
 
     // 2️⃣ Fetch 3 latest published articles per category
     const categoriesWithArticles: (CategoryWithArticles | null)[] = await Promise.all(
-      categories.map(async (cat) => {
+      categories.map(async (cat: { id: number; name: string; slug: string; imageUrl: string | null }) => {
         const articles: ArticleSummary[] = await prisma.article.findMany({
           where: { categoryId: cat.id, status: "published" },
           orderBy: { createdAt: "desc" },
@@ -60,7 +60,6 @@ export default async function handler(
         });
 
         if (articles.length === 0) return null;
-
         return { ...cat, articles };
       })
     );
