@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 
-// --- Define strict response shape ---
+// --- Define response row shape ---
 interface ActivityLogRow {
   id: number;
   action: string;
@@ -15,11 +15,7 @@ interface ActivityLogRow {
   adminEmail: string | null;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Reject unsupported methods
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
@@ -31,11 +27,17 @@ export default async function handler(
     const pageSize = Math.max(parseInt(limit as string, 10), 1);
     const skip = (pageNumber - 1) * pageSize;
 
-    // ✅ Safely infer where input type from Prisma client
-    type FindManyArgs = NonNullable<Parameters<typeof prisma.activityLog.findMany>[0]>;
-    type ActivityLogWhereInput = NonNullable<FindManyArgs["where"]>;
+    // ✅ Derive Prisma where type safely
+    type FindManyArgs = Parameters<typeof prisma.activityLog.findMany>[0];
+    type WhereType = NonNullable<FindManyArgs>["where"];
+    type ActivityLogWithRelations = Awaited<
+      ReturnType<typeof prisma.activityLog.findMany>
+    >[number] & {
+      user?: { names?: string | null; email?: string | null } | null;
+      admin?: { name?: string | null; email?: string | null } | null;
+    };
 
-    const filters: ActivityLogWhereInput = {};
+    const filters: WhereType = {};
 
     if (userId) filters.userId = Number(userId);
     if (adminId) filters.adminId = Number(adminId);
@@ -53,10 +55,10 @@ export default async function handler(
       ];
     }
 
-    // 2️⃣ Count total records
+    // 2️⃣ Count total logs
     const total = await prisma.activityLog.count({ where: filters });
 
-    // 3️⃣ Fetch paginated logs
+    // 3️⃣ Fetch logs with related data
     const logsRaw = await prisma.activityLog.findMany({
       where: filters,
       skip,
@@ -68,8 +70,8 @@ export default async function handler(
       },
     });
 
-    // 4️⃣ Map to response shape (fully typed)
-    const logs: ActivityLogRow[] = logsRaw?.map((log) => ({
+    // 4️⃣ Map response with proper types
+    const logs: ActivityLogRow[] = logsRaw.map((log: ActivityLogWithRelations) => ({
       id: log.id,
       action: log.action,
       description: log.description ?? null,
@@ -82,7 +84,7 @@ export default async function handler(
       adminEmail: log.admin?.email ?? null,
     }));
 
-    // 5️⃣ Send response
+    // 5️⃣ Send final response
     return res.status(200).json({
       message: "Activity logs fetched successfully",
       data: logs,
