@@ -69,7 +69,7 @@ export default async function handler(
     });
 
     // 4️⃣ Map to response shape (fully typed)
-    const logs: ActivityLogRow[] = logsRaw.map((log) => ({
+    const logs: ActivityLogRow[] = logsRaw?.map((log) => ({
       id: log.id,
       action: log.action,
       description: log.description ?? null,
