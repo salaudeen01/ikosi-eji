@@ -74,33 +74,54 @@ export default async function handler(
         page = "1",
         limit = "10",
       } = req.query as Record<string, string>;
-
+  
       const pageNumber = Math.max(parseInt(page), 1);
       const pageSize = Math.max(parseInt(limit), 1);
       const skip = (pageNumber - 1) * pageSize;
-
-      // Build filter for Prisma
+  
+      // -------------------------------------------------------
+      // ✅ Build dynamic Prisma filters SAFELY
+      // -------------------------------------------------------
       const where: any = {
-        category: { status: "active" },
-        slug: slug ?? undefined,
-        // status: status ?? undefined,
-        categoryId: categoryId ? Number(categoryId) : undefined,
-        adminId: adminId ? Number(adminId) : undefined,
+        category: {
+          status: "active", // always filter active category
+        },
       };
-
+  
+      if (slug) where.slug = slug;
+      if (status) where.status = status;
+      if (categoryId) where.categoryId = Number(categoryId);
+      if (adminId) where.adminId = Number(adminId);
+  
+      // Search filter
       if (search) {
         where.OR = [
           { title: { contains: search, mode: "insensitive" } },
           { summary: { contains: search, mode: "insensitive" } },
         ];
       }
-
+  
+      // Date filter
       if (startDate || endDate) {
         where.createdAt = {};
-        if (startDate) where.createdAt.gte = new Date(startDate);
-        if (endDate) where.createdAt.lte = new Date(endDate);
+  
+        if (startDate) {
+          const start = new Date(startDate);
+          if (!isNaN(start.getTime())) where.createdAt.gte = start;
+        }
+  
+        if (endDate) {
+          const end = new Date(endDate);
+          if (!isNaN(end.getTime())) where.createdAt.lte = end;
+        }
       }
-
+  
+      // Debug log (optional)
+      // console.log("WHERE FILTER:", JSON.stringify(where, null, 2));
+  
+      // -------------------------------------------------------
+      // ✅ Query articles + total count
+      // -------------------------------------------------------
       const [articles, total] = await Promise.all([
         prisma.article.findMany({
           where,
@@ -112,19 +133,19 @@ export default async function handler(
           skip,
           take: pageSize,
         }),
+  
         prisma.article.count({ where }),
       ]);
-
+  
+      // -------------------------------------------------------
+      // ✅ Additional Stats
+      // -------------------------------------------------------
       const stats = await prisma.article.aggregate({
-        _count: {
-          _all: true,
-        },
-        _sum: {
-          viewNo: true,
-        },
+        _count: { _all: true },
+        _sum: { viewNo: true },
         where: { category: { status: "active" } },
       });
-
+  
       return res.status(200).json({
         message: "Articles fetched successfully",
         data: articles,
@@ -140,6 +161,7 @@ export default async function handler(
           draft: await prisma.article.count({ where: { status: "draft" } }),
         },
       });
+  
     } catch (err) {
       console.error("Error fetching articles:", err);
       return res.status(500).json({
@@ -148,6 +170,7 @@ export default async function handler(
       });
     }
   }
+  
 
   // -----------------------------
   // CREATE Article
@@ -276,10 +299,10 @@ export default async function handler(
 
     const { id, status } = req.body as any;
     if (!id) return res.status(400).json({ message: "Article ID is required" });
-
+    const articleId = Number(id);
     try {
       const article = await prisma.article.update({
-        where: { id },
+        where: { id: articleId },
         data: { status },
       });
 
