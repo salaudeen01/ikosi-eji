@@ -183,7 +183,7 @@ export default async function handler(
           content: content ?? null,
           imageUrl: imageUrl ?? null,
           videoUrl: videoUrl ?? null,
-          categoryId,
+          categoryId:Number(categoryId),
           adminId,
           createdAt: now,
         },
