@@ -83,7 +83,7 @@ export default async function handler(
       const where: any = {
         category: { status: "active" },
         slug: slug ?? undefined,
-        status: status ?? undefined,
+        // status: status ?? undefined,
         categoryId: categoryId ? Number(categoryId) : undefined,
         adminId: adminId ? Number(adminId) : undefined,
       };
