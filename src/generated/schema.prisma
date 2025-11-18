@@ -5,33 +5,44 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Admin {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  password     String
-  name         String
-  role         String
-  status       String        @default("active")
-  phone        String? // Optional
-  imageUrl     String? // Optional
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      String
+  status    String   @default("active")
+  phone     String? // Optional
+  imageUrl  String? // Optional
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 👇 Add these two fields for password reset
+  resetPasswordToken   String?   @db.VarChar(255)
+  resetPasswordExpires DateTime?
+
   articles     Article[]
   activityLogs ActivityLog[]
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  names         String
-  email         String         @unique
-  password      String
-  status        String         @default("active")
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id        Int      @id @default(autoincrement())
+  names     String
+  email     String   @unique
+  password  String
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 👇 Add these two fields for password reset
+  resetPasswordToken   String?   @db.VarChar(255)
+  resetPasswordExpires DateTime?
+
   savedArticles SavedArticle[]
   articleViews  ArticleView[]
   activityLogs  ActivityLog[]

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLogin } from "@/hooks/mutatiion/auth/useLogin";
+import { useForget, useLogin } from "@/hooks/mutatiion/auth/useLogin";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -15,6 +15,13 @@ const Login = () => {
   const [session, setSession] = useState("");
   const loginMutation = useLogin();
 
+  const resetMutation = useForget({
+    onSuccessCallback: () =>{ 
+      setLoading(false);
+      setForm({...form, email: ''});
+    },
+  });
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     loginMutation.mutate(form);
@@ -23,39 +30,15 @@ const Login = () => {
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    resetMutation.mutate(form);
     setLoading(true);
-    setSession('')
-    // try {
-    //   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    //     redirectTo: `${window.location.origin}/auth?mode=reset`,
-    //   });
-    //   if (error) throw error;
-    //   toast.success("Password reset link sent to your email!");
-    //   setIsForgotPassword(false);
-    // } catch (error: any) {
-    //   toast.error(error.message || "An error occurred");
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    // resetMutation.mutate(form);
     setLoading(true);
-
-    // try {
-    //   const { error } = await supabase.auth.updateUser({
-    //     password: password,
-    //   });
-    //   if (error) throw error;
-    //   toast.success("Password updated successfully!");
-    //   navigate("/");
-    // } catch (error: any) {
-    //   toast.error(error.message || "An error occurred");
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
+  }
 
   if (session) {
     return null;
@@ -97,6 +80,47 @@ const Login = () => {
     );
   }
 
+  // if (isForgotPassword) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+  //       <Card className="w-full max-w-md">
+  //         <CardHeader>
+  //           <CardTitle>Forgot Password</CardTitle>
+  //           <CardDescription>
+  //             Enter your email to receive a password reset link
+  //           </CardDescription>
+  //         </CardHeader>
+  //         <CardContent>
+  //           <form onSubmit={handleForgotPassword} className="space-y-4">
+  //             <div className="space-y-2">
+  //               <Label htmlFor="email">Email</Label>
+  //               <Input
+  //                 id="email"
+  //                 type="email"
+  //                 value={email}
+  //                 onChange={(e) => setEmail(e.target.value)}
+  //                 required
+  //                 placeholder="you@example.com"
+  //               />
+  //             </div>
+  //             <Button type="submit" className="w-full" disabled={loading}>
+  //               {loading ? "Loading..." : "Send Reset Link"}
+  //             </Button>
+  //           </form>
+  //           <div className="mt-4 text-center">
+  //             <button
+  //               type="button"
+  //               onClick={() => setIsForgotPassword(false)}
+  //               className="text-sm text-primary hover:underline"
+  //             >
+  //               Back to login
+  //             </button>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
+  //     </div>
+  //   );
+  // }
   if (isForgotPassword) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -114,8 +138,8 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={form.email}
+                  onChange={(e) => setForm({...form, email: e.target.value})}
                   required
                   placeholder="you@example.com"
                 />

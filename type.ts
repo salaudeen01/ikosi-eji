@@ -193,6 +193,11 @@ import { RowDataPacket } from "mysql2";
     password: string;
   }
 
+  export interface ResetPayload{
+    token: string;
+    password: string;
+  }
+
   export interface LoginResponse {
     token: string;
     user: {
@@ -201,6 +206,7 @@ import { RowDataPacket } from "mysql2";
       email: string;
       role: string;
     };
+    email?: string;
   }
   
   export interface User {

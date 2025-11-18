@@ -7,6 +7,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Admin {
@@ -20,6 +21,11 @@ model Admin {
   imageUrl     String?       // Optional
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  
+  // 👇 Add these two fields for password reset
+  resetPasswordToken     String?    @db.VarChar(255)
+  resetPasswordExpires   DateTime?
+
   articles     Article[]
   activityLogs ActivityLog[]
 }
@@ -32,6 +38,11 @@ model User {
   status       String        @default("active")
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  
+  // 👇 Add these two fields for password reset
+  resetPasswordToken     String?    @db.VarChar(255)
+  resetPasswordExpires   DateTime?
+
   savedArticles SavedArticle[]
   articleViews ArticleView[]
   activityLogs ActivityLog[]

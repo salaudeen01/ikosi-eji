@@ -130,7 +130,9 @@ exports.Prisma.AdminScalarFieldEnum = {
   phone: 'phone',
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  resetPasswordToken: 'resetPasswordToken',
+  resetPasswordExpires: 'resetPasswordExpires'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -140,7 +142,9 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  resetPasswordToken: 'resetPasswordToken',
+  resetPasswordExpires: 'resetPasswordExpires'
 };
 
 exports.Prisma.ArticleScalarFieldEnum = {
