@@ -54,8 +54,8 @@ export default async function handler(
       },
     });
 
-    // ✅ Send reset email
-    const resetUrl = `http://localhost:3001/admin/reset-password?token=${token}`;
+    // ✅ Send reset email  const resetUrl = `http://localhost:3001/admin/reset-password?token=${token}`;
+    const resetUrl = `/${process.env.NEXT_PUBLIC_SITE_URL}/admin/reset-password?token=${token}`;
     await senOtpMail(
         user.email,
         resetUrl,

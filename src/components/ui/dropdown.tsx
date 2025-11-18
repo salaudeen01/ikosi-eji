@@ -55,7 +55,7 @@ const Dropdown: React.FC<DropdownProps> = ({ user, onLogout, type }) => {
               <p
                 className="block px-4 py-2 hover:bg-gray-600 hover:text-white"
               >
-                Role: {user?.role}
+                Role: {user?.role === 'admin' ? 'Executive' : user?.role}
               </p>
             </li>
           }

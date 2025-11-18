@@ -35,16 +35,6 @@ export function forgetTemplate(to?: string, resetUrl?: string) {
         .content {
           padding: 32px;
         }
-        .content h2 {
-          color: #111827;
-          font-size: 22px;
-          margin-bottom: 16px;
-        }
-        .content p {
-          font-size: 16px;
-          line-height: 1.6;
-          margin-bottom: 16px;
-        }
         .button {
           display: inline-block;
           background-color: #1a6540;
@@ -73,28 +63,19 @@ export function forgetTemplate(to?: string, resetUrl?: string) {
       <div class="container">
         <div class="header">
           <div class="dlex">
-              <img src="https://res.cloudinary.com/orestech/image/upload/v1759767961/econo_elexj1.png" width="50" height="50" alt="Ecometrics Logo" />
-              <h3 style="color: #fff; font-size:28px; font-style: bold">Ecometrics</h3>
+            <img src="https://res.cloudinary.com/orestech/image/upload/v1759767961/econo_elexj1.png" width="50" height="50" alt="Ecometrics Logo" />
+            <h3 style="color: #fff; font-size:28px; font-style: bold">Ecometrics</h3>
           </div>
         </div>
         <div class="content">
           <h2>Hello 👋</h2>
-          <p>
-              You are receiving this email because we received a password reset request for your account.
-          </p>
+          <p>You are receiving this email because we received a password reset request for your account.</p>
           <div style="text-align: center;">
-              <a href={resetUrl} class="button">Reset Password</a>
-            </div>
-          <p>
-              This password reset link will expire in 60 minutes.
-          </p>
-          <p>
-              If you did not request a password reset, no need further action is required.
-          </p>
-          <p>
-              Regards,<br />
-              Ecometricsnews
-          </p>
+            <a href="${resetUrl}" class="button">Reset Password</a>
+          </div>
+          <p>This password reset link will expire in 60 minutes.</p>
+          <p>If you did not request a password reset, no further action is required.</p>
+          <p>Regards,<br />Ecometricsnews</p>
         </div>
         <div class="footer">
           © ${new Date().getFullYear()} Your Company. All rights reserved.

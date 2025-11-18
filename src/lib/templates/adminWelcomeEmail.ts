@@ -85,7 +85,7 @@ export function adminWelcomeTemplate(name?: string, password?: string) {
             <p>
               Please keep your credentials safe and do not share them with anyone.
             </p>
-            <a href="https://econometric.vercel.app/admin/login" class="button">Go to Admin Portal</a>
+            <a href="https://www.ecometricsnews.com/admin/login" class="button">Go to Admin Portal</a>
             <p>
               If you didn’t request this, please ignore this email.
             </p>

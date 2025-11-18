@@ -204,7 +204,7 @@ const Index = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="admin">Executive</SelectItem>
                         <SelectItem value="publisher">Publisher</SelectItem>
                         <SelectItem value="editor">Editor</SelectItem>
                       </SelectContent>
