@@ -26,8 +26,12 @@ export default async function handler(
       return res.status(400).json({ message: "Token and new password are required" });
     }
 
+    const users = await prisma.admin.findMany();
+
+    console.log(users)
+
     // ✅ Find user with valid token
-    const user = await prisma.user.findFirst({
+    const user = await prisma.admin.findFirst({
       where: {
         resetPasswordToken: body.token,
         resetPasswordExpires: { gt: new Date() },
@@ -41,7 +45,7 @@ export default async function handler(
     // ✅ Hash new password
     const hashedPassword = await bcrypt.hash(body.password, 10);
 
-    await prisma.user.update({
+    await prisma.admin.update({
       where: { id: user.id },
       data: {
         password: hashedPassword,

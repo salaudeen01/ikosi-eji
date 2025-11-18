@@ -44,18 +44,22 @@ export default async function handler(
 
     // ✅ Generate reset token
     const token = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
     const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
-
+    // const resetUrl = `http://localhost:3001/admin/reset-password?token=${token}`;
+    
     await prisma.admin.update({
       where: { id: user.id },
       data: {
-        resetPasswordToken: token,
+        resetPasswordToken: hashedToken,
         resetPasswordExpires: expires,
       },
     });
+    const resetUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/admin/reset-password?token=${hashedToken}`;
+
+    console.log(hashedToken, expires)
 
     // ✅ Send reset email  const resetUrl = `http://localhost:3001/admin/reset-password?token=${token}`;
-    const resetUrl = `/${process.env.NEXT_PUBLIC_SITE_URL}/admin/reset-password?token=${token}`;
     await senOtpMail(
         user.email,
         resetUrl,
