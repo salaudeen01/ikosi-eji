@@ -81,7 +81,6 @@ const Index = () => {
     setDialogOpen(true)
   }
   const handleDelete = async (e: Admin, b:string) => {
-    console.log(b)
     setForm({...form, email: e.email, name: e.name, role: e.role, id: e.id, phone: e.phone, status: b})
     setOpen(true)
   };
@@ -316,7 +315,7 @@ const Index = () => {
         </CardContent>
       </Card>
 
-<     Confirmation name={form?.name} status="delete" open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
+<     Confirmation name={form?.name} loading={isLoading} status="delete" open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
     </Layout>
   )
 }

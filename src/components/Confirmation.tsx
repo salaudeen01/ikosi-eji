@@ -6,6 +6,7 @@ import { Button } from './ui/button'
 
 type ConfirmProps = {
   open: boolean;
+  loading?: boolean;
   name?: string;
   status?: string;
   onClose: ()=>void;
@@ -13,7 +14,7 @@ type ConfirmProps = {
   // data: CreateCategoryPayload | CreateArticlePayload
 }
 
-const Confirmation = ({open, onClose, name, status, onSubmit}: ConfirmProps) => {
+const Confirmation = ({open, loading, onClose, name, status, onSubmit}: ConfirmProps) => {
   return (
     <div>
       <Dialog open={open} onOpenChange={onClose}>
@@ -22,10 +23,35 @@ const Confirmation = ({open, onClose, name, status, onSubmit}: ConfirmProps) => 
             <DialogDescription className='text-center'>
               <OctagonAlert className={`mx-auto mb-4 h-14 w-14 ${status === 'draft'? 'text-[hsl(var(--primary))]': 'text-red-400'}`} />
               {status === 'delete' && 
-                <DialogTitle>Are you sure you want to delete this <br /> <br /> {name} </DialogTitle>
+                <DialogTitle>
+                  {loading ? (
+                    "Drafting..."
+                  ) : (
+                    <>
+                      Are you sure you want to delete this
+                      <br />
+                      <br />
+                      {name}
+                    </>
+                  )}
+                </DialogTitle>
               }
               {status !== 'delete' &&
-                <DialogTitle>Are you sure you want to move this <br /> <br /> {name} <br /> <br /> {status === 'draft' ? 'publish': 'draft'} </DialogTitle>
+              <DialogTitle>
+                {loading ? (
+                  "Loading..."
+                ) : (
+                  <>
+                    Are you sure you want to move this
+                    <br />
+                    <br />
+                    {name}
+                    <br />
+                    <br />
+                    {status === "draft" ? "publish" : "draft"}
+                  </>
+                )}
+              </DialogTitle>
               }
             </DialogDescription>
             <div className='py-5 flex gap-4'>

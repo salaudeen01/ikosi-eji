@@ -241,22 +241,22 @@ export default async function handler(
 
     const { id, title, summary, type, isBreak, imageUrl, categoryId, content, videoUrl } =
       req.body as any;
+      const articleId = Number(id);
 
-    if (!id || !title) {
+    if (!articleId || !title) {
       return res.status(400).json({ message: "Missing required fields (id, title)" });
     }
-
     try {
       let slug = slugify(title, { lower: true, strict: true });
       const isBreaking = isBreak === "1";
 
       const existingSlug = await prisma.article.findFirst({
-        where: { slug, NOT: { id } },
+        where: { slug, NOT: { id: articleId } },
       });
       if (existingSlug) slug = `${slug}-${Date.now()}`;
 
       await prisma.article.update({
-        where: { id },
+        where: { id: articleId },
         data: {
           title,
           summary: summary ?? null,
@@ -266,7 +266,7 @@ export default async function handler(
           content: content ?? null,
           imageUrl: imageUrl ?? null,
           videoUrl: videoUrl ?? null,
-          categoryId: categoryId ?? undefined,
+          categoryId: Number(categoryId) ?? undefined,
         },
       });
 

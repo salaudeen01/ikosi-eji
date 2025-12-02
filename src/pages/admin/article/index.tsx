@@ -437,7 +437,7 @@ const Index = () => {
         }
       </div>
 
-      <Confirmation name={form?.title} status={form?.status === 'draft' ? 'publish': 'draft'} open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
+      <Confirmation loading={isLoading} name={form?.title} status={form?.status === 'draft' ? 'publish': 'draft'} open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
 
     </Layout>
   )

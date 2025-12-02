@@ -166,8 +166,9 @@ const CategoryManager = () => {
                       </div>
 
                       <div className="flex space-x-2">
-                        <Button type="submit" className="flex-1">
-                          {form?.id ? "Update" : "Create"}
+                        <Button type="submit" className="flex-1" disabled={isLoading}>
+                          {isLoading ? (form?.id ? "Updating..." : "Creating...") : form?.id ? "Update" : "Create"}
+                          {/* {form?.id ? "Update" : "Create"} */}
                         </Button>
                         {form?.id && (
                           <Button type="button" variant="outline" onClick={onClose}>
@@ -235,7 +236,7 @@ const CategoryManager = () => {
           </div>
         </div>
 
-        <Confirmation name={form?.name} status="delete" open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
+        <Confirmation loading={isLoading} name={form?.name} status="delete" open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
       </div>
     </Layout>
   );
