@@ -50,7 +50,7 @@ const  Layout = ({ children }: LayoutProps) => {
   
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))]" suppressHydrationWarning>
+    <div className="min-h-screen conta bg-[hsl(var(--background))]" suppressHydrationWarning>
       <Navigation categories={categories || []} />
       <main className=''>
         {children}
