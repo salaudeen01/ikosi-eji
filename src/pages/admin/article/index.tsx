@@ -430,10 +430,10 @@ const Index = () => {
           </>
         }
         {section === 'create' &&
-          <CreateArticle form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle='Create New Article' handleSubmit={handleSubmit} />
+          <CreateArticle loading={isLoading} form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle='Create New Article' handleSubmit={handleSubmit} />
         }
         {section === 'edit' &&
-          <CreateArticle form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle="Edit Article" handleSubmit={handleSubmitEdit} />
+          <CreateArticle loading={isLoading} form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle="Edit Article" handleSubmit={handleSubmitEdit} />
         }
       </div>
 

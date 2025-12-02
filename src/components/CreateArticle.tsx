@@ -14,6 +14,7 @@ import { useFetchCategories } from "@/hooks/mutatiion/useCreateCategory";
 type ArticleProps ={
   setSection: ()=>void;
   pageTitle?: string;
+  loading?: boolean;
   form: CreateArticlePayload;
   setForm: React.Dispatch<React.SetStateAction<CreateArticlePayload>>;
   content: string;
@@ -21,7 +22,7 @@ type ArticleProps ={
   handleSubmit: (e: React.FormEvent) => void | Promise<void>;
 }
 
-const CreateArticle = ({setSection, pageTitle, form, setForm, content, setContent, handleSubmit}:ArticleProps) => {
+const CreateArticle = ({setSection, pageTitle, form, setForm, loading, content, setContent, handleSubmit}:ArticleProps) => {
   // const [published, setPublished] = useState(false);
   // const [loading, setLoading] = useState(false);
 
@@ -151,13 +152,13 @@ const CreateArticle = ({setSection, pageTitle, form, setForm, content, setConten
 
               <div className="flex space-x-4">
                 {!form?.id &&
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading ? "Saving..." : "Create Article"}
+                  <Button type="submit" disabled={isLoading || loading}>
+                    {isLoading || loading ? "Saving..." : "Create Article"}
                   </Button>
                 }
                 {form?.id &&
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading ? "Saving..." : "Update Article"}
+                  <Button type="submit" disabled={isLoading || loading}>
+                    {isLoading || loading ? "Saving..." : "Update Article"}
                   </Button>
                 }
                 <Button
