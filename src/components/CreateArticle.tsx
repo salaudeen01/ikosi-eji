@@ -25,6 +25,7 @@ type ArticleProps ={
 const CreateArticle = ({setSection, pageTitle, form, setForm, loading, content, setContent, handleSubmit}:ArticleProps) => {
   // const [published, setPublished] = useState(false);
   // const [loading, setLoading] = useState(false);
+  console.log(loading)
 
   const { categories } = useCategoryStore();
   const { isLoading, isError } = useFetchCategories();

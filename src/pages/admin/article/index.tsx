@@ -26,6 +26,7 @@ const Index = () => {
   const [content, setContent] = useState("");
   const [seValue, setSeValue] = useState("");
   const [open, setOpen] = useState(false);
+  const [loading, setloading] = useState(false);
   const [section, setSection] = useState('main');
   const { setArticle } = useSimpleArticleStore();
   const router = useRouter();
@@ -58,6 +59,7 @@ const Index = () => {
 
   const createAMutation = useCreateArticle({
     onSuccessCallback: () =>{ 
+      setloading(false);
       setSection('main');
       setForm({...form, title: '', slug: '', imageUrl: '', isBreak: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
       setImage('')
@@ -66,6 +68,7 @@ const Index = () => {
   });  
   const updateMutation = useUpdateArticle({
     onSuccessCallback: () =>{ 
+      setloading(false);
       setSection('main');
       setForm({...form, title: '', slug: '', imageUrl: '', isBreak: '', type: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
       setImage('')
@@ -74,6 +77,7 @@ const Index = () => {
   });
   const patchMutation = usePatchArticle({
     onSuccessCallback: () =>{ 
+      setloading(false);
       setSection('main');
       setOpen(false)
       setForm({...form, title: '', slug: '', imageUrl: '', type: '', isBreak: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
@@ -99,17 +103,22 @@ const Index = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     const payload: CreateArticlePayload ={...form, imageUrl: imageUrl || '', content: content}
     e.preventDefault();
+    setloading(true);
     createAMutation.mutate(payload);
   };
+
+  console.log(isLoading)
 
   const handleSubmitEdit = async (e: React.FormEvent) => {
     const payload: CreateArticlePayload ={...form, imageUrl: imageUrl || '', content: content}
     e.preventDefault();
+    setloading(true);
     updateMutation.mutate(payload);
   };
 
   const handleSubmitDelete = async (e: React.FormEvent) => {
     e.preventDefault();
+    setloading(true);
     patchMutation.mutate(form);
   };
 
@@ -430,14 +439,14 @@ const Index = () => {
           </>
         }
         {section === 'create' &&
-          <CreateArticle loading={isLoading} form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle='Create New Article' handleSubmit={handleSubmit} />
+          <CreateArticle loading={loading} form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle='Create New Article' handleSubmit={handleSubmit} />
         }
         {section === 'edit' &&
-          <CreateArticle loading={isLoading} form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle="Edit Article" handleSubmit={handleSubmitEdit} />
+          <CreateArticle loading={loading} form={form} setForm={setForm} setSection={()=>handleCloseContent()} content={content} setContent={setContent} pageTitle="Edit Article" handleSubmit={handleSubmitEdit} />
         }
       </div>
 
-      <Confirmation loading={isLoading} name={form?.title} status={form?.status === 'draft' ? 'publish': 'draft'} open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
+      <Confirmation loading={loading} name={form?.title} status={form?.status === 'draft' ? 'publish': 'draft'} open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
 
     </Layout>
   )
