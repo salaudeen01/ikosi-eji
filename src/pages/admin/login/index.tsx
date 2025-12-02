@@ -4,12 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useForget, useLogin } from "@/hooks/mutatiion/auth/useLogin";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
+  const [view, setview] = useState(false)
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState("");
@@ -187,17 +189,21 @@ const Login = () => {
                 placeholder="you@example.com"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                type="password"
+                type={view ? "text" : "password"}
                 value={form.password}
                 onChange={(e) => setForm({...form, password: e.target.value})}
                 required
                 placeholder="••••••••"
                 minLength={6}
               />
+              {!view ?
+                <EyeClosedIcon className={`absolute top-8 right-3 w-5 h-5 cursor-pointer text-gray-400`} onClick={() => setview(!view)} />:
+                <EyeIcon className="absolute top-8 right-3 w-5 h-5 cursor-pointer text-gray-400" onClick={() => setview(!view)} />
+              }
             </div>
             {isLogin && (
               <div className="text-right">
