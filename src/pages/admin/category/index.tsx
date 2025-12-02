@@ -23,6 +23,7 @@ const CategoryManager = () => {
   const { imageUrl, setImage } = useUploadStore();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  const [loading, setloading] = useState(false);
   const { categories } = useCategoryStore(); // page, total, nextPage, prevPage, setSearch
   const { isLoading, isError, refetch } = useFetchCategories();
 
@@ -40,6 +41,7 @@ const CategoryManager = () => {
       setDialogOpen(false);
       setForm({...form, name: '', slug: '', imageUrl: '', status:'', description:''});
       setImage('')
+      setloading(false);
     },
   });
 
@@ -48,6 +50,7 @@ const CategoryManager = () => {
       setDialogOpen(false);
       setForm({...form, name: '', slug: '', imageUrl: '', status:'', description:''});
       setImage('')
+      setloading(false);
     },
   });
 
@@ -56,23 +59,27 @@ const CategoryManager = () => {
       setOpen(false);
       setForm({...form, name: '', slug: '', imageUrl: '', status:'', description:''});
       setImage('')
+      setloading(false);
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     const payload: CreateCategoryPayload ={...form, imageUrl: imageUrl || ''}
     e.preventDefault();
+    setloading(true);
     createCategoryMutation.mutate(payload);
   };
 
   const handleSubmitEdit = async (e: React.FormEvent) => {
     const payload: CreateCategoryPayload = {...form, imageUrl: imageUrl || ''}
     e.preventDefault();
+    setloading(true);
     updateCategoryMutation.mutate(payload);
   };
 
   const handleSubmitDelete = async (e: React.FormEvent) => {
     e.preventDefault();
+    setloading(true);
     patchCategoryMutation.mutate(form);
   };
 
@@ -166,8 +173,8 @@ const CategoryManager = () => {
                       </div>
 
                       <div className="flex space-x-2">
-                        <Button type="submit" className="flex-1" disabled={isLoading}>
-                          {isLoading ? (form?.id ? "Updating..." : "Creating...") : form?.id ? "Update" : "Create"}
+                        <Button type="submit" className="flex-1" disabled={loading}>
+                          {loading ? (form?.id ? "Updating..." : "Creating...") : form?.id ? "Update" : "Create"}
                           {/* {form?.id ? "Update" : "Create"} */}
                         </Button>
                         {form?.id && (
@@ -236,7 +243,7 @@ const CategoryManager = () => {
           </div>
         </div>
 
-        <Confirmation loading={isLoading} name={form?.name} status="delete" open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
+        <Confirmation loading={loading} name={form?.name} status="delete" open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
       </div>
     </Layout>
   );
