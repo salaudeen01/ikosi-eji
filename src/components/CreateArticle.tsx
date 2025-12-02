@@ -152,13 +152,13 @@ const CreateArticle = ({setSection, pageTitle, form, setForm, loading, content, 
 
               <div className="flex space-x-4">
                 {!form?.id &&
-                  <Button type="submit" disabled={isLoading || loading}>
-                    {isLoading || loading ? "Saving..." : "Create Article"}
+                  <Button type="submit" disabled={loading}>
+                    {loading ? "Saving..." : "Create Article"}
                   </Button>
                 }
                 {form?.id &&
-                  <Button type="submit" disabled={isLoading || loading}>
-                    {isLoading || loading ? "Saving..." : "Update Article"}
+                  <Button type="submit" disabled={loading}>
+                    {loading ? "Saving..." : "Update Article"}
                   </Button>
                 }
                 <Button
