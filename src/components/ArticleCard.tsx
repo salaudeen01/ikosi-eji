@@ -56,7 +56,7 @@ const ArticleCard = ({
 
   return (
     <Card
-      className="overflow-hidden border border-[hsl(var(--border))] hover:shadow-lg transition-shadow cursor-pointer group"
+      className="overflow-hidden glass card-hover bg-sky-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:shadow-lg transition-shadow cursor-pointer group"
       onClick={handleClick}
     >
       <div className="relative h-48 overflow-hidden">

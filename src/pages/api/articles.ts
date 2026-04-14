@@ -324,5 +324,37 @@ export default async function handler(
     }
   }
 
+  if (req.method === "DELETE") {
+    const { isAdmin: adminCheck, userId: adminId, adminType } = await isAdmin(req);
+    if (!adminCheck || !adminId || adminType === "editor") {
+      return res.status(403).json({ message: "Unauthorized: Admin access required" });
+    }
+
+    const { id } = req.body as any;
+    if (!id) return res.status(400).json({ message: "Article ID is required" });
+    const articleId = Number(id);
+    try {
+      const article = await prisma.article.delete({
+        where: { id: articleId },
+      });
+
+      await logActivity({
+        req,
+        action: "PUBLISH_ARTICLE",
+        type: "admin",
+        id: adminId,
+        description: `An article with id: ${id} has been deleted`,
+      });
+
+      return res.status(200).json({ message: `Article deleted successfully`, userId: id });
+    } catch (err: any) {
+      if (err.code === "P2025") return res.status(404).json({ message: "Article not found" });
+      return res.status(500).json({
+        message: "Error updating article",
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
+    }
+  }
+
   return res.status(405).json({ message: "Method Not Allowed" });
 }

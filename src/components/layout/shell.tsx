@@ -12,7 +12,7 @@ interface LayoutProps {
 const  Layout = ({ children }: LayoutProps) => {
 
   return (
-    // <ProtectedRoute>
+    <ProtectedRoute>
       <div className="min-h-screen bg-[hsl(var(--background))]" suppressHydrationWarning>
       <Navbar />
       <Sidebar />
@@ -21,7 +21,7 @@ const  Layout = ({ children }: LayoutProps) => {
           {children}
       </main>
       </div>
-    // </ProtectedRoute>
+    </ProtectedRoute>
   )
 }
 

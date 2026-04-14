@@ -100,6 +100,17 @@ export const fetchArticlesByCategory = async (
   return res.data;
 };
 
+export const fetchArticles = async (
+  slug: string,
+  page = 1,
+  limit = 20
+): Promise<PaginatedResponse<Article>> => {
+  const res = await publicApi.get(`/projects/news`, {
+    params: { page, limit },
+  });
+  return res.data;
+};
+
 export const fetchHomeData = async (): Promise<HomeResponse> => {
   const response = await publicApi.get<HomeResponse>("/home");
   return response.data;

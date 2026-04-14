@@ -212,7 +212,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/MAC/Desktop/projects/EconoNetrics/src/generated",
+      "value": "/Users/MAC/Desktop/EconoNetrics/src/generated",
       "fromEnvVar": null
     },
     "config": {
@@ -230,7 +230,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/MAC/Desktop/projects/EconoNetrics/prisma/schema.prisma",
+    "sourceFilePath": "/Users/MAC/Desktop/EconoNetrics/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -244,7 +244,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

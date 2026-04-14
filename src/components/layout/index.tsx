@@ -4,6 +4,8 @@ import Footer from '../Footer';
 import { useClientCategories } from '@/hooks/mutatiion/clients/useCategories';
 import { Skeleton } from '../ui/skeleton';
 import { ErrorState } from '../ui/error-state';
+import PublicFooter from '../PublicFooter';
+import PublicNavbar from '../PublicNavbar';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -37,25 +39,27 @@ const  Layout = ({ children }: LayoutProps) => {
     </div>
   )
 
-  const { data: categories, isLoading, isError, refetch } = useClientCategories();
+  // const { data: categories, isLoading, isError, refetch } = useClientCategories();
 
-  if (isLoading) return <Loader />;
-  if (isError) return (
-    <ErrorState
-      message="Failed to fetch article details."
-      onRetry={() => refetch()}
-    />
-  );
+  // if (isLoading) return <Loader />;
+  // if (isError) return (
+  //   <ErrorState
+  //     message="Failed to fetch article details."
+  //     onRetry={() => refetch()}
+  //   />
+  // );
   // if (isError) return <p>Failed to load admins</p>;
   
 
   return (
-    <div className="min-h-screen conta bg-[hsl(var(--background))]" suppressHydrationWarning>
-      <Navigation categories={categories || []} />
-      <main className=''>
+    <div className="min-h-screen flex flex-col conta bg-[hsl(var(--background))]" suppressHydrationWarning>
+      <PublicNavbar />
+      {/* <Navigation categories={categories || []} /> */}
+      <main className='flex-grow pt-16'>
         {children}
       </main>
-      <Footer categories={categories || []} />
+      {/* <Footer categories={categories || []} /> */}
+      <PublicFooter />
     </div>
   )
 }

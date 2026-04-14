@@ -29,12 +29,12 @@ const Navigation = ({categories}: NavItem) => {
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-1">
               <img
-                src={'/images/assets/econo.png'}
+                src={'/images/assets/logo.jpeg'}
                 alt={'logo'}
                 className="w-10 h-auto"
               />
               <h1 className="text-2xl font-bold text-[hsl(var(--primary))] cursor-pointer hover:text-[hsl(var(--news-hover))] transition-colors">
-                cometrics
+              Ikosi-Ejinrin LCDA
               </h1>
             </Link>
           </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // types/admin.ts
 import { RowDataPacket } from "mysql2";
 
@@ -319,6 +320,8 @@ import { RowDataPacket } from "mysql2";
     id: number;
     title: string;
     slug: string;
+    summary: string;
+    createdAt: string;
     categoryName: string;
     categorySlug: string;
     imageUrl: string;
@@ -339,6 +342,8 @@ import { RowDataPacket } from "mysql2";
     message: string;
     categories: HomeCategory[];
     breakingNews: BreakingNews[];
+    projects: BreakingNews[];
+    newsData: BreakingNews[];
     banners: Banner[];
   }
 
@@ -399,4 +404,21 @@ export interface ActivityLogResponse {
     limit: number;
     totalPages: number;
   };
+}
+
+export interface Services {
+  title: string;
+  description: string
+  icon: string
+}
+
+export interface Executive {
+  id: string;
+  role: string;
+  name: string;
+  image: string;
+  description: string;
+  detailedBio: string;
+  awards: string[];
+  sections?: { title: string; content: string[] }[];
 }

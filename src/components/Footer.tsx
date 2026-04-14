@@ -23,11 +23,11 @@ const Footer = ({categories}: NavItem) => {
           <div>
             <h3 className="text-xl font-bold text-[hsl(var(--primary))] mb-4 flex gap-1 items-center">
             <img
-              src={'/images/assets/econo.png'}
+              src={'/images/assets/logo.jpeg'}
               alt={'logo'}
               className="w-10 h-auto"
             />
-            cometrics
+            Ikosi-Ejinrin LCDA
             </h3>
             <p className="text-sm text-[hsl(var(--muted-foreground))] ">
               Nigeria&apos;s leading business and financial news platform. Stay
@@ -95,7 +95,7 @@ const Footer = ({categories}: NavItem) => {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-[hsl(var(--border))] text-center text-sm text-[hsl(var(--muted-foreground))] ">
-          <p>© 2025 Ecometrics. All rights reserved.</p>
+          <p>© 2026 Ikosi-Ejinrin LCDA. All rights reserved.</p>
         </div>
       </div>
   </footer>

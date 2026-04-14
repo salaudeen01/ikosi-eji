@@ -7,6 +7,7 @@ import { Calendar, User, Bookmark, Loader2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useArticleData } from "@/hooks/mutatiion/clients/useArticleData";
 import { useClientUrl } from "@/hooks/mutatiion/clients/useBreakingNewsRotation";
+import DOMPurify from "dompurify";
 import ArticleSkeleton from "@/components/ArticleSkeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import EmptyState from "@/components/EmptyState";
@@ -15,6 +16,7 @@ import { useAuthStore } from "@/store/clients/useAuthStore";
 import { useLoginModalStore } from "@/store/useLoginModalStore";
 import Link from "next/link";
 import { DataCon } from "../../../type";
+import { formatQuillContent } from "@/lib/quill-converter";
 
 const ArticleMainPage = () => {
   const { currentUrl, origin } = useClientUrl();
@@ -42,6 +44,11 @@ const ArticleMainPage = () => {
   const articleResponse = (data?.data ?? {}) as Partial<DataCon>;
   const { article, related, views } = articleResponse;
   const articleData = article;
+
+    // const cleanContent = DOMPurify.sanitize(
+    //   (articleData?.content ?? "").replace(/&nbsp;/g, " ")
+    // );
+const cleanContent = formatQuillContent(articleData?.content || "");
 
 
   const handleClick = () => {
@@ -109,7 +116,7 @@ const ArticleMainPage = () => {
 
           {articleData?.content ? (
             <div 
-              dangerouslySetInnerHTML={{ __html: articleData?.content }}
+              dangerouslySetInnerHTML={{ __html: cleanContent }}
               className="article-content"
             />
           ) : (

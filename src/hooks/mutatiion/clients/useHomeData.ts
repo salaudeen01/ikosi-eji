@@ -34,6 +34,8 @@ export const useHomeData = () => {
         setHomeData({
           categories: query.data.categories,
           breakingNews: query.data.breakingNews,
+          newsData: query.data.newsData,
+          projects: query.data.projects,
           banners: query.data.banners,
         });
       }

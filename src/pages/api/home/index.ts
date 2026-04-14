@@ -23,6 +23,8 @@ interface HomeDataResponse {
   message: string;
   categories: CategoryWithArticles[];
   breakingNews: (ArticleSummary & { category: { name: string; slug: string } })[];
+  newsData: (ArticleSummary & { category: { name: string; slug: string } })[];
+  projects: (ArticleSummary & { category: { name: string; slug: string } })[];
   banners: (ArticleSummary & { category: { name: string; slug: string } })[];
 }
 
@@ -83,6 +85,33 @@ export default async function handler(
       },
     });
 
+    // 4️⃣ Fetch breaking news (with category details)
+    const newsData = await prisma.article.findMany({
+      where: {
+        categoryId: 1,
+        status: "published",
+        category: { status: "active" },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        category: { select: { name: true, slug: true } },
+      },
+    });
+
+    const projects = await prisma.article.findMany({
+      where: {
+        categoryId: 2,
+        status: "published",
+        category: { status: "active" },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        category: { select: { name: true, slug: true } },
+      },
+    });
+
     // 5️⃣ Fetch banner articles (with category details)
     const banners = await prisma.article.findMany({
       where: {
@@ -100,6 +129,8 @@ export default async function handler(
       categories: filteredCategories,
       breakingNews,
       banners,
+      newsData,
+      projects,
     });
   } catch (err) {
     console.error("Error fetching home data:", err);
