@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { notFound, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { executivesData } from "../../../../data";
 import Layout from "@/components/layout";
+import EmptyState from "@/components/EmptyState";
 
 export default function ExecutiveProfilePage() {
   const param = useParams<{
@@ -13,7 +14,7 @@ export default function ExecutiveProfilePage() {
   const exec = executivesData.find(e => e.id === execId);
 
   if (!exec) {
-    notFound();
+    return <EmptyState />;
   }
 
   return (
@@ -28,13 +29,15 @@ export default function ExecutiveProfilePage() {
           <div className="bg-white dark:bg-slate-950 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-5">
               <div className="col-span-1 md:col-span-2 relative h-125 md:h-145 border-r border-slate-100 dark:border-slate-800">
-                <Image 
-                  src={exec.image} 
-                  alt={exec.name} 
-                  fill 
-                  className="object-cover"
-                  priority
-                />
+                {exec && (
+                  <Image 
+                    src={exec.image} 
+                    alt={exec.name} 
+                    fill 
+                    className="object-cover"
+                    priority
+                  />
+                )}
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex items-end p-8 md:hidden">
                   <div>
                     <h2 className="text-accent-ocean font-bold uppercase tracking-widest text-sm mb-1">{exec.role}</h2>
