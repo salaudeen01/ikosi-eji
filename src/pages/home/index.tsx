@@ -6,13 +6,14 @@ import { services } from '../../../data'
 import NewsSlider from '@/components/HeroSlider'
 import { useHomeData } from '@/hooks/mutatiion/clients/useHomeData'
 import { useHomeStore } from '@/store/clients/useHomeStore'
+import ArticleSkeleton from '@/components/ArticleSkeleton'
 
 const HomeIndex = () => {
   const { isLoading } = useHomeData();
   const { projects, breakingNews, newsData } = useHomeStore();
-  console.log(projects, breakingNews, newsData);
   const recentNews = newsData.slice(0, 4);
-  const sideNews = newsData.slice(1, 4);
+  const sideNews = projects.slice(1, 4);
+  if (isLoading) return <ArticleSkeleton />;
   return (
     <Layout>
        <div className="flex flex-col">
