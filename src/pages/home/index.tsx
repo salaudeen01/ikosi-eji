@@ -7,7 +7,7 @@ import NewsSlider from '@/components/HeroSlider'
 import { useHomeData } from '@/hooks/mutatiion/clients/useHomeData'
 import { useHomeStore } from '@/store/clients/useHomeStore'
 
-const Index = () => {
+const HomeIndex = () => {
   const { isLoading } = useHomeData();
   const { projects, breakingNews, newsData } = useHomeStore();
   console.log(projects, breakingNews, newsData);
@@ -128,4 +128,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default HomeIndex
