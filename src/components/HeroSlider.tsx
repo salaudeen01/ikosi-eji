@@ -16,7 +16,10 @@ interface NewsItem {
 export default function NewsSlider({ newsData }: { newsData: BreakingNews[] }) {
   const [current, setCurrent] = useState(0);
 
-  console.log(newsData)
+
+  // const handleClick = () => {
+  //   router.push(`/${category}/article/1/${data?.slug}`);
+  // };
 
   // Auto scroll
   useEffect(() => {
@@ -67,7 +70,7 @@ export default function NewsSlider({ newsData }: { newsData: BreakingNews[] }) {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href={`/projects/${news.id}`} className="px-6 py-3 bg-primary-green hover:bg-secondary-green text-white rounded-full font-bold shadow-lg transition-all hover:scale-105 text-sm inline-flex items-center justify-center">
+                <Link href={`/news/article/1/${news?.slug}`} className="px-6 py-3 bg-primary-green hover:bg-secondary-green text-white rounded-full font-bold shadow-lg transition-all hover:scale-105 text-sm inline-flex items-center justify-center">
                   Read Full Story
                 </Link>
               </div>

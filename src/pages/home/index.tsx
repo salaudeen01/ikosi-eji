@@ -66,7 +66,7 @@ const HomeIndex = () => {
                   
                   <div className="space-y-8">
                     {breakingNews.map((news) => (
-                      <Link href={`/projects/${news.id}`} key={news.id} className="group block bg-white dark:bg-slate-950 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-100 dark:border-slate-800">
+                      <Link href={`/news/article/1/${news?.slug}`} key={news.id} className="group block bg-white dark:bg-slate-950 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-100 dark:border-slate-800">
                         <div className="flex flex-col md:flex-row gap-6 items-start">
                           <div className="relative w-full md:w-48 h-48 md:h-32 rounded-xl overflow-hidden flex-shrink-0">
                             <Image src={news.imageUrl} alt={news.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
@@ -87,7 +87,7 @@ const HomeIndex = () => {
                     <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white border-l-4 border-primary-green pl-3">More Updates</h3>
                     <div className="space-y-6">
                       {sideNews.map(news => (
-                        <Link href={`/projects/${news.id}`} key={news.id} className="block group border-b border-slate-100 dark:border-slate-800 pb-6 last:border-0 last:pb-0">
+                        <Link href={`/projects/article/1/${news?.slug}`} key={news.id} className="block group border-b border-slate-100 dark:border-slate-800 pb-6 last:border-0 last:pb-0">
                           <h4 className="font-bold text-slate-800 dark:text-slate-200 leading-snug group-hover:text-primary-green transition-colors">{news.title}</h4>
                           <p className="text-sm text-slate-500 mt-2">{new Date(news.createdAt).toDateString()}</p>
                         </Link>
