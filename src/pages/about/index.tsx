@@ -11,7 +11,7 @@ const About = () => {
           
           {/* Hero Header */}
           <div className="text-center mb-16 animate-[fade-in_0.5s_ease-out]">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-serif font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">
               About Ikosi-Ejinrin LCDA
             </h1>
             <div className="w-32 h-1.5 bg-linear-to-r from-primary-green to-accent-ocean mx-auto rounded-full mb-8"></div>
@@ -55,7 +55,7 @@ const About = () => {
               </div>
             </div>
             <div>
-              <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-8 relative inline-block">
+              <h2 className="text-4xl font-serif font-extrabold text-slate-900 dark:text-white mb-8 relative inline-block">
                 Our Origin
                 <span className="absolute -bottom-2 left-0 w-1/2 h-1.5 bg-accent-ocean rounded-full"></span>
               </h2>
@@ -74,7 +74,7 @@ const About = () => {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-ocean/5 rounded-full blur-3xl -z-10"></div>
             
             <div className="text-center mb-16 relative z-10">
-              <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-6">Geography & District Structure</h2>
+              <h2 className="text-4xl font-serif font-extrabold text-slate-900 dark:text-white mb-6">Geography & District Structure</h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-3xl mx-auto text-lg">
                 Located in the Lagos East Senatorial District, on the north side of the Lekki Lagoon, covering 378 sq km with an estimated population of 320,274. We share boundaries with Epe LG, Eredo LCDA, Imota LCDA, and Ogun State.
               </p>
@@ -101,7 +101,7 @@ const About = () => {
           {/* Guidelines / Traditional Structure & Kingdoms */}
           <div className="mb-24">
              <div className="text-center mb-16">
-              <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-6">Traditional Structure &<br />Kingdoms</h2>
+              <h2 className="text-4xl font-serif font-extrabold text-slate-900 dark:text-white mb-6">Traditional Structure &<br />Kingdoms</h2>
               <div className="w-24 h-1.5 bg-linear-to-r from-primary-green to-accent-ocean mx-auto rounded-full"></div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -122,7 +122,7 @@ const About = () => {
           {/* Leadership History Timeline */}
           <div className="mb-24 bg-linear-to-br from-primary-green/5 to-accent-ocean/5 rounded-[3rem] p-10 md:p-16 border border-white/60 dark:border-slate-800 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 p-32 bg-primary-green/5 rounded-full blur-[100px] -z-10 mix-blend-multiply dark:mix-blend-screen"></div>
-            <h2 className="text-4xl font-extrabold text-center text-slate-900 dark:text-white mb-20 tracking-tight">Leadership History</h2>
+            <h2 className="text-4xl font-serif font-extrabold text-center text-slate-900 dark:text-white mb-20 tracking-tight">Leadership History</h2>
             
             <div className="max-w-4xl mx-auto relative z-10">
               {/* Timeline center line */}
@@ -163,7 +163,7 @@ const About = () => {
           {/* Map Section */}
           <div className="mb-8">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Location Map</h2>
+              <h2 className="text-4xl font-serif font-extrabold text-slate-900 dark:text-white mb-4">Location Map</h2>
               <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
                 Find the LCDA Secretariat in Ita Merin, Agbowa.
               </p>

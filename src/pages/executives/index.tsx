@@ -10,7 +10,7 @@ export default function ExecutivesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center mb-16 px-4 animate-[fade-in_0.5s_ease-out]">
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">Our Executives</h1>
+            <h1 className="text-4xl md:text-5xl font-serif font-extrabold text-slate-900 dark:text-white mb-6">Our Executives</h1>
             <div className="w-24 h-1 bg-primary-green mx-auto rounded-full mb-6"></div>
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
               Meet the dedicated leaders and technocrats steering the wheel of progress in Ikosi-Ejinrin LCDA.
@@ -31,7 +31,7 @@ export default function ExecutivesPage() {
                   </div>
                   <div className="p-6 flex-grow flex flex-col">
                     <h2 className="text-sm font-bold text-accent-ocean uppercase tracking-wider mb-2">{exec.role}</h2>
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">{exec.name}</h3>
+                    <h3 className="text-2xl font-serif font-bold text-slate-900 dark:text-white mb-3">{exec.name}</h3>
                     <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 flex-grow">
                       {exec.description}
                     </p>

@@ -29,7 +29,7 @@ if (isError) return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center mb-16 px-4 animate-[fade-in_0.5s_ease-out]">
-            <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">Projects</h1>
+            <h1 className="text-5xl md:text-6xl font-serif font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">Projects</h1>
             <div className="w-24 h-1.5 bg-gradient-to-r from-primary-green to-accent-ocean mx-auto rounded-full mb-6"></div>
             <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
               Explore the latest community development projects, infrastructure expansions, and community empowerment programs.

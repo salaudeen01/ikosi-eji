@@ -20,7 +20,7 @@ const HomeIndex = () => {
         <NewsSlider newsData={recentNews} />
         <section className="py-16 bg-primary-green relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-            <h2 className="text-2xl md:text-4xl font-extrabold mb-4 drop-shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-serif font-black mb-6 drop-shadow-md">
               Moving Ikosi-Ejinrin Forward
             </h2>
             <p className="text-lg md:text-xl font-medium max-w-3xl mx-auto text-white/90">
@@ -44,7 +44,7 @@ const HomeIndex = () => {
                     <span className="w-2 h-2 rounded-full bg-accent-ocean"></span>
                     Leadership
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900 dark:text-white">A Message from the Executive Chairman</h2>
+                  <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6 text-slate-900 dark:text-white">A Message from the Executive Chairman</h2>
                   <p className="text-slate-600 dark:text-slate-300 mb-6 text-lg leading-relaxed">
                   &quot;I want to personally welcome you to the Ikosi-Ejinrin LCDA platform. Since we took office, my team and I have been on the ground making sure that every single ward—from Agbowa down to every surrounding community—feels the true impact of our work. We&apos;re busy fixing schools, supporting our local farmers, and creating real chances for our youth to succeed, because at the end of the day, this is our home, and we have to build it together.&quot;
                   </p>
@@ -74,7 +74,7 @@ const HomeIndex = () => {
                           </div>
                           <div>
                             <div className="text-xs font-bold text-accent-ocean mb-2 uppercase tracking-wide">{new Date(news.createdAt).toDateString()}</div>
-                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary-green transition-colors">{news.title}</h3>
+                            <h3 className="text-2xl font-serif font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary-green transition-colors">{news.title}</h3>
                             <p className="text-slate-600 dark:text-slate-400 line-clamp-2">{news.summary}</p>
                           </div>
                         </div>
@@ -85,7 +85,7 @@ const HomeIndex = () => {
 
                 <div className="lg:col-span-1">
                   <div className="bg-white dark:bg-slate-950 p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 sticky top-32">
-                    <h3 className="text-xl font-bold mb-6 text-slate-900 dark:text-white border-l-4 border-primary-green pl-3">More Updates</h3>
+                    <h3 className="text-2xl font-serif font-bold mb-6 text-slate-900 dark:text-white border-l-4 border-primary-green pl-3">More Updates</h3>
                     <div className="space-y-6">
                       {sideNews.map(news => (
                         <Link href={`/projects/article/1/${news?.slug}`} key={news.id} className="block group border-b border-slate-100 dark:border-slate-800 pb-6 last:border-0 last:pb-0">
@@ -108,7 +108,7 @@ const HomeIndex = () => {
           <section className="py-20 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Our Core Pillars</h2>
+                <h2 className="text-3xl font-serif font-bold text-slate-900 dark:text-white mb-4">Our Core Pillars</h2>
                 <div className="w-24 h-1 bg-accent-ocean mx-auto rounded-full"></div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -117,7 +117,7 @@ const HomeIndex = () => {
                     <div className="w-16 h-16 mx-auto bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-primary-green mb-6 shadow-md shadow-primary-green/10">
                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={service.icon}></path></svg>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{service.title}</h3>
+                    <h3 className="text-xl font-serif font-bold text-slate-900 dark:text-white mb-3">{service.title}</h3>
                     <p className="text-slate-600 dark:text-slate-400">{service.description}</p>
                   </div>
                 ))}

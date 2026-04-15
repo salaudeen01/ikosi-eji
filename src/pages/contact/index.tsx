@@ -24,7 +24,7 @@ export default function Contact() {
           
           {/* Header */}
           <div className="text-center mb-16 animate-[fade-in_0.5s_ease-out]">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-serif font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">
               Contact Us
             </h1>
             <div className="w-32 h-1.5 bg-linear-to-r from-primary-green to-accent-ocean mx-auto rounded-full mb-8"></div>
@@ -40,7 +40,7 @@ export default function Contact() {
               <div className="bg-white dark:bg-slate-800 p-10 rounded-3xl shadow-xl border-t-8 border-primary-green space-y-8 relative overflow-hidden h-full">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary-green/5 rounded-full blur-3xl -z-10"></div>
                 
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white border-b pb-4 dark:border-slate-700">
+                <h3 className="text-2xl font-serif font-bold text-slate-900 dark:text-white border-b pb-4 dark:border-slate-700">
                   Get In Touch
                 </h3>
                 
@@ -118,7 +118,7 @@ export default function Contact() {
             <div>
               <div className="bg-white dark:bg-slate-800 p-10 rounded-3xl shadow-xl space-y-8 flex flex-col h-full border border-slate-100 dark:border-slate-800">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Send us a Message</h3>
+                  <h3 className="text-2xl font-serif font-bold text-slate-900 dark:text-white mb-2">Send us a Message</h3>
                   <p className="text-slate-500 dark:text-slate-400">Fill out the form below and our team will get back to you immediately.</p>
                 </div>
 
@@ -156,7 +156,7 @@ export default function Contact() {
           {/* Map Section */}
           <div className="mb-8">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Location Map</h2>
+              <h2 className="text-4xl font-serif font-extrabold text-slate-900 dark:text-white mb-4">Location Map</h2>
               <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
                 Find the LCDA Secretariat in Ita Merin, Agbowa.
               </p>

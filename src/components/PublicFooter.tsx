@@ -11,7 +11,7 @@ export default function PublicFooter() {
                 {/* <span className="text-white font-bold text-xl">IE</span> */}
                 <img src="/images/assets/logo.jpeg" alt="" className="rounded-full" />
               </div>
-              <span className="font-bold text-xl text-white">Ikosi-Ejinrin</span>
+              <span className="font-extrabold text-xl font-serif text-white tracking-widest">IKOSI-EJINRIN</span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed">
               Official Digital Portal of Ikosi-Ejinrin Local Council Development Area, Agbowa. Committed to grassroots development, empowerment, and excellence.
@@ -19,7 +19,7 @@ export default function PublicFooter() {
           </div>
           
           <div>
-            <h3 className="text-white font-semibold mb-4 text-lg border-b border-primary-green pb-2 inline-block">Quick Links</h3>
+            <h3 className="text-white font-serif font-bold mb-4 text-xl border-b border-primary-green pb-2 inline-block">Quick Links</h3>
             <ul className="space-y-3">
               <li><Link href="/about" className="text-slate-400 hover:text-primary-green transition-colors text-sm">About LCDA</Link></li>
               <li><Link href="/projects" className="text-slate-400 hover:text-primary-green transition-colors text-sm">Projects & News</Link></li>
@@ -30,7 +30,7 @@ export default function PublicFooter() {
           </div>
           
           <div>
-            <h3 className="text-white font-semibold mb-4 text-lg border-b border-accent-ocean pb-2 inline-block">Contact Us</h3>
+            <h3 className="text-white font-serif font-bold mb-4 text-xl border-b border-accent-ocean pb-2 inline-block">Contact Us</h3>
             <ul className="space-y-3 text-sm text-slate-400">
               <li className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-primary-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -48,7 +48,7 @@ export default function PublicFooter() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4 text-lg border-b border-primary-green pb-2 inline-block">Newsletter</h3>
+            <h3 className="text-white font-serif font-bold mb-4 text-xl border-b border-primary-green pb-2 inline-block">Newsletter</h3>
             <p className="text-slate-400 text-sm mb-4">Subscribe to receive updates on projects and announcements.</p>
             <form className="flex flex-col gap-2" action="#">
               <input 

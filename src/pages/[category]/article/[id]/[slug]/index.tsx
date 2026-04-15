@@ -65,7 +65,7 @@ export default function ArticlePage({ article, canonical }: { article: Article; 
   return (
     <>
       <Head>
-        <title>{article.article.title} — Ecometrics</title>
+        <title>{article.article.title} — Ikosi-Ejinrin</title>
         <meta name="description" content={article.article.summary || ""} />
         <link rel="canonical" href={canonical} />
 
