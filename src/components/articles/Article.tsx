@@ -20,11 +20,11 @@ import { formatQuillContent } from "@/lib/quill-converter";
 
 const ArticleMainPage = () => {
   const { currentUrl, origin } = useClientUrl();
-  const { mutate: saveArticle, isPending } = useSaveArticle();  
+  const { mutate: saveArticle, isPending } = useSaveArticle();
   const { token, isAuthenticated } = useAuthStore();
   const { openLogin } = useLoginModalStore();
 
-  const params = useParams<{ slug: string}>();
+  const params = useParams<{ slug: string }>();
   const slug = params?.slug;
 
   const { data, isLoading, isError, refetch } = useArticleData(slug!, {
@@ -45,16 +45,16 @@ const ArticleMainPage = () => {
   const { article, related, views } = articleResponse;
   const articleData = article;
 
-    // const cleanContent = DOMPurify.sanitize(
-    //   (articleData?.content ?? "").replace(/&nbsp;/g, " ")
-    // );
-const cleanContent = formatQuillContent(articleData?.content || "");
+  // const cleanContent = DOMPurify.sanitize(
+  //   (articleData?.content ?? "").replace(/&nbsp;/g, " ")
+  // );
+  const cleanContent = formatQuillContent(articleData?.content || "");
 
 
   const handleClick = () => {
     if (!token || !isAuthenticated) {
       openLogin()
-    }else{
+    } else {
       saveArticle(articleData?.id || 0)
     }
   };
@@ -89,8 +89,8 @@ const cleanContent = formatQuillContent(articleData?.content || "");
               url={currentUrl}
               image={articleData?.imageUrl}
             />
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               disabled={isPending}
               onClick={() => handleClick()}
@@ -115,7 +115,7 @@ const cleanContent = formatQuillContent(articleData?.content || "");
           </p>
 
           {articleData?.content ? (
-            <div 
+            <div
               dangerouslySetInnerHTML={{ __html: cleanContent }}
               className="article-content"
             />
@@ -127,9 +127,9 @@ const cleanContent = formatQuillContent(articleData?.content || "");
           <div className="mt-12 pt-8 border-t border-[hsl(var(--border))]">
             <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
             {related?.length === 0 ?
-              <p>No Article Found</p>:
+              <p>No Article Found</p> :
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {related?.map((item, index)=>(
+                {related?.map((item, index) => (
                   <div key={index} className="border border-[hsl(var(--border))] rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer">
                     <Link href={`/${item?.categoryName}/article/1/${item?.slug}`}>
                       <Badge className="mb-2 bg-primary/10 text-[hsl(var(--primary))] hover:bg-primary/20 border-0">

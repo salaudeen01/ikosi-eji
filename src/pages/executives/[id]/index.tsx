@@ -8,7 +8,7 @@ import EmptyState from "@/components/EmptyState";
 export default function ExecutiveProfilePage() {
   const param = useParams<{
     id: string; slug: string
-}>();
+  }>();
   const resolvedParams = param;
   const execId = resolvedParams?.id ?? '';
   const exec = executivesData.find(e => e.id === execId);
@@ -21,19 +21,19 @@ export default function ExecutiveProfilePage() {
     <Layout>
       <div className="bg-slate-50 dark:bg-slate-900 min-h-screen py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           <Link href="/executives" className="inline-flex items-center gap-2 text-primary-green font-semibold mb-8 hover:underline">
             &larr; Back to Executives
           </Link>
-          
+
           <div className="bg-white dark:bg-slate-950 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-5">
               <div className="col-span-1 md:col-span-2 relative h-125 md:h-145 border-r border-slate-100 dark:border-slate-800">
                 {exec && (
-                  <Image 
-                    src={exec.image} 
-                    alt={exec.name} 
-                    fill 
+                  <Image
+                    src={exec.image}
+                    alt={exec.name}
+                    fill
                     className="object-cover"
                     priority
                   />
@@ -45,7 +45,7 @@ export default function ExecutiveProfilePage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="col-span-1 md:col-span-3 p-8 lg:p-12">
                 <div className="hidden md:block mb-8">
                   <div className="inline-block px-4 py-1 bg-accent-ocean/10 text-accent-ocean rounded-full text-sm font-bold uppercase tracking-wider mb-4 border border-accent-ocean/20">

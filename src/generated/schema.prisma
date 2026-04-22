@@ -117,3 +117,15 @@ model ArticleView {
   article   Article  @relation(fields: [articleId], references: [id])
   user      User?    @relation(fields: [userId], references: [id])
 }
+
+model Member {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  title     String?
+  role      String
+  insight   String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -21,19 +21,20 @@ export default function PublicNavbar() {
   const navLinks = [
     { name: "Home", href: "/home" },
     { name: "About", href: "/about" },
-    { name: "Projects & News", 
+    {
+      name: "Projects & News",
       dropdown: [
         { name: "News", href: "/news" },
         { name: "Projects", href: "/projects" }
       ]
     },
-    { 
-      name: "Councils Teams", 
+    {
+      name: "Councils Teams",
       dropdown: [
         { name: "Executives", href: "/executives" },
         // { name: "Legislatures", href: "/legislatures" },
         { name: "Management Team", href: "/management-team" }
-      ] 
+      ]
     },
     // { name: "Gallery", href: "/gallery" },
     // { name: "Jobs", href: "/jobs" },
@@ -46,9 +47,8 @@ export default function PublicNavbar() {
 
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100 ${
-        scrolled ? "py-2" : "py-4"
-      }`}
+      className={`fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100 ${scrolled ? "py-2" : "py-4"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
@@ -63,7 +63,7 @@ export default function PublicNavbar() {
               </span>
             </Link>
           </div>
-          
+
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-2">
             {navLinks.map((link) => (
@@ -82,11 +82,10 @@ export default function PublicNavbar() {
                           <Link
                             key={sublink.name}
                             href={sublink.href}
-                            className={`block px-4 py-2 mt-1 mx-2 rounded-lg text-sm font-bold transition-colors ${
-                              pathname === sublink.href
+                            className={`block px-4 py-2 mt-1 mx-2 rounded-lg text-sm font-bold transition-colors ${pathname === sublink.href
                                 ? "text-primary-green bg-sky-50"
                                 : "text-slate-600 hover:text-primary-green hover:bg-sky-50"
-                            }`}
+                              }`}
                           >
                             {sublink.name}
                           </Link>
@@ -97,11 +96,10 @@ export default function PublicNavbar() {
                 ) : (
                   <Link
                     href={link.href}
-                    className={`px-3 py-2 rounded-full text-sm font-bold transition-colors ${
-                      pathname === link.href
+                    className={`px-3 py-2 rounded-full text-sm font-bold transition-colors ${pathname === link.href
                         ? "text-primary-green bg-sky-50"
                         : "text-slate-600 hover:text-primary-green hover:bg-sky-50"
-                    }`}
+                      }`}
                   >
                     {link.name}
                   </Link>
@@ -132,8 +130,8 @@ export default function PublicNavbar() {
       </div>
 
       {/* Mobile menu Overlay */}
-      <div 
-        className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} 
+      <div
+        className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         onClick={() => setIsOpen(false)}
       />
 
@@ -154,7 +152,7 @@ export default function PublicNavbar() {
               </svg>
             </button>
           </div>
-          
+
           <div className="space-y-3">
             {navLinks.map((link) => (
               <div key={link.name}>
@@ -176,11 +174,10 @@ export default function PublicNavbar() {
                             key={sublink.name}
                             href={sublink.href}
                             onClick={() => setIsOpen(false)}
-                            className={`block px-4 py-2.5 rounded-lg text-sm font-bold transition-colors ${
-                              pathname === sublink.href
+                            className={`block px-4 py-2.5 rounded-lg text-sm font-bold transition-colors ${pathname === sublink.href
                                 ? "text-primary-green bg-white shadow-sm"
                                 : "text-slate-600 hover:text-primary-green hover:bg-white"
-                            }`}
+                              }`}
                           >
                             {sublink.name}
                           </Link>
@@ -192,11 +189,10 @@ export default function PublicNavbar() {
                   <Link
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`block px-4 py-3 rounded-xl text-base font-bold transition-colors ${
-                      pathname === link.href
+                    className={`block px-4 py-3 rounded-xl text-base font-bold transition-colors ${pathname === link.href
                         ? "text-primary-green bg-sky-50 shadow-sm"
                         : "text-slate-700 hover:text-primary-green hover:bg-sky-50"
-                    }`}
+                      }`}
                   >
                     {link.name}
                   </Link>

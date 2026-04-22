@@ -1,5 +1,5 @@
 import { authApi } from "@/lib/axios";
-import { ActivityLogResponse, ArticleQueryParams, CreateAdminPayload, CreateArticlePayload, CreateCategoryPayload, FetchAdminsResponse, FetchArticleResponse, FetchArticlesResponse, FetchCategoriesResponse } from "../../type";
+import { ActivityLogResponse, ArticleQueryParams, CreateAdminPayload, CreateArticlePayload, CreateCategoryPayload, CreateMemberPayload, FetchAdminsResponse, FetchArticleResponse, FetchArticlesResponse, FetchCategoriesResponse, FetchMemberResponse, MemberQueryParams } from "../../type";
 
 
 
@@ -58,6 +58,26 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
       return data;
     };
 
+  // Members
+
+  export const createMember = async (payload: CreateMemberPayload) => {
+    const { data } = await authApi.post("/member", payload);
+    return data;
+  };
+
+  export const updatemember = async (payload: CreateMemberPayload) => {
+    const { data } = await authApi.put("/member", payload);
+    return data;
+  };
+
+  export const fetchMember = async (
+    params: MemberQueryParams,
+  ): Promise<FetchMemberResponse> => {
+    const response = await authApi.get(`/member`,
+         { params }
+);
+    return response.data;
+  };
 
 
 

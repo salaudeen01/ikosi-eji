@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // ============================= POST - Create or Reactivate Admin
     case "POST": {
       const { isAdmin: isUserAdmin, userId } = await isAdmin(req);
-      // if (!isUserAdmin) return res.status(403).json({ message: "Access denied. Admins only." });
+      if (!isUserAdmin) return res.status(403).json({ message: "Access denied. Admins only." });
 
       interface AdminRequestBody {
         email: string;

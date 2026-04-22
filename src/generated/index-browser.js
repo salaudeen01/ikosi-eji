@@ -204,6 +204,18 @@ exports.Prisma.ArticleViewScalarFieldEnum = {
   viewedAt: 'viewedAt'
 };
 
+exports.Prisma.MemberScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  title: 'title',
+  role: 'role',
+  insight: 'insight',
+  imageUrl: 'imageUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -227,7 +239,8 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   ActivityLog: 'ActivityLog',
   SavedArticle: 'SavedArticle',
-  ArticleView: 'ArticleView'
+  ArticleView: 'ArticleView',
+  Member: 'Member'
 };
 
 /**

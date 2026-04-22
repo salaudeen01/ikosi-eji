@@ -40,13 +40,12 @@ const ArticleCard = ({
             <Badge className="mb-4 bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--news-hover))]">
               {category}
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-3 leading-tight">
+            <h2 className="text-3xl md:text-5xl font-serif font-black mb-4 leading-tight tracking-tight drop-shadow-lg lg:max-w-4xl">
               {data?.title}
             </h2>
-            <p className="text-lg text-white/90 mb-4 line-clamp-2">{data?.summary}</p>
-            <div className="flex items-center text-sm text-white/80">
-              <Calendar className="h-4 w-4 mr-2" />
-              {data?.createdAt}
+            <p className="text-lg md:text-2xl text-white/90 mb-6 line-clamp-2 md:line-clamp-3 font-serif leading-relaxed font-medium max-w-3xl drop-shadow-md">{data?.summary}</p>
+            <div className="flex items-center text-sm font-bold uppercase tracking-widest text-white/80">
+              {new Date(data.createdAt).toDateString()}
             </div>
           </div>
         </div>
@@ -66,20 +65,19 @@ const ArticleCard = ({
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
-      <CardContent className="p-4">
-        <Badge className="mb-2 bg-[hsl(var(--primary))]/10 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/20 border-0">
-          {category}
-        </Badge>
-        <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-[hsl(var(--primary))] transition-colors">
-          {data?.title}
-        </h3>
-        <p className="text-sm text-[hsl(var(--muted-foreground))] mb-3 line-clamp-2">
-          {data?.summary}
-        </p>
-        <div className="flex items-center text-xs text-[hsl(var(--muted-foreground))]">
-          <Calendar className="h-3 w-3 mr-1" />
+      <CardContent className="p-6 md:p-8 flex-grow flex flex-col bg-white">
+        <div className="flex items-center text-[11px] md:text-xs font-bold uppercase tracking-widest text-accent-ocean mb-4">
           {new Date(data.createdAt).toDateString()}
         </div>
+        <h3 className="text-xl md:text-3xl font-serif font-black text-slate-900 mb-4 line-clamp-3 group-hover:text-primary-green transition-colors leading-snug">
+          {data?.title}
+        </h3>
+        <p className="text-base md:text-lg text-slate-700 mb-8 flex-grow line-clamp-3 leading-relaxed font-serif font-medium">
+          {data?.summary}
+        </p>
+        <span className="mt-auto block w-full text-center py-4 rounded-xl border-2 border-slate-100 text-slate-800 text-sm font-bold uppercase tracking-widest group-hover:border-primary-green group-hover:text-primary-green transition-colors duration-300">
+           Read Article
+        </span>
       </CardContent>
     </Card>
   );

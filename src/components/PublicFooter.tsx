@@ -17,7 +17,7 @@ export default function PublicFooter() {
               Official Digital Portal of Ikosi-Ejinrin Local Council Development Area, Agbowa. Committed to grassroots development, empowerment, and excellence.
             </p>
           </div>
-          
+
           <div>
             <h3 className="text-white font-serif font-bold mb-4 text-xl border-b border-primary-green pb-2 inline-block">Quick Links</h3>
             <ul className="space-y-3">
@@ -28,13 +28,13 @@ export default function PublicFooter() {
               <li><Link href="/jobs" className="text-slate-400 hover:text-primary-green transition-colors text-sm">Job Opportunities</Link></li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-white font-serif font-bold mb-4 text-xl border-b border-accent-ocean pb-2 inline-block">Contact Us</h3>
             <ul className="space-y-3 text-sm text-slate-400">
               <li className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-primary-green flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                <span>LCDA Secretariat,<br/>Itamerin Junction,<br/>Agbowa-Ikosi, Epe Division,<br/>Lagos State.</span>
+                <span>LCDA Secretariat,<br />Itamerin Junction,<br />Agbowa-Ikosi, Epe Division,<br />Lagos State.</span>
               </li>
               <li className="flex items-center gap-3">
                 <svg className="w-5 h-5 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -51,12 +51,12 @@ export default function PublicFooter() {
             <h3 className="text-white font-serif font-bold mb-4 text-xl border-b border-primary-green pb-2 inline-block">Newsletter</h3>
             <p className="text-slate-400 text-sm mb-4">Subscribe to receive updates on projects and announcements.</p>
             <form className="flex flex-col gap-2" action="#">
-              <input 
+              <input
                 type="email"
-                placeholder="Email Address" 
+                placeholder="Email Address"
                 className="bg-slate-800 border border-slate-700 text-white px-4 py-2 rounded-md focus:outline-none focus:border-primary-green focus:ring-1 focus:ring-primary-green text-sm"
               />
-              <button 
+              <button
                 type="button"
                 className="bg-primary-green hover:bg-secondary-green text-white px-4 py-2 rounded-md transition-colors text-sm font-medium"
               >
@@ -65,7 +65,7 @@ export default function PublicFooter() {
             </form>
           </div>
         </div>
-        
+
         <div className="border-t border-slate-800 pt-8 mt-8 text-center md:flex md:justify-between md:items-center">
           <p className="text-slate-500 text-sm">
             © {new Date().getFullYear()} Ikosi-Ejinrin LCDA. All rights reserved.

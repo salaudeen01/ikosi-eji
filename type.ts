@@ -89,6 +89,40 @@ import { RowDataPacket } from "mysql2";
     id: string
   }
 
+  export interface CreateMemberPayload {
+    name: string;
+    title: string;
+    imageUrl: string;
+    insight: string;
+    role: string;
+    id: string
+  }
+
+  export interface Member {
+    id: string;
+    name: string;
+    slug: string
+    title: string;
+    imageUrl: string;
+    insight: string;
+    role: string;
+    createdAt: string;
+  }
+
+  export interface FetchMemberResponse {
+    message: string;
+    data: Member[];
+    pagination: Pagination;
+  }
+  
+  export interface MemberQueryParams {
+    slug?: string;
+    search?: string;
+    role?: string;
+    page?: number;
+    limit?: number;
+  }
+
   export interface CategoryState {
     categories: Category[];
     page: number;
@@ -164,6 +198,21 @@ import { RowDataPacket } from "mysql2";
     endDate?: string;
     page?: number;
     limit?: number;
+  }
+
+  export interface MemberState {
+    search: string;
+    slug: string;
+    role?: string;
+    page: number;
+    limit: number;
+
+    // Actions
+    setSlug: (slug: string) =>void;
+    setSearch: (search: string) => void;
+    setRole: (role: string) => void;
+    setPage: (page: number) => void;
+    resetFilters: () => void;
   }
 
   export interface ArticleFilterState {

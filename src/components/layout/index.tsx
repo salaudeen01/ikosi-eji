@@ -6,14 +6,16 @@ import { Skeleton } from '../ui/skeleton';
 import { ErrorState } from '../ui/error-state';
 import PublicFooter from '../PublicFooter';
 import PublicNavbar from '../PublicNavbar';
+import SEO from '../SEO';
 
 interface LayoutProps {
     children: React.ReactNode;
     pageTitle?: string;
+    pageDescription?: string;
     icon?: string;
   }
 
-const  Layout = ({ children }: LayoutProps) => {
+const  Layout = ({ children, pageTitle, pageDescription }: LayoutProps) => {
 
   const Loader =()=>(
     <div className="container mx-auto px-4 py-8 animate-pulse">
@@ -39,26 +41,13 @@ const  Layout = ({ children }: LayoutProps) => {
     </div>
   )
 
-  // const { data: categories, isLoading, isError, refetch } = useClientCategories();
-
-  // if (isLoading) return <Loader />;
-  // if (isError) return (
-  //   <ErrorState
-  //     message="Failed to fetch article details."
-  //     onRetry={() => refetch()}
-  //   />
-  // );
-  // if (isError) return <p>Failed to load admins</p>;
-  
-
   return (
     <div className="min-h-screen flex flex-col conta bg-[hsl(var(--background))]" suppressHydrationWarning>
+      <SEO title={pageTitle} description={pageDescription} />
       <PublicNavbar />
-      {/* <Navigation categories={categories || []} /> */}
       <main className='flex-grow pt-16'>
         {children}
       </main>
-      {/* <Footer categories={categories || []} /> */}
       <PublicFooter />
     </div>
   )

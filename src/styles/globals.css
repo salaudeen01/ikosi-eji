@@ -15,11 +15,15 @@
   --primary: 150 60% 25%;
   --primary-foreground: 0 0% 100%;
 
-  --background: #ffffff; /* Bright white background */
+  --background: #ffffff;
+  /* Bright white background */
   --foreground: #0f172a;
-  --primary-green: #22c55e; /* Vibrant Bright Green */
-  --secondary-green: #15803d; /* Deeper Green for contrast */
-  --accent-ocean: #0ea5e9; /* Vibrant Light Blue / Sky Blue */
+  --primary-green: #22c55e;
+  /* Vibrant Bright Green */
+  --secondary-green: #15803d;
+  /* Deeper Green for contrast */
+  --accent-ocean: #0ea5e9;
+  /* Vibrant Light Blue / Sky Blue */
 
   --secondary: 210 14% 95%;
   --secondary-foreground: 220 13% 13%;
@@ -38,7 +42,7 @@
   --ring: 150 60% 25%;
 
   --radius: 0.5rem;
-  
+
   --news-category: 150 60% 25%;
   --news-hover: 150 60% 30%;
 
@@ -76,7 +80,7 @@
   --color-primary-green: var(--primary-green);
   --color-secondary-green: var(--secondary-green);
   --color-accent-ocean: var(--accent-ocean);
-  
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -134,7 +138,7 @@
     --ring: 150 60% 25%;
 
     --radius: 0.5rem;
-    
+
     --news-category: 150 60% 25%;
     --news-hover: 150 60% 30%;
 
@@ -172,6 +176,7 @@ body {
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -246,6 +251,7 @@ body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -269,6 +275,7 @@ body {
   .glass {
     @apply bg-white/60 dark:bg-slate-900/60 backdrop-blur-lg border border-white/20 dark:border-white/10 shadow-xl;
   }
+
   .card-hover {
     @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-primary-green/30;
   }
