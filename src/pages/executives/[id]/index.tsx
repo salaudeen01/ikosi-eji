@@ -122,7 +122,7 @@ export default function ExecutiveProfilePage() {
               {exec.sections ? (
                 <div className="space-y-8">
                   {exec.sections.map((section, idx) => (
-                    <motion.div variants={itemVariants} key={idx} className="bg-white rounded-[2.5rem] p-8 sm:p-12 shadow-xl shadow-navy/5 border border-border-color hover:border-primary/20 transition-colors duration-500 overflow-hidden relative group">
+                    <motion.div key={idx} className="bg-white rounded-[2.5rem] p-8 sm:p-12 shadow-xl shadow-navy/5 border border-border-color hover:border-primary/20 transition-colors duration-500 overflow-hidden relative group">
                       {/* Artistic corner accent */}
                       <div className="absolute -top-16 -right-16 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors duration-500"></div>
 
@@ -149,7 +149,7 @@ export default function ExecutiveProfilePage() {
                   ))}
                 </div>
               ) : (
-                <motion.div variants={itemVariants} className="bg-white rounded-[2.5rem] p-8 sm:p-12 shadow-xl shadow-navy/5 border border-border-color hover:border-primary/20 transition-colors duration-500">
+                <motion.div className="bg-white rounded-[2.5rem] p-8 sm:p-12 shadow-xl shadow-navy/5 border border-border-color hover:border-primary/20 transition-colors duration-500">
                   <div className="flex items-center gap-6 mb-8">
                     <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center shrink-0 border border-primary/10">
                       <Briefcase className="w-6 h-6 text-primary" />
@@ -168,7 +168,7 @@ export default function ExecutiveProfilePage() {
 
               {/* Awards & Recognitions */}
               {exec.awards && exec.awards.length > 0 && (
-                <motion.div variants={itemVariants} className="bg-navy rounded-[2.5rem] p-8 sm:p-12 shadow-2xl border border-navy text-white relative overflow-hidden group">
+                <motion.div className="bg-navy rounded-[2.5rem] p-8 sm:p-12 shadow-2xl border border-navy text-white relative overflow-hidden group">
                   {/* Dark Mode Glowing Accents */}
                   <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-gold/20 via-primary/10 to-transparent rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4 group-hover:from-gold/30 transition-all duration-700"></div>
                   
