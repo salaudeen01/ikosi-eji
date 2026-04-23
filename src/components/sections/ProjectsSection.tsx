@@ -13,7 +13,7 @@ interface ProjectsSectionProps {
 }
 
 export default function ProjectsSection({ projects }: ProjectsSectionProps) {
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState("all");
   const tabs = ["all", "ongoing", "completed"];
 
   // Placeholder data if no array provided
