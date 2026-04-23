@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Menu, X, ChevronDown, ExternalLink } from "lucide-react";
 
 export default function PublicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +14,7 @@ export default function PublicNavbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 80);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -22,22 +24,25 @@ export default function PublicNavbar() {
     { name: "Home", href: "/home" },
     { name: "About", href: "/about" },
     {
-      name: "Projects & News",
+      name: "Council",
       dropdown: [
-        { name: "News", href: "/news" },
-        { name: "Projects", href: "/projects" }
-      ]
+        { name: "Leadership", href: "/executives" },
+        { name: "Legislature", href: "/legislatures" },
+        { name: "Our Team", href: "/management-team" },
+        { name: "History", href: "/about#biography" },
+      ],
     },
     {
-      name: "Councils Teams",
+      name: "Services",
       dropdown: [
-        { name: "Executives", href: "/executives" },
-        // { name: "Legislatures", href: "/legislatures" },
-        { name: "Management Team", href: "/management-team" }
-      ]
+        { name: "Infrastructure", href: "/services/infrastructure" },
+        { name: "Health", href: "/services/health" },
+        { name: "Education", href: "/services/education" },
+        { name: "Revenue", href: "/services/revenue" },
+      ],
     },
-    // { name: "Gallery", href: "/gallery" },
-    // { name: "Jobs", href: "/jobs" },
+    { name: "Projects", href: "/projects" },
+    { name: "News", href: "/news" },
     { name: "Contact Us", href: "/contact" },
   ];
 
@@ -45,168 +50,238 @@ export default function PublicNavbar() {
     setOpenDropdown(openDropdown === name ? null : name);
   };
 
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  // Animation variants
+  const mobileMenuVariants = {
+    closed: { x: "100%", transition: { ease: "easeInOut", duration: 0.3 } },
+    open: {
+      x: 0,
+      transition: { ease: "easeInOut", duration: 0.4, staggerChildren: 0.1, delayChildren: 0.2 },
+    },
+  };
+
+  const linkVariants = {
+    closed: { opacity: 0, y: 20 },
+    open: { opacity: 1, y: 0 },
+  };
+
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -10, display: "none" },
+    visible: { opacity: 1, y: 0, display: "block", transition: { duration: 0.2 } },
+  };
+
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100 ${scrolled ? "py-2" : "py-4"
-        }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <Link href="/" className="shrink-0 flex items-center gap-2">
-              <div className="w-14 h-14 bg-primary-green rounded-full flex items-center justify-center shadow-md">
-                {/* <span className="text-white font-bold text-xl">IE</span> */}
-                <img src="/images/assets/logo.jpeg" alt="" />
-              </div>
-              <span className="font-extrabold text-xl font-serif text-slate-800 tracking-tight">
-                Ikosi-Ejinrin LCDA
-              </span>
+    <>
+      <nav className="fixed w-full z-50 flex flex-col font-sans">
+        {/* TOP BAR (Hidden on mobile) */}
+        <div className="hidden md:flex h-9 bg-navy text-white text-xs items-center justify-between px-6 lg:px-12 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-2 font-medium">
+              <span className="w-4 h-4 bg-primary rounded-full inline-block"></span>
+              Lagos State Govt
+            </span>
+            <span className="text-white/30">|</span>
+            <span className="font-semibold text-white/90">Ikosi-Ejinrin LCDA</span>
+            <span className="text-white/30">|</span>
+            <span className="text-white/70">{currentDate}</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link href="/transparency" className="hover:text-gold transition-colors font-medium">
+              Transparency Portal
+            </Link>
+            <Link href="/pay" className="text-gold flex items-center gap-1 hover:text-yellow-300 transition-colors font-bold">
+              Pay Levies <ExternalLink className="w-3 h-3" />
             </Link>
           </div>
-
-          {/* Desktop menu */}
-          <div className="hidden md:flex items-center space-x-2">
-            {navLinks.map((link) => (
-              <div key={link.name} className="relative group">
-                {link.dropdown ? (
-                  <>
-                    <button className="px-3 py-2 rounded-full text-sm font-bold text-slate-600 hover:text-primary-green hover:bg-sky-50 transition-colors flex items-center gap-1">
-                      {link.name}
-                      <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    <div className="absolute left-0 mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left group-hover:translate-y-0 translate-y-2">
-                      <p className="py-2">
-                        {link.dropdown.map((sublink) => (
-                          <Link
-                            key={sublink.name}
-                            href={sublink.href}
-                            className={`block px-4 py-2 mt-1 mx-2 rounded-lg text-sm font-bold transition-colors ${pathname === sublink.href
-                                ? "text-primary-green bg-sky-50"
-                                : "text-slate-600 hover:text-primary-green hover:bg-sky-50"
-                              }`}
-                          >
-                            {sublink.name}
-                          </Link>
-                        ))}
-                      </p>
-                    </div>
-                  </>
-                ) : (
-                  <Link
-                    href={link.href}
-                    className={`px-3 py-2 rounded-full text-sm font-bold transition-colors ${pathname === link.href
-                        ? "text-primary-green bg-sky-50"
-                        : "text-slate-600 hover:text-primary-green hover:bg-sky-50"
-                      }`}
-                  >
-                    {link.name}
-                  </Link>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md text-slate-600 hover:text-primary-green focus:outline-none"
-            >
-              <span className="sr-only">Open main menu</span>
-              {!isOpen ? (
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              ) : (
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              )}
-            </button>
-          </div>
         </div>
-      </div>
 
-      {/* Mobile menu Overlay */}
-      <div
-        className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
-        onClick={() => setIsOpen(false)}
-      />
+        {/* MAIN NAV */}
+        <div
+          className={`w-full transition-all duration-300 ${
+            scrolled || isOpen
+              ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-border-color text-text-base h-20"
+              : "bg-transparent backdrop-blur-sm text-text-base md:text-white h-24"
+          }`}
+        >
+          <div className="flex h-full items-center justify-between max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 z-50 group">
+              {/* <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                <span className="text-white font-heading font-black text-xl tracking-tighter">IE</span>
+              </div> */}
 
-      {/* Mobile menu Side Sheet */}
-      <div className={`fixed top-0 right-0 h-[100dvh] w-[80vw] max-w-sm bg-white z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden overflow-y-auto border-l border-slate-100 shadow-2xl flex flex-col`}>
-        <div className="p-6 flex-1">
-          <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
-            <span className="font-extrabold text-xl font-serif text-slate-800 tracking-tight">
-              Menu
-            </span>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-2 rounded-full text-slate-500 hover:text-primary-green hover:bg-sky-50 focus:outline-none transition-colors"
-            >
-              <span className="sr-only">Close menu</span>
-              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+              <div className="w-14 h-14 bg-primary-green rounded-full flex items-center justify-center shadow-md">
+                {/* <span className="text-white font-bold text-xl">IE</span> */}
+                <img src="/images/assets/logo.jpeg" className="rounded-full" alt="" />
+              </div>
+              <div className={`flex flex-col ${scrolled || isOpen ? "text-navy" : "text-navy md:text-white"}`}>
+                <span className="font-heading font-extrabold text-lg leading-tight tracking-tight">Ikosi-Ejinrin</span>
+                <span className="text-xs font-semibold tracking-wider uppercase opacity-80">Local Council</span>
+              </div>
+            </Link>
 
-          <div className="space-y-3">
-            {navLinks.map((link) => (
-              <div key={link.name}>
-                {link.dropdown ? (
-                  <div>
-                    <button
-                      onClick={() => handleMobileDropdown(link.name)}
-                      className="w-full flex justify-between items-center px-4 py-3 rounded-xl text-base font-bold text-slate-700 hover:text-primary-green hover:bg-sky-50 transition-colors"
-                    >
-                      {link.name}
-                      <svg className={`w-5 h-5 text-slate-400 transition-transform duration-200 ${openDropdown === link.name ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    <div className={`overflow-hidden transition-all duration-300 ${openDropdown === link.name ? 'max-h-64 opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>
-                      <div className="pl-6 pr-4 py-2 space-y-1 bg-slate-50/80 rounded-xl">
-                        {link.dropdown.map((sublink) => (
-                          <Link
-                            key={sublink.name}
-                            href={sublink.href}
-                            onClick={() => setIsOpen(false)}
-                            className={`block px-4 py-2.5 rounded-lg text-sm font-bold transition-colors ${pathname === sublink.href
-                                ? "text-primary-green bg-white shadow-sm"
-                                : "text-slate-600 hover:text-primary-green hover:bg-white"
+            {/* Desktop Links */}
+            <div className="hidden lg:flex items-center gap-1 h-full">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href || (link.dropdown && link.dropdown.some(d => pathname === d.href));
+                const textColorClass = scrolled 
+                  ? (isActive ? "text-primary" : "text-navy hover:text-primary")
+                  : (isActive ? "text-gold" : "text-white hover:text-gold");
+
+                return (
+                  <div key={link.name} className="relative group h-full flex items-center px-3">
+                    {link.dropdown ? (
+                      <span className={`cursor-pointer font-bold text-sm tracking-wide flex items-center gap-1 transition-colors ${textColorClass}`}>
+                        {link.name}
+                        <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                        {isActive && <span className="absolute bottom-6 left-0 right-0 h-0.5 bg-current mx-2" />}
+                      </span>
+                    ) : (
+                      <Link href={link.href} className={`font-bold text-sm tracking-wide transition-colors relative ${textColorClass}`}>
+                        {link.name}
+                        {isActive && <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-current rounded-full" />}
+                      </Link>
+                    )}
+
+                    {/* Dropdown Menu */}
+                    {link.dropdown && (
+                      <div className="absolute top-[80px] left-0 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
+                        <div className="w-56 bg-white rounded-2xl shadow-xl border border-border-color p-2 overflow-hidden">
+                          {link.dropdown.map((sublink) => (
+                            <Link
+                              key={sublink.name}
+                              href={sublink.href}
+                              className={`block px-4 py-3 text-sm font-semibold rounded-xl transition-all ${
+                                pathname === sublink.href
+                                  ? "bg-primary-light text-primary"
+                                  : "text-text-base hover:bg-surface-alt hover:text-primary hover:pl-6"
                               }`}
-                          >
-                            {sublink.name}
-                          </Link>
-                        ))}
+                            >
+                              {sublink.name}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
-                ) : (
-                  <Link
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`block px-4 py-3 rounded-xl text-base font-bold transition-colors ${pathname === link.href
-                        ? "text-primary-green bg-sky-50 shadow-sm"
-                        : "text-slate-700 hover:text-primary-green hover:bg-sky-50"
-                      }`}
-                  >
-                    {link.name}
-                  </Link>
-                )}
-              </div>
-            ))}
+                );
+              })}
+            </div>
+
+            {/* Right Actions */}
+            {/* <div className="hidden lg:flex items-center gap-6">
+              <button aria-label="Search" className={`transition-colors ${scrolled ? "text-navy hover:text-primary" : "text-white hover:text-gold"}`}>
+                <Search className="w-5 h-5" />
+              </button>
+              <Link href="/pay" className="btn-gold py-2.5 px-5 text-sm shadow-md">
+                Pay Levies
+              </Link>
+            </div> */}
+
+            {/* Mobile Menu Toggle */}
+            <button
+              className={`lg:hidden z-50 p-2 rounded-xl transition-colors ${
+                isOpen ? "text-white" : scrolled ? "text-navy bg-surface-alt" : "text-white bg-white/10"
+              }`}
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
-        <div className="p-6 bg-slate-50 border-t border-slate-100">
-          <p className="text-xs text-center text-slate-500 font-medium font-sans">
-            © {new Date().getFullYear()} Ikosi-Ejinrin LCDA.
-          </p>
-        </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 lg:hidden bg-navy/80 backdrop-blur-md"
+            onClick={() => setIsOpen(false)}
+          >
+            <motion.div
+              // variants={mobileMenuVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              onClick={(e) => e.stopPropagation()}
+              className="absolute right-0 top-0 bottom-0 w-[85vw] max-w-sm bg-navy pt-28 px-6 pb-6 overflow-y-auto border-l border-white/10 shadow-2xl flex flex-col"
+            >
+              <div className="flex-1 flex flex-col gap-2">
+                {navLinks.map((link) => (
+                  <motion.div key={link.name} variants={linkVariants}>
+                    {link.dropdown ? (
+                      <div className="border-b border-white/10 pb-2">
+                        <button
+                          onClick={() => handleMobileDropdown(link.name)}
+                          className="w-full flex justify-between items-center py-3 text-lg font-heading font-bold text-white tracking-wide"
+                        >
+                          {link.name}
+                          <ChevronDown 
+                            className={`w-5 h-5 text-gold transition-transform duration-300 ${openDropdown === link.name ? "rotate-180" : ""}`} 
+                          />
+                        </button>
+                        <AnimatePresence>
+                          {openDropdown === link.name && (
+                            <motion.div
+                              variants={dropdownVariants}
+                              initial="hidden"
+                              animate="visible"
+                              exit="hidden"
+                              className="pl-4 pb-2 space-y-1"
+                            >
+                              {link.dropdown.map((sublink) => (
+                                <Link
+                                  key={sublink.name}
+                                  href={sublink.href}
+                                  onClick={() => setIsOpen(false)}
+                                  className={`block py-2.5 px-3 rounded-lg text-sm font-semibold transition-colors ${
+                                    pathname === sublink.href
+                                      ? "bg-white/10 text-gold"
+                                      : "text-white/70 hover:bg-white/5 hover:text-white"
+                                  }`}
+                                >
+                                  {sublink.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className={`block py-4 border-b border-white/10 text-lg font-heading font-bold tracking-wide transition-colors ${
+                          pathname === link.href ? "text-gold bg-gradient-to-r from-gold/10 to-transparent px-3 rounded-xl border-none" : "text-white"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+              
+              <motion.div variants={linkVariants} className="mt-8 pt-8 border-t border-white/10">
+                <Link href="/pay" onClick={() => setIsOpen(false)} className="w-full py-4 bg-gold rounded-xl flex items-center justify-center font-bold text-navy shadow-lg shadow-gold/20 active:scale-95 transition-transform">
+                  Pay Levies
+                </Link>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

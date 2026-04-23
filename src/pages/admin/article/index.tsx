@@ -37,6 +37,9 @@ const Index = () => {
     imageUrl: "",
     isBreak: '',
     status: "",
+    progress: 0,
+    progStatus: 'pending',
+    location:'',
     summary: "",
     categoryId: "",
     content: "",
@@ -106,8 +109,6 @@ const Index = () => {
     setloading(true);
     createAMutation.mutate(payload);
   };
-
-  console.log(isLoading)
 
   const handleSubmitEdit = async (e: React.FormEvent) => {
     const payload: CreateArticlePayload ={...form, imageUrl: imageUrl || '', content: content}

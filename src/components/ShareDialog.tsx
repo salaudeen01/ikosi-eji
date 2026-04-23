@@ -106,7 +106,7 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button onClick={handleShare} variant="outline" size="sm">
+        <Button onClick={handleShare} variant="outline" size="sm" className="border-border-color text-navy hover:bg-primary/5 hover:text-primary transition-colors h-10">
           <Share2 className="h-4 w-4 mr-2" />
           Share
         </Button>

@@ -9,13 +9,13 @@ interface SEOProps {
 }
 
 export default function SEO({ 
-  title = "Ikosi-Ejinrin LCDA", 
-  description = "Welcome to the official portal of Ikosi-Ejinrin Local Council Development Area. Discover news, projects, and administrative resources.", 
-  keywords = "Ikosi-Ejinrin, LCDA, Lagos, Local Government, Community, Development, Administration, Nigeria", 
-  image = "/images/assets/logo.jpeg", 
-  url = "https://ikosiejinrin.lg.gov.ng" 
+  title = "Ikosi-Ejinrin LCDA | Official Government Website", 
+  description = "Official website of Ikosi-Ejinrin Local Council Development Area, Lagos State, Nigeria. Access government services, news, projects, and council information.", 
+  keywords = "Ikosi-Ejinrin LCDA, Ikosi Ejinrin, Lagos Local Government, LCDA Lagos, Kosofe LGA, Lagos State, Nigeria local government, Ikosi beach, Ejinrin market, Agboyi", 
+  image = "/og/default.jpg", 
+  url = "https://www.ikosi-ejinrin.gov.ng" 
 }: SEOProps) {
-  const fullTitle = title === "Ikosi-Ejinrin LCDA" ? title : `${title} | Ikosi-Ejinrin LCDA`;
+  const fullTitle = title.includes("Ikosi-Ejinrin LCDA") ? title : `${title} | Ikosi-Ejinrin LCDA`;
 
   return (
     <Head>
@@ -26,6 +26,7 @@ export default function SEO({
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
       <meta property="og:url" content={url} />
+      <meta property="og:site_name" content="Ikosi-Ejinrin LCDA" />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
@@ -36,6 +37,8 @@ export default function SEO({
       <meta property="twitter:title" content={fullTitle} />
       <meta property="twitter:description" content={description} />
       <meta property="twitter:image" content={image} />
+      
+      <link rel="canonical" href={url} />
     </Head>
   );
 }

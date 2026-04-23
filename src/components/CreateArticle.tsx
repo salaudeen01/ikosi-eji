@@ -37,7 +37,7 @@ const CreateArticle = ({setSection, pageTitle, form, setForm, loading, content, 
   //   setLoading(true);
   //   handleSubmit
   // };
-
+console.log(form?.categoryId)
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
       <div className="">
@@ -58,17 +58,6 @@ const CreateArticle = ({setSection, pageTitle, form, setForm, loading, content, 
                 />
               </div>
 
-              {/* <div className="space-y-2">
-                <Label htmlFor="slug">Slug (URL)</Label>
-                <Input
-                  id="slug"
-                  value={form?.slug}
-                  onChange={(e) => setForm({...form, slug: e.target.value})}
-                  required
-                  placeholder="article-slug"
-                />
-              </div> */}
-
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
                 <Select value={form?.categoryId} onValueChange={(e) => setForm({...form, categoryId: String(e)})}>
@@ -82,6 +71,11 @@ const CreateArticle = ({setSection, pageTitle, form, setForm, loading, content, 
                   </SelectContent>
                 </Select>
               </div>
+              {form?.categoryId === "2" &&
+                <div>
+                  Hjeueu
+                </div>
+              }
 
               <div className="space-y-2">
                 <Label htmlFor="excerpt">Summary</Label>

@@ -19,19 +19,23 @@ export default function Contact() {
 
   return (
     <Layout>
-      <div className="bg-sky-50 dark:bg-slate-900 min-h-screen py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Header */}
-          <div className="text-center mb-16 animate-[fade-in_0.5s_ease-out]">
-            <h1 className="text-4xl md:text-5xl font-serif font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">
-              Contact Us
-            </h1>
-            <div className="w-32 h-1.5 bg-linear-to-r from-primary-green to-accent-ocean mx-auto rounded-full mb-8"></div>
-            <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
-              Have questions, feedback, or need assistance? Reach out to us through any of the channels below or send us a message directly from the platform.
-            </p>
+      <div className="bg-surface-alt min-h-screen font-sans">
+        {/* Simple Dark Navy Hero Header */}
+        <section className="bg-navy pt-32 pb-16 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/images/wave-pattern.svg')] bg-cover opacity-5"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+             <div className="flex flex-col items-center text-center">
+               <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-white mb-6 tracking-tight">
+                  Contact Us
+               </h1>
+               <p className="text-white/70 text-lg max-w-2xl mx-auto">
+                 Have questions, feedback, or need assistance? Reach out to us through any of the channels below or send us a message directly from the platform.
+               </p>
+             </div>
           </div>
+        </section>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
 

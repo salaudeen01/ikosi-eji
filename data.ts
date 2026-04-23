@@ -70,7 +70,7 @@ export const executivesData: Executive[] = [
     id: "chairman",
     role: "Executive Chairman",
     name: "Akogun Wale Raji Anomo",
-    image: "https://res.cloudinary.com/orestech/image/upload/v1775298709/Screenshot_njc50c.png",
+    image: "https://res.cloudinary.com/orestech/image/upload/v1776806117/items/swsbpoz8pg93seded2hael8jh.jpg",
     description: "The Narrative Changer. Driving the vision and progressive administration of Ikosi-Ejinrin LCDA.",
     detailedBio: "Akogun Wale Anomo (B.Sc., M.Ed, Fsi, Pde) holds a distinguished career in public service spanning over two decades. Born in Agbowa-Ikosi, his deep-rooted understanding of local customs and community needs has informed his grassroots approach to governance. Under his visionary leadership, the LCDA has witnessed widespread development in infrastructure, women's empowerment, and agriculture. He is currently running for Member House of Representatives, Epe Federal Constituency.",
     awards: [
@@ -159,40 +159,29 @@ export const executivesData: Executive[] = [
       "Best Local Government Administrator, Epe Division",
       "Public Service Performance Award"
     ]
-  },
-  {
-    id: "legislative-affairs",
-    role: "Chief of Staff",
-    name: "Jayesimi Ibraheem Abiodun",
-    image: "https://res.cloudinary.com/orestech/image/upload/v1776078114/Jayesimi_Ibraheem_hz5e8n.jpg",
-    description: "Ensuring efficient administrative operations within the council secretariat.",
-    detailedBio: "",
-    awards: [
-      "Best Local Government Administrator, Epe Division",
-      "Public Service Performance Award"
-    ]
-  },
+  }
 ];
 
-export const councilMembersData = [
-  { kingdom: "Ejinrin Kingdom", hrm: "HRM Oba Rafiu Ishola Babatunde Balogun", title: "(Ejalonibu II)" },
-  { kingdom: "Agbowa-Ikosi Kingdom", hrm: "HRM Oba (Barr) Saheed Owolabi Momson", title: "" },
-  { kingdom: "Odo-Ayandelu Kingdom", hrm: "HRM Oba Asunmo Ganiyu Aderibigbe", title: "" },
-  { kingdom: "Orugbo-Iddo Kingdom", hrm: "HRM Oba Mushafau Adewale Abdul", title: "" },
-  { kingdom: "Owu-Ikosi Kingdom", hrm: "HRM Oba Nelson Obayomi Ogunlari", title: "" },
-  { kingdom: "Otta-Ikosi Kingdom", hrm: "HRM Oba Elias Omoloro Adedapo", title: "" },
-  { kingdom: "Ketu Kingdom", hrm: "Regent: High Chief Adewale Badru", title: "", isRegent: true }
+export const tranditionaRulers = [
+  { id: 1, kingdom: "Ejinrin Kingdom", hrm: "HRM Oba Rafiu Ishola Babatunde Balogun", title: "(Ejalonibu II)", imageUrl: "https://res.cloudinary.com/orestech/image/upload/v1776956581/images_1_r7w5gu.jpg" },
+  { id: 2, kingdom: "Agbowa-Ikosi Kingdom", hrm: "HRM Oba (Barr) Saheed Owolabi Momson", title: "", imageUrl: "https://res.cloudinary.com/orestech/image/upload/v1776956711/DSC_0040_800x1200_onzds0.webp" },
+  { id: 3, kingdom: "Odo-Ayandelu Kingdom", hrm: "HRM Oba Asunmo Ganiyu Aderibigbe", title: "", imageUrl: "https://res.cloudinary.com/orestech/image/upload/v1776956826/images_2_lujvvv.jpg" },
+  { id: 4, kingdom: "Orugbo-Iddo Kingdom", hrm: "HRM Oba Mushafau Adewale Abdul", title: "", imageUrl: "https://res.cloudinary.com/orestech/image/upload/v1776956976/images_3_mcfupa.jpg" },
+  { id: 5, kingdom: "Owu-Ikosi Kingdom", hrm: "HRM Oba Nelson Obayomi Ogunlari", title: "", imageUrl: "https://res.cloudinary.com/orestech/image/upload/v1776957089/images_4_scx7ic.jpg" },
+  { id: 6, kingdom: "Otta-Ikosi Kingdom", hrm: "HRM Oba Elias Omoloro Adedapo", title: "", imageUrl: "https://res.cloudinary.com/orestech/image/upload/v1776957173/images_5_j24xf9.jpg" },
+  { id: 7, kingdom: "Ketu Kingdom", hrm: "Regent: High Chief Adewale Badru", title: "", imageUrl:"https://res.cloudinary.com/orestech/image/upload/v1776956184/blank-profile-picture-973460_1280_pzdddl.webp", isRegent: true }
 ]
 
-export const tranditionaRulers = [
-  { name: "Alhaji Ganiu Akintola", role: "Pioneer Chairman", years: "2004–2007" },
-  { name: "Mr. G.O.C. Bada", role: "Sole Administrator", years: "2007–2008" },
-  { name: "Hon. Adetola Ganiu Olusegun", role: "Executive Chairman", years: "2008–2011 & 2011–2014" },
-  { name: "Hon. Yusuf Sulaimon Adewale", role: "Executive Secretary", years: "2014–2015" },
-  { name: "Arch. Adetunji Babatunde", role: "Sole Administrator", years: "2016–2017" },
-  { name: "Hon. Onanuga Samson Adeniyi", role: "Executive Chairman", years: "2017–2021" },
-  { name: "Hon. Anomo Ibrahim Adewale (Otunba-Akogun)", role: "Executive Chairman", years: "2021–date", isCurrent: true }
+export const councilLeader = [
+  { id: 1, name: "Alhaji Ganiu Akintola", role: "Pioneer Chairman", tenure: "2004 – 2007", imageUrl:"https://res.cloudinary.com/orestech/image/upload/v1776956184/blank-profile-picture-973460_1280_pzdddl.webp" },
+  { id: 2, name: "Mr. G.O.C. Bada", role: "Sole Administrator", tenure: "2007 – 2008", imageUrl:"https://res.cloudinary.com/orestech/image/upload/v1776956184/blank-profile-picture-973460_1280_pzdddl.webp" },
+  { id: 3, name: "Hon. Adetola Ganiu Olusegun", role: "Executive Chairman", tenure: "2008 – 2011 & 2011 – 2014", imageUrl:"https://res.cloudinary.com/orestech/image/upload/v1776956184/blank-profile-picture-973460_1280_pzdddl.webp" },
+  { id: 4, name: "Hon. Yusuf Sulaimon Adewale", role: "Executive Secretary", tenure: "2014 – 2015", imageUrl:"https://res.cloudinary.com/orestech/image/upload/v1776956184/blank-profile-picture-973460_1280_pzdddl.webp" },
+  { id: 5, name: "Arch. Adetunji Babatunde", role: "Sole Administrator", tenure: "2016 – 2017", imageUrl:"https://res.cloudinary.com/orestech/image/upload/v1776956184/blank-profile-picture-973460_1280_pzdddl.webp" },
+  { id: 6, name: "Hon. Onanuga Samson Adeniyi", role: "Executive Chairman", tenure: "2017 – 2021", imageUrl:"https://res.cloudinary.com/orestech/image/upload/v1776958267/images_6_pimwqn.jpg" },
+  { id: 7, name: "Hon. Anomo Ibrahim Adewale (Otunba-Akogun)", role: "Executive Chairman", tenure: "2021 – Present", imageUrl:"https://res.cloudinary.com/orestech/image/upload/v1776806117/items/swsbpoz8pg93seded2hael8jh.jpg", isCurrent: true }
 ]
+
 
 export const teamMembers = [
   // --- Supervisors ---
@@ -237,15 +226,6 @@ export const teamMembers = [
     role: "Supervisor for Women Affairs & Poverty Alleviation",
     name: "Hon Onaneye Adetutu",
     image: "https://res.cloudinary.com/orestech/image/upload/v1776078115/Onaneye_Adetutu_esefv5.jpg",
-    description: "",
-    detailedBio: "",
-    awards: []
-  },
-  {
-    id: "segun-raji",
-    role: "Supervisor for Legislative and Intergovernmental Affairs",
-    name: "Hon Segun Raji",
-    image: "https://res.cloudinary.com/orestech/image/upload/v1776078115/Raji_Olusegun_zwqosg.jpg",
     description: "",
     detailedBio: "",
     awards: []
@@ -387,4 +367,37 @@ export const teamMembers = [
     detailedBio: "",
     awards: []
   }
+];
+
+export const legislature = [
+  {
+    id: "legislative-affairs",
+    role: "Chief of Staff",
+    name: "Jayesimi Ibraheem Abiodun",
+    image: "https://res.cloudinary.com/orestech/image/upload/v1776078114/Jayesimi_Ibraheem_hz5e8n.jpg",
+    description: "Ensuring efficient administrative operations within the council secretariat.",
+    detailedBio: "",
+    awards: [
+      "Best Local Government Administrator, Epe Division",
+      "Public Service Performance Award"
+    ]
+  },
+  {
+    id: "segun-raji",
+    role: "Supervisor for Legislative and Intergovernmental Affairs",
+    name: "Hon Segun Raji",
+    image: "https://res.cloudinary.com/orestech/image/upload/v1776078115/Raji_Olusegun_zwqosg.jpg",
+    description: "",
+    detailedBio: "",
+    awards: []
+  },
+]
+
+export const communities = [
+  { id: "01", name: "Ikosi Town", ward: "Ward 1", landmark: "Ikosi Beach", desc: "The cultural heartbeat of the council, known for traditional fishing and historic markets." },
+  { id: "02", name: "Ejinrin", ward: "Ward 2", landmark: "Ejinrin Market", desc: "Famous ancient trading post along the Lagoon with deep commercial roots." },
+  { id: "03", name: "Agboyi", ward: "Ward 3", landmark: "Agboyi Creek", desc: "A scenic riverine community focusing heavily on agriculture and local commerce." },
+  { id: "04", name: "Isheri-Olofin", ward: "Ward 4", landmark: "Isheri Waterfront", desc: "A rapidly developing suburb acting as a bridge between the mainland and coastal areas." },
+  { id: "05", name: "Alapere", ward: "Ward 5", landmark: "Community Center", desc: "A densely populated residential hub driving much of the council's local economy." },
+  { id: "06", name: "Ketu-Ejinrin", ward: "Ward 6", landmark: "Market Junction", desc: "The commercial nerve center accommodating diverse residents and sprawling markets." },
 ];

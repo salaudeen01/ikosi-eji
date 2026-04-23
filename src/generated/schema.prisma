@@ -55,6 +55,9 @@ model Article {
   summary       String?
   content       String?        @db.Text // PostgreSQL compatible
   status        String         @default("draft")
+  progStatus    String?        @default("pending")
+  location      String?
+  progress      Int?           @default(0)
   imageUrl      String?
   videoUrl      String?
   type          String?
@@ -125,6 +128,16 @@ model Member {
   title     String?
   role      String
   insight   String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Gallery {
+  id        Int      @id @default(autoincrement())
+  category  String
+  slug      String   @unique
+  title     String?
   imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -86,13 +86,7 @@ export default function ArticlePage({ article, canonical }: { article: Article; 
         {article.article.imageUrl && <meta name="twitter:image" content={article.article.imageUrl} />}
       </Head>
 
-      <main>
-        <article>
-          {/* <h1>{clientArticle.article.title}</h1> */}
-          {/* render the rest */}
-          <ArticleMainPage />
-        </article>
-      </main>
+      <ArticleMainPage />
     </>
   );
 }

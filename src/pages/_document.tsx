@@ -1,17 +1,40 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "GovernmentOrganization",
+    "name": "Ikosi-Ejinrin Local Council Development Area",
+    "alternateName": "Ikosi-Ejinrin LCDA",
+    "url": "https://www.ikosi-ejinrin.gov.ng",
+    "description": "Official local government council for Ikosi-Ejinrin, Lagos State",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Ikosi-Ejinrin",
+      "addressRegion": "Lagos State",
+      "addressCountry": "NG"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "areaServed": "NG",
+      "availableLanguage": "English"
+    },
+    "sameAs": [
+      "https://facebook.com/ikosilejinrinlcda",
+      "https://twitter.com/ikosilejinrin"
+    ]
+  };
+
   return (
     <Html lang="en">
       <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?act=swap&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
-          rel="stylesheet"
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </Head>
-      <body className="antialiased text-slate-800 font-sans">
+      <body className="antialiased text-text-base bg-surface font-sans">
         <Main />
         <NextScript />
       </body>

@@ -155,6 +155,9 @@ exports.Prisma.ArticleScalarFieldEnum = {
   summary: 'summary',
   content: 'content',
   status: 'status',
+  progStatus: 'progStatus',
+  location: 'location',
+  progress: 'progress',
   imageUrl: 'imageUrl',
   videoUrl: 'videoUrl',
   type: 'type',
@@ -216,6 +219,16 @@ exports.Prisma.MemberScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.GalleryScalarFieldEnum = {
+  id: 'id',
+  category: 'category',
+  slug: 'slug',
+  title: 'title',
+  imageUrl: 'imageUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -240,7 +253,8 @@ exports.Prisma.ModelName = {
   ActivityLog: 'ActivityLog',
   SavedArticle: 'SavedArticle',
   ArticleView: 'ArticleView',
-  Member: 'Member'
+  Member: 'Member',
+  Gallery: 'Gallery'
 };
 
 /**
