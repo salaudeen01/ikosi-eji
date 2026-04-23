@@ -44,7 +44,7 @@ export default function PublicFooter() {
           <div className="lg:col-span-1 flex flex-col gap-5">
             <Link href="/" className="flex items-center gap-3">
               <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center p-1 border border-white/20">
-                <img src="/images/assets/logo.jpeg" alt="Logo" className="rounded-full object-cover w-full h-full" />
+                <img src="https://res.cloudinary.com/orestech/image/upload/v1776174319/items/nev42bp1usbt3nezyri273jpc.jpg" alt="Logo" className="rounded-full object-cover w-full h-full" />
               </div>
               <span className="font-heading font-extrabold text-xl text-white tracking-widest leading-none">
                 IKOSI-<br />EJINRIN

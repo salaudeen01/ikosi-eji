@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Link from "next/link";
@@ -119,7 +120,7 @@ export default function PublicNavbar() {
 
               <div className="w-14 h-14 bg-primary-green rounded-full flex items-center justify-center shadow-md">
                 {/* <span className="text-white font-bold text-xl">IE</span> */}
-                <img src="/images/assets/logo.jpeg" className="rounded-full" alt="" />
+                <img src="https://res.cloudinary.com/orestech/image/upload/v1776174319/items/nev42bp1usbt3nezyri273jpc.jpg" className="rounded-full" alt="" />
               </div>
               <div className={`flex flex-col ${scrolled || isOpen ? "text-navy" : "text-navy md:text-white"}`}>
                 <span className="font-heading font-extrabold text-lg leading-tight tracking-tight">Ikosi-Ejinrin</span>
