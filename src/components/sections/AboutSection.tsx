@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { motion } from "framer-motion";
@@ -28,7 +29,7 @@ export default function AboutSection() {
             <div className="absolute -top-10 -left-10 w-40 h-40 opacity-20 bg-[radial-gradient(#006B3F_2px,transparent_2px)] [background-size:16px_16px]"></div>
             
             <div className="relative z-10 w-4/5 ml-auto rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-              <img src="/images/assets/logo.jpeg" alt="Ikosi-Ejinrin Secretariat" className="w-full aspect-[4/5] object-cover" />
+              <img src="https://res.cloudinary.com/orestech/image/upload/v1776174319/items/nev42bp1usbt3nezyri273jpc.jpg" alt="Ikosi-Ejinrin Secretariat" className="w-full aspect-[4/5] object-cover" />
               
               {/* Floating Badge */}
               <motion.div 

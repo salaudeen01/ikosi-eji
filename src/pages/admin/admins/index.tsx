@@ -59,16 +59,19 @@ const Index = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createAdminMutation.mutate(form);
+    onClose()
   };
 
   const handleSubmitEdit = (e: React.FormEvent) => {
     e.preventDefault();
     updateAdminMutation.mutate(form);
+    onClose()
   };
 
   const handleSubmitDelete = async (e: React.FormEvent) => {
     e.preventDefault();
     patchMutation.mutate(form);
+    setOpen(true)
   };
 
   const onClose =()=>{
