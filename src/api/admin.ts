@@ -96,6 +96,11 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
       const { data } = await authApi.patch("/articles", payload);
       return data;
     };
+
+    export const deleteArticle = async (payload: CreateArticlePayload) => {
+      const { data } = await authApi.delete("/articles", { data: { id: Number(payload.id) } });
+      return data;
+    };
   
     export const fetchArticles = async (
         params: ArticleQueryParams,

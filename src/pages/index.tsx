@@ -62,7 +62,7 @@ const Index = () => {
     //     </section>
 
     //     {/* Breaking News Banner with Auto-Rotation */}
-    //     <div className="bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] py-3 overflow-hidden">
+    //     <div className="bg-primary text-surface py-3 overflow-hidden">
     //       <div className="container mx-auto px-4">
     //         <div className="flex items-center">
     //           <span className="font-bold mr-4 whitespace-nowrap">BREAKING:</span>

@@ -13,10 +13,10 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
       <div className="flex flex-col items-center justify-center text-center py-20 px-4">
         <div className="flex flex-col items-center gap-4 max-w-md">
           <AlertTriangle className="h-12 w-12 text-destructive" />
-          <h2 className="text-2xl font-semibold text-[hsl(var(--foreground))]">
+          <h2 className="text-2xl font-semibold text-navy">
             Something went wrong
           </h2>
-          <p className="text-[hsl(var(--muted-foreground))]">
+          <p className="text-text-muted">
             {message || "We couldn’t load the page or content. Please try again."}
           </p>
           {onRetry && (

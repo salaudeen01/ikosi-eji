@@ -17,6 +17,9 @@ export interface Article {
   summary: string | null;
   imageUrl: string | null;
   createdAt: string;
+  location?: string | null;
+  progress?: number | null;
+  progStatus?: string | null;
 }
 
 export interface FetchCategoriesResponse {
@@ -92,10 +95,11 @@ export const fetchArticlesByCategor = async (
 export const fetchArticlesByCategory = async (
   slug: string,
   page = 1,
-  limit = 20
+  limit = 20,
+  progStatus?: string
 ): Promise<PaginatedResponse<Article>> => {
   const res = await publicApi.get(`/categories/${slug}/articles`, {
-    params: { page, limit },
+    params: { page, limit, progStatus },
   });
   return res.data;
 };

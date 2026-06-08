@@ -9,6 +9,9 @@ interface ClientArticleResponse {
   summary: string | null;
   imageUrl: string | null;
   createdAt: Date;
+  location?: string | null;
+  progress?: number | null;
+  progStatus?: string | null;
 }
 
 interface CategoryArticlesResponse {
@@ -38,7 +41,7 @@ export default async function handler(
   }
 
   try {
-    const { slug } = req.query as { slug?: string };
+    const { slug, progStatus } = req.query as { slug?: string; progStatus?: string };
     const page = Math.max(parseInt((req.query.page as string) || "1", 10), 1);
     const limit = Math.max(parseInt((req.query.limit as string) || "10", 10), 1);
     const offset = (page - 1) * limit;
@@ -63,14 +66,19 @@ export default async function handler(
       return res.status(404).json({ message: "Category not found" });
     }
 
+    const whereClause: any = { categoryId: category.id, status: "published" };
+    if (progStatus && progStatus !== "all") {
+      whereClause.progStatus = progStatus;
+    }
+
     // 2️⃣ Count total published articles in this category
     const total = await prisma.article.count({
-      where: { categoryId: category.id, status: "published" },
+      where: whereClause,
     });
 
     // 3️⃣ Fetch paginated articles
     const articles: ClientArticleResponse[] = await prisma.article.findMany({
-      where: { categoryId: category.id, status: "published" },
+      where: whereClause,
       orderBy: { createdAt: "desc" },
       skip: offset,
       take: limit,
@@ -81,6 +89,9 @@ export default async function handler(
         summary: true,
         imageUrl: true,
         createdAt: true,
+        location: true,
+        progress: true,
+        progStatus: true,
       },
     });
 

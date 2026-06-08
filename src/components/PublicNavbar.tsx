@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
+// "use client";
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -96,9 +96,9 @@ export default function PublicNavbar() {
             <Link href="/transparency" className="hover:text-gold transition-colors font-medium">
               Transparency Portal
             </Link>
-            <Link href="/pay" className="text-gold flex items-center gap-1 hover:text-yellow-300 transition-colors font-bold">
+            {/* <Link href="/pay" className="text-gold flex items-center gap-1 hover:text-yellow-300 transition-colors font-bold">
               Pay Levies <ExternalLink className="w-3 h-3" />
-            </Link>
+            </Link> */}
           </div>
         </div>
 
@@ -177,14 +177,14 @@ export default function PublicNavbar() {
             </div>
 
             {/* Right Actions */}
-            {/* <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden lg:flex items-center gap-6">
               <button aria-label="Search" className={`transition-colors ${scrolled ? "text-navy hover:text-primary" : "text-white hover:text-gold"}`}>
                 <Search className="w-5 h-5" />
               </button>
-              <Link href="/pay" className="btn-gold py-2.5 px-5 text-sm shadow-md">
+              {/* <Link href="/pay" className="btn-gold py-2.5 px-5 text-sm shadow-md">
                 Pay Levies
-              </Link>
-            </div> */}
+              </Link> */}
+            </div>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -275,9 +275,9 @@ export default function PublicNavbar() {
               </div>
               
               <motion.div variants={linkVariants} className="mt-8 pt-8 border-t border-white/10">
-                <Link href="/pay" onClick={() => setIsOpen(false)} className="w-full py-4 bg-gold rounded-xl flex items-center justify-center font-bold text-navy shadow-lg shadow-gold/20 active:scale-95 transition-transform">
+                {/* <Link href="/pay" onClick={() => setIsOpen(false)} className="w-full py-4 bg-gold rounded-xl flex items-center justify-center font-bold text-navy shadow-lg shadow-gold/20 active:scale-95 transition-transform">
                   Pay Levies
-                </Link>
+                </Link> */}
               </motion.div>
             </motion.div>
           </motion.div>

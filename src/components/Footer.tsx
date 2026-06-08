@@ -17,11 +17,11 @@ const Footer = ({categories}: NavItem) => {
   const { token, isAuthenticated } = useAuthStore();
   const { openLogin } = useLoginModalStore();
   return (
-    <footer className="bg-[hsl(var(--secondary))] mt-16 py-12 border-t border-[hsl(var(--border))]">
+    <footer className="bg-primary-light mt-16 py-12 border-t border-border-color">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-bold text-[hsl(var(--primary))] mb-4 flex gap-1 items-center">
+            <h3 className="text-xl font-bold text-primary mb-4 flex gap-1 items-center">
             <img
               src={'/images/assets/logo.jpeg'}
               alt={'logo'}
@@ -29,17 +29,17 @@ const Footer = ({categories}: NavItem) => {
             />
             Ikosi-Ejinrin LCDA
             </h3>
-            <p className="text-sm text-[hsl(var(--muted-foreground))] ">
+            <p className="text-sm text-text-muted ">
               Nigeria&apos;s leading business and financial news platform. Stay
               informed with the latest market insights and economic analysis.
             </p>
           </div>
           <div>
             <h4 className="font-semibold mb-4">Categories</h4>
-            <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))] ">
+            <ul className="space-y-2 text-sm text-text-muted ">
               {categories?.map((e)=>(
                 <li key={e?.id}>
-                  <Link href={`/category/${e.slug}` || "#"} className="hover:text-[hsl(var(--primary))] transition-colors">
+                  <Link href={`/category/${e.slug}` || "#"} className="hover:text-primary transition-colors">
                     {e?.name}
                   </Link>
                 </li>
@@ -49,24 +49,24 @@ const Footer = ({categories}: NavItem) => {
           </div>
           <div>
             <h4 className="font-semibold mb-4">Company</h4>
-            <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))] ">
+            <ul className="space-y-2 text-sm text-text-muted ">
               <li>
-                <Link href="#" className="hover:text-[hsl(var(--primary))] transition-colors">
+                <Link href="#" className="hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-[hsl(var(--primary))] transition-colors">
+                <Link href="#" className="hover:text-primary transition-colors">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-[hsl(var(--primary))] transition-colors">
+                <Link href="#" className="hover:text-primary transition-colors">
                   Advertise
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-[hsl(var(--primary))] transition-colors">
+                <Link href="#" className="hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
               </li>
@@ -74,11 +74,11 @@ const Footer = ({categories}: NavItem) => {
           </div>
           <div>
             <h4 className="font-semibold mb-4">Newsletter</h4>
-            <p className="text-sm text-[hsl(var(--muted-foreground))]  mb-4">
+            <p className="text-sm text-text-muted  mb-4">
               Get daily business insights delivered to your inbox.
             </p>
             {(!token || !isAuthenticated) &&
-              <Button onClick={openLogin} className="flex bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--news-hover))]">
+              <Button onClick={openLogin} className="flex bg-primary text-surface hover:bg-[hsl(var(--news-hover))]">
                 Login
               </Button>
             }
@@ -86,15 +86,15 @@ const Footer = ({categories}: NavItem) => {
               <input
                 type="email"
                 placeholder="Your email"
-                className="flex-1 px-3 py-2 text-sm border border-[hsl(var(--border))] rounded-md bg-[hsl(var(--background))]"
+                className="flex-1 px-3 py-2 text-sm border border-border-color rounded-md bg-surface-alt"
               />
-              <button className="px-4 py-2 text-sm font-medium bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] rounded-md hover:bg-[hsl(var(--news-hover))]  transition-colors">
+              <button className="px-4 py-2 text-sm font-medium bg-primary text-surface rounded-md hover:bg-[hsl(var(--news-hover))]  transition-colors">
                 Subscribe
               </button>
             </div> */}
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-[hsl(var(--border))] text-center text-sm text-[hsl(var(--muted-foreground))] ">
+        <div className="mt-8 pt-8 border-t border-border-color text-center text-sm text-text-muted ">
           <p>© 2026 Ikosi-Ejinrin LCDA. All rights reserved.</p>
         </div>
       </div>

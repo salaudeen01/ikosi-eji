@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Calendar, CheckCheck, Eye, FilePlus, FileText, Pencil, Search, Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
 import { Article, CreateArticlePayload } from '../../../../type'
-import { useCreateArticle, useFetchArticle, usePatchArticle, useUpdateArticle } from '@/hooks/mutatiion/useCreateArticle'
+import { useCreateArticle, useDeleteArticle, useFetchArticle, usePatchArticle, useUpdateArticle } from '@/hooks/mutatiion/useCreateArticle'
 import { useUploadStore } from '@/store/useUploadStore'
 import { useArticleStore } from '@/store/useArticleStore'
 import { useSimpleArticleStore } from '@/hooks/ArticleStore'
@@ -26,6 +26,7 @@ const Index = () => {
   const [content, setContent] = useState("");
   const [seValue, setSeValue] = useState("");
   const [open, setOpen] = useState(false);
+  const [trash, setTrash] = useState(false);
   const [loading, setloading] = useState(false);
   const [section, setSection] = useState('main');
   const { setArticle } = useSimpleArticleStore();
@@ -89,18 +90,29 @@ const Index = () => {
     },
   });
 
+  const deleteMutation = useDeleteArticle({
+    onSuccessCallback: () =>{ 
+      setloading(false);
+      setSection('main');
+      setOpen(false)
+      setForm({...form, title: '', slug: '', imageUrl: '', type: '', isBreak: '', status:'', summary:'', categoryId:'', content:'', videoUrl:'' });
+      setImage('')
+      setContent('')
+    },
+  });
+
   const handleClick = (e: Article) => {
     const slug = e?.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     setArticle({
       image: e?.imageUrl,
-      category: e?.categoryName,
+      category: e?.category?.name,
       title :e?.title,
       excerpt: e?.summary,
       // date: e?.createdAt,
       date: new Date(e.createdAt).toDateString(),
       author: e?.adminName,
     });
-    router.push(`/${e?.categoryName}/article/1/${slug}`);
+    router.push(`/${e?.category?.name}/article/1/${slug}`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -123,9 +135,20 @@ const Index = () => {
     patchMutation.mutate(form);
   };
 
+  const handleSubmitTrash = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setloading(true);
+    deleteMutation.mutate(form);
+  };
+
   const handleDelete = async (e: Article) => {
     setForm({...form, title: e.title, slug: e.slug, imageUrl: e.imageUrl, summary: e.summary, status: e.status ==='draft' ? 'published': 'draft', id: String(e.id)});
     setOpen(true)
+  };
+
+  const handleTrash = async (e: Article) => {
+    setForm({...form, title: e.title, slug: e.slug, imageUrl: e.imageUrl, summary: e.summary, status: e.status ==='draft' ? 'published': 'draft', id: String(e.id)});
+    setTrash(true)
   };
 
   const handleEdit = (e: Article) => {
@@ -141,34 +164,7 @@ const Index = () => {
     setImage('')
     setContent('')
   }
-
-  const articles = [
-    {
-      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/naira-currency_snbzhq.jpg",
-      category: "Economy",
-      title: "Naira Appreciates to ₦750/$1 at Official Market",
-      excerpt:
-        "Nigerian currency strengthens as CBN's forex reforms boost investor confidence and dollar inflows.",
-      date: "September 22, 2025",
-    },
-    {
-      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/business-meeting_zxlxgu.jpg",
-      category: "Policy",
-      title: "Federal Government Unveils New Tax Reform Framework",
-      excerpt:
-        "Finance Minister announces comprehensive tax policy aimed at broadening revenue base and supporting SMEs.",
-      date: "September 21, 2025",
-    },
-    {
-      image: "https://res.cloudinary.com/orestech/image/upload/v1759767960/oil-industry_aat83r.jpg",
-      category: "Trade",
-      title: "Nigeria's Non-Oil Exports Grow 35% Year-on-Year",
-      excerpt:
-        "Agricultural products and manufactured goods drive export diversification efforts in 2025.",
-      date: "September 20, 2025",
-    },
-  ];
-
+  
   // if (isLoading) return <p>Loading...</p>;
   // if (error) return <p>Failed to load admins</p>;
   if (isLoading) return <ArticleSkeleton />;
@@ -210,14 +206,14 @@ const Index = () => {
               <div className='grid grid-cols-4 gap-2'>
                 <div className='flex py-2 md:py-0'>
                   <Input 
-                    className=''
+                    className='rounded-r-none'
                     placeholder='search...'
                     value={seValue}
                     onChange={(e)=>setSeValue(e.target.value)}
                   />
                   <Button
                     onClick={() =>setSearch(seValue)}
-                    className='rounded-r-lg'
+                    className='rounded-r-lg rounded-l-none'
                   >
                     <Search className="h-4 w-4" />
                   </Button>
@@ -280,8 +276,8 @@ const Index = () => {
               {data?.data?.map((item, index)=>(
                 <Card
                   key={index}
-                  className="overflow-hidden border border-[hsl(var(--border))] hover:shadow-lg transition-shadow cursor-pointer group"
-                  onClick={()=>(console.log('first'))}
+                  className="overflow-hidden border border-border-color hover:shadow-lg transition-shadow cursor-pointer group"
+                  // onClick={()=>(console.log('first'))}
                 >
                   <div className="relative h-48 overflow-hidden">
                     <img
@@ -292,26 +288,27 @@ const Index = () => {
                   </div>
                   <CardContent className="p-4">
                     <div className='flex justify-between'>
-                      <Badge className="mb-2 bg-[hsl(var(--primary))]/10 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/20 border-0">
+                      <Badge className="mb-2 bg-primary/10 text-primary hover:bg-primary/20 border-0">
                         {item?.categoryName}
                       </Badge>
-                      <Badge className="mb-2 bg-gray-300 text-black hover:bg-[hsl(var(--primary))]/20 border-0">
+                      <Badge className="mb-2 bg-gray-300 text-black hover:bg-primary/20 border-0">
                         {item?.status}
                       </Badge>
                     </div>
-                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-[hsl(var(--primary))] transition-colors">
+                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                       {item?.title}
                     </h3>
-                    <p className="text-sm text-[hsl(var(--muted-foreground))] mb-3 line-clamp-2">
+                    <p className="text-sm text-text-muted mb-3 line-clamp-2">
                       {item?.summary}
                     </p>
-                    <div className="flex items-center text-xs text-[hsl(var(--muted-foreground))]">
+                    <div className="flex items-center text-xs text-text-muted">
                       <Calendar className="h-3 w-3 mr-1" />
                       {new Date(item.createdAt).toDateString()}
                     </div>
                     <div className="flex space-x-2 pt-4">
                       <Button
                         variant="outline"
+                        className='text-[#0F172A]'
                         size="sm"
                         onClick={() =>(handleEdit(item))}
                       >
@@ -348,6 +345,13 @@ const Index = () => {
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() =>(handleTrash(item))}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                     <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
                       <span>👁️ {item.viewNo} views</span>
@@ -356,61 +360,6 @@ const Index = () => {
                     </div>
                   </CardContent>
 
-                </Card>
-              ))}
-            </div>
-            <div className='gri grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden'>
-              {articles?.map((item, index)=>(
-                <Card
-                  key={index}
-                  className="overflow-hidden border border-[hsl(var(--border))] hover:shadow-lg transition-shadow cursor-pointer group"
-                  onClick={()=>(console.log('first'))}
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={item?.image}
-                      alt={item?.image}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <CardContent className="p-4">
-                    <Badge className="mb-2 bg-[hsl(var(--primary))]/10 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/20 border-0">
-                      {item?.category}
-                    </Badge>
-                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-[hsl(var(--primary))] transition-colors">
-                      {item?.title}
-                    </h3>
-                    <p className="text-sm text-[hsl(var(--muted-foreground))] mb-3 line-clamp-2">
-                      {item?.excerpt}
-                    </p>
-                    <div className="flex items-center text-xs text-[hsl(var(--muted-foreground))]">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {item?.date}
-                    </div>
-                    <div className="flex space-x-2 pt-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>(setSection('edit'))}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() =>(console.log('first'))}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="default"
-                        size="sm"
-                        onClick={() =>(console.log('first'))}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
                 </Card>
               ))}
             </div>
@@ -448,6 +397,8 @@ const Index = () => {
       </div>
 
       <Confirmation loading={loading} name={form?.title} status={form?.status === 'draft' ? 'publish': 'draft'} open={open} onSubmit={handleSubmitDelete} onClose={()=>setOpen(false)} />
+
+      <Confirmation loading={loading} name={form?.title} status={'delete'} open={trash} onSubmit={handleSubmitTrash} onClose={()=>setTrash(false)} />
 
     </Layout>
   )

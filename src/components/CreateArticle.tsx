@@ -39,7 +39,7 @@ const CreateArticle = ({setSection, pageTitle, form, setForm, loading, content, 
   // };
 console.log(form?.categoryId)
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))]">
+    <div className="min-h-screen bg-surface-alt">
       <div className="">
         <Card>
           <CardHeader>

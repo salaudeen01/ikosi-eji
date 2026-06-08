@@ -81,11 +81,11 @@ const CommentSection = () => {
   };
 
   return (
-    <div className="mt-12 pt-8 border-t border-[hsl(var(--border))]">
+    <div className="mt-12 pt-8 border-t border-border-color">
       <h3 className="text-2xl font-bold mb-6">Comments ({comments.length})</h3>
 
       {/* Comment Form */}
-      <form onSubmit={handleSubmit} className="mb-8 bg-[hsl(var(--secondary))] p-6 rounded-lg">
+      <form onSubmit={handleSubmit} className="mb-8 bg-primary-light p-6 rounded-lg">
         <h4 className="font-semibold mb-4">Leave a Comment</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
@@ -120,18 +120,18 @@ const CommentSection = () => {
       {/* Comments List */}
       <div className="space-y-6">
         {comments.map((comment) => (
-          <div key={comment.id} className="flex gap-4 p-4 bg-[hsl(var(--secondary))]/50 rounded-lg">
+          <div key={comment.id} className="flex gap-4 p-4 bg-primary-light/50 rounded-lg">
             <Avatar className="h-10 w-10">
-              <AvatarFallback className="bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]">
+              <AvatarFallback className="bg-primary text-surface">
                 {getInitials(comment.name)}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
                 <h5 className="font-semibold">{comment.name}</h5>
-                <span className="text-xs text-[hsl(var(--muted-foreground))]">{comment.date}</span>
+                <span className="text-xs text-text-muted">{comment.date}</span>
               </div>
-              <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">
+              <p className="text-sm text-text-muted leading-relaxed">
                 {comment.comment}
               </p>
             </div>

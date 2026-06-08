@@ -86,6 +86,9 @@ export default async function handler(
         category: {
           status: "active", // always filter active category
         },
+        status: {
+          not: "deleted",
+        },
       };
   
       if (slug) where.slug = slug;
@@ -143,7 +146,7 @@ export default async function handler(
       const stats = await prisma.article.aggregate({
         _count: { _all: true },
         _sum: { viewNo: true },
-        where: { category: { status: "active" } },
+        where: { category: { status: "active" }, status: { not: "deleted" } },
       });
   
       return res.status(200).json({
@@ -334,8 +337,13 @@ export default async function handler(
     if (!id) return res.status(400).json({ message: "Article ID is required" });
     const articleId = Number(id);
     try {
-      const article = await prisma.article.delete({
+      // const article = await prisma.article.delete({
+      //   where: { id: articleId },
+      // });
+
+      const article = await prisma.article.update({
         where: { id: articleId },
+        data: { status: "deleted" },
       });
 
       await logActivity({

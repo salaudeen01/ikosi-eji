@@ -48,7 +48,7 @@ const Index = () => {
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {data?.articles.map((article, index) => (
-                  <ArticleCard key={index} data={article} />
+                  <ArticleCard key={index} data={article} category='news' />
                 ))}
               </div>
               {data?.pagination && (

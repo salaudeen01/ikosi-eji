@@ -26,18 +26,18 @@ const Sidebar: React.FC = () => {
   return (
     <aside
       id="logo-sidebar"
-      className="fixed w-64 h-screen pt-8 transition-transform -translate-x-full sm:translate-x-0 bg-[hsl(var(--background))] border-r border-[hsl(var(--border))]"
+      className="fixed w-64 h-screen pt-8 transition-transform -translate-x-full sm:translate-x-0 bg-surface-alt border-r border-border-color"
       aria-label="Sidebar"
     >
-      <div className="h-full px-3 pb-4 overflow-y-auto bg-[hsl(var(--background))] border-r border-[hsl(var(--border))]">
+      <div className="h-full px-3 pb-4 overflow-y-auto bg-surface-alt border-r border-border-color">
         <ul className="space-y-4 font-medium">
           {navItems?.map((items)=>(
             <li key={items.label}>
               <a
                 href={items.href}
                 className={`${
-                  location === items.href ? "border-[hsl(var(--primary))] border bg-[hsl(var(--primary))] text-white" : "text-gray-600 "
-                } flex items-center p-3 rounded-lg hover:bg-[hsl(var(--primary))] hover:text-white group`}
+                  location === items.href ? "border-primary border bg-primary text-white" : "text-gray-600 "
+                } flex items-center p-3 rounded-lg hover:bg-primary hover:text-white group`}
               >
                 {items.icon}
                 <span className="ms-3 font-semibold text-base">{items.label}</span>
@@ -48,8 +48,8 @@ const Sidebar: React.FC = () => {
               <a
                 href={`/admin/activity-log`}
                 className={`${
-                  location === `/admin/activity-log` ? "border-[hsl(var(--primary))] border bg-[hsl(var(--primary))] text-white" : "text-gray-600 "
-                } flex items-center p-3 rounded-lg hover:bg-[hsl(var(--primary))] hover:text-white group`}
+                  location === `/admin/activity-log` ? "border-primary border bg-primary text-white" : "text-gray-600 "
+                } flex items-center p-3 rounded-lg hover:bg-primary hover:text-white group`}
               >
                 <Wallpaper />
                 <span className="ms-3 font-semibold text-base">{`Activity Log`}</span>
@@ -60,7 +60,7 @@ const Sidebar: React.FC = () => {
               href="/admin/categories"
               className={`${
                 location === "/admin/categories" ? "border-gray-400 border" : ""
-              } flex items-center p-3 rounded-lg text-gray-600 hover:bg-[hsl(var(--primary))] hover:text-white group`}
+              } flex items-center p-3 rounded-lg text-gray-600 hover:bg-[#006B3F] hover:text-white group`}
             >
               <span className="ms-3">Categories</span>
             </a>

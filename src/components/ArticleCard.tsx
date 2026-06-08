@@ -37,7 +37,7 @@ const ArticleCard = ({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-            <Badge className="mb-4 bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--news-hover))]">
+            <Badge className="mb-4 bg-primary text-surface hover:bg-[hsl(var(--news-hover))]">
               {category}
             </Badge>
             <h2 className="text-3xl md:text-5xl font-serif font-black mb-4 leading-tight tracking-tight drop-shadow-lg lg:max-w-4xl">

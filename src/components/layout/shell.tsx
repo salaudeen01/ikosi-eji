@@ -13,7 +13,7 @@ const  Layout = ({ children }: LayoutProps) => {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[hsl(var(--background))]" suppressHydrationWarning>
+      <div className="min-h-screen bg-surface-alt" suppressHydrationWarning>
       <Navbar />
       <Sidebar />
       {/* className='container mx-auto px-4 my-6' */}

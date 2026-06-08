@@ -15,12 +15,12 @@ import { useArticleCategoryStore } from "@/store/clients/useArticleCategoryStore
 // import { fetchArticlesByCategory } from "@/lib/api/articles";
 // import { useArticlePaginationStore } from "@/store/useArticlePaginationStore";
 
-export const useCategoryArticles = (slug?: string, options?: { enabled?: boolean }) => {
+export const useCategoryArticles = (slug?: string, options?: { enabled?: boolean; progStatus?: string }) => {
   const { page, limit } = useArticleCategoryStore();
 
   return useQuery({
-    queryKey: ["articles", slug, page],
-    queryFn: () => fetchArticlesByCategory(slug!, page, limit),
+    queryKey: ["articles", slug, page, options?.progStatus],
+    queryFn: () => fetchArticlesByCategory(slug!, page, limit, options?.progStatus),
     enabled: !!slug && (options?.enabled ?? true), // ✅ skip if slug missing
     staleTime: 60_000,
   });

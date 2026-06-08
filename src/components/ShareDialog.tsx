@@ -136,7 +136,7 @@ const ShareDialog = ({ title, url }: ShareDialogProps) => {
         </div>
 
         <div className="flex items-center space-x-2 mt-4 w-72">
-          <div className="flex-1 bg-[hsl(var(--secondary))] p-3 rounded-md text-sm truncate">
+          <div className="flex-1 bg-primary-light p-3 rounded-md text-sm truncate">
             {fullUrl || "Loading..."}
           </div>
           <Button onClick={copyToClipboard} size="sm" variant="outline">

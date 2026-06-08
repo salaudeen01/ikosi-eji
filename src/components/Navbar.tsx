@@ -11,7 +11,7 @@ const Navbar = () => {
   const { logout, user } = useAuth();
 
   return (
-    <nav className="bg-[hsl(var(--background))] border-b border-[hsl(var(--border))] sticky top-0 z-50">
+    <nav className="bg-surface-alt border-b border-border-color sticky top-0 z-50">
       <div className="px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -22,7 +22,7 @@ const Navbar = () => {
                 alt={'logo'}
                 className="w-10 h-auto"
               />
-              <h1 className="text-2xl font-bold text-[hsl(var(--primary))] cursor-pointer hover:text-[hsl(var(--news-hover))] transition-colors">
+              <h1 className="text-2xl font-bold text-primary cursor-pointer hover:text-[hsl(var(--news-hover))] transition-colors">
               Ikosi-Ejinrin LCDA
               </h1>
             </Link>
@@ -33,7 +33,7 @@ const Navbar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-[hsl(var(--foreground))]"
+              className="lg:hidden text-navy"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <Menu className="h-5 w-5" />

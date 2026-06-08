@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createArticle, fetchArticleBySlug, fetchArticles, patchArticle, patchCategory, updateArticle, updateCategory } from "@/api/admin";
+import { createArticle, deleteArticle, fetchArticleBySlug, fetchArticles, patchArticle, patchCategory, updateArticle, updateCategory } from "@/api/admin";
 import { useToast } from "@/hooks/use-toast";
 import { CreateArticlePayload, CreateCategoryPayload } from "../../../type";
 import { useRouter } from "next/navigation";
@@ -98,6 +98,33 @@ export const usePatchArticle = ({ onSuccessCallback }: UseCreateOptions = {}) =>
     onError: (error) => {
       toast({
         title: "Error updating article",
+        description: error?.response?.data?.message || "Something went wrong",
+        variant: "destructive",
+      });
+    },
+  });
+};
+
+export const useDeleteArticle = ({ onSuccessCallback }: UseCreateOptions = {}) => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, ApiError, CreateArticlePayload>({
+    mutationFn: deleteArticle,
+    onSuccess: async (_, variables) => {
+      toast({
+        title: "Article deleted successfully ✅",
+        description: `${variables.title} has been deleted.`,
+      });
+
+      // 👇 refresh list after update too
+      await queryClient.invalidateQueries({ queryKey: ["articles"] });
+
+      if (onSuccessCallback) onSuccessCallback();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error deleting article",
         description: error?.response?.data?.message || "Something went wrong",
         variant: "destructive",
       });

@@ -21,7 +21,7 @@ const Confirmation = ({open, loading, onClose, name, status, onSubmit}: ConfirmP
         <DialogContent>
           <DialogHeader>
             <DialogDescription className='text-center'>
-              <OctagonAlert className={`mx-auto mb-4 h-14 w-14 ${status === 'draft'? 'text-[hsl(var(--primary))]': 'text-red-400'}`} />
+              <OctagonAlert className={`mx-auto mb-4 h-14 w-14 ${status === 'draft'? 'text-primary': 'text-red-400'}`} />
               {status === 'delete' && 
                 <DialogTitle>
                   {loading ? (

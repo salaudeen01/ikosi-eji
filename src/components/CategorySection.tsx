@@ -13,11 +13,11 @@ const CategorySection = ({ title, articles, categorySlug }: CategorySectionProps
   return (
     <section className="py-12">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-bold text-[hsl(var(--foreground))] ">{title}</h2>
+        <h2 className="text-3xl font-bold text-navy ">{title}</h2>
         <Link
           // href={`#`}
           href={`/ca/${categorySlug}`}
-          className="flex items-center text-sm font-medium text-[hsl(var(--primary))] hover:text-[hsl(var(--news-hover))] transition-colors"
+          className="flex items-center text-sm font-medium text-primary hover:text-[hsl(var(--news-hover))] transition-colors"
         >
           View All
           <ChevronRight className="h-4 w-4 ml-1" />

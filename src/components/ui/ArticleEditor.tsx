@@ -68,7 +68,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ value, onChange }) => {
           modules,
           formats,
           className:
-            "bg-[hsl(var(--background))] min-h-[300px] border border-[hsl(var(--border))] rounded-md",
+            "bg-surface-alt min-h-[300px] border border-border-color rounded-md",
         } as ReactQuillWithRef)} // ✅ this cast fixes the overload issue
       />
     </div>

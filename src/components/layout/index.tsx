@@ -42,7 +42,7 @@ const  Layout = ({ children, pageTitle, pageDescription }: LayoutProps) => {
   )
 
   return (
-    <div className="min-h-screen flex flex-col conta bg-[hsl(var(--background))]" suppressHydrationWarning>
+    <div className="min-h-screen flex flex-col conta bg-surface-alt" suppressHydrationWarning>
       <SEO title={pageTitle} description={pageDescription} />
       <PublicNavbar />
       <main className='flex-grow pt-16'>
